@@ -14,9 +14,12 @@ public class StrainGauge{
    private float barWidth;
    // private float barHeight;
 
-   private float barElongRatio = 500;
+   private float barElongRatio = 300;
 
    //Text Display data member
+   private float heatMapXOrigin;
+   private float heatMapYOrigin;
+   private float heatMapSize;
    private float elongTextXOrigin;
    private float elongTextYOrigin;
    private float elongTextSize;
@@ -48,7 +51,7 @@ public class StrainGauge{
    }
 
    public float getElongationValue(){
-      //return random(-2, 4);
+      // return random(-2, 4);
       return enable ? (float)newValue/calibrationValue : 0.0f;
    }
 
@@ -96,6 +99,25 @@ public class StrainGauge{
 
       fill(getHeatmapRGB(getElongationValue()));
       rect(barXOrigin, barYOrigin, barWidth, (1-elongRatio)*barElongRatio);
+   }
+
+   public void drawHeatMap(){
+      if (!enable) return;
+      float elongRatio = getElongationValue();
+
+      // color stretch = color(4, 79, 111);
+      // color compress = color(255, 145, 158);
+
+      fill(getHeatmapRGB(getElongationValue()));
+      rect(heatMapXOrigin, heatMapYOrigin, heatMapSize, heatMapSize);
+   }
+
+   public void setDisplayPropertiesForHeatMap(float heatMapXOrigin,
+                                                float heatMapYOrigin,
+                                                float heatMapSize){
+      this.heatMapXOrigin = heatMapXOrigin;
+      this.heatMapYOrigin = heatMapYOrigin;
+      this.heatMapSize = heatMapSize;
    }
 
    //Text Display methods

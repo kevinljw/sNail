@@ -41,6 +41,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static String CALIBRATE = "calibrate";
    public final static String CALIBRATE_CONST_AMP = "calibrate (const amp)";
    public final static String CALIBRATE_ACCEL = "calibrate (accel)";
+   public final static String SET_SGS_CALIBRATING_WITH_CURRENT_VALUES = "Set Current Value as Calibrating";
 
    // toggles
    public final static String ENABLE_STRAIN_GAUGE = "enable\nsg";
@@ -283,6 +284,13 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setSize(100,20)
          .setBroadcast(true)
       ;
+      cp5.addButton(SET_SGS_CALIBRATING_WITH_CURRENT_VALUES)
+         .setBroadcast(false)
+         .setValue(0)
+         .setPosition(width*0.12 + 360, height*0.94)
+         .setSize(150,20)
+         .setBroadcast(true)
+      ;
       cp5.addToggle(ENABLE_SIGNAL_TO_ROBOT)
          .setColorLabel(color(0))
          .setBroadcast(false)
@@ -415,6 +423,9 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
                .setVisible(!cp5.controller(CALIBRATE_CONST_AMP).isVisible());
             cp5.controller(CALIBRATE_ACCEL)
                .setVisible(!cp5.controller(CALIBRATE_ACCEL).isVisible());
+            cp5.controller(SET_SGS_CALIBRATING_WITH_CURRENT_VALUES)
+               .setVisible(!cp5.controller(SET_SGS_CALIBRATING_WITH_CURRENT_VALUES).isVisible());
+               
             radioButton.setVisible(!radioButton.isVisible());
             radioButton.setValue(RADIO_SHOW_BAR_ITEM);
             uiHidden = !uiHidden;

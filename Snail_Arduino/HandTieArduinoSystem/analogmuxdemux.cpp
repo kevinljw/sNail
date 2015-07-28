@@ -61,6 +61,9 @@ void AnalogMux::SelectPin(uint8_t pin) {
   _currentPin = pin;
   
     if (_ms) {
+        // WriteSelectionPins(_SS0, _SS1, _SS2, (9 % 8));
+        // digitalWrite(_MS0, HIGH); digitalWrite(_MS1, LOW); digitalWrite(_MS2, HIGH);
+        // delay(5);
         // we need to consider multi mux arrangement
 
         // the master is the significant bit so it determines which
@@ -85,7 +88,7 @@ void AnalogMux::SelectPin(uint8_t pin) {
         WriteSelectionPins(_MS0, _MS1, _MS2, pin);
     }
 
-    delay(20);
+    // delay(20);
 }
 
 uint16_t AnalogMux::AnalogRead() {

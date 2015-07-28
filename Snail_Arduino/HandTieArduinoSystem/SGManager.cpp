@@ -67,10 +67,10 @@ void SGManager::serialPrint(){
 }
 
 void SGManager::serialPrint(int protocol){
-   Serial.print(stateMachine);
-   Serial.print(" ");
-   // Serial.print(protocol);
+   // Serial.print(stateMachine);
    // Serial.print(" ");
+   Serial.print(protocol);
+   Serial.print(" ");
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       // if (protocol == SEND_CALIBRATING_MIN_AMP_VALS)
 //         mcp4251->wiper0_pos(255);
@@ -193,8 +193,8 @@ void SGManager::calibrateBridgeAtConstAmp(){
       // Serial.print(" calibrateBridgeAtConstAmpNumber:");
       // Serial.print(i);
       // Serial.print(" ");
-      // Serial.print(i);
-      // Serial.print("/ ");
+      Serial.print(i);
+      Serial.print("/ ");
       if (!calibrateBridgePotAtConstAmp(i))
          complete = false;
    }

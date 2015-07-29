@@ -24,7 +24,7 @@
 #define OHM_WIPER 102
 
 #define WIPER0_INIT_POS 4
-#define WIPER1_INIT_POS 1023
+#define WIPER1_INIT_POS 300
 
 // #define TARGET_NO_AMP 20
 // #define TARGET_WITH_AMP 295
@@ -32,12 +32,12 @@
 #define TARGET_TOLERANCE_WITH_AMP 100
 
 // -------- StrainGauge Macro Define -------- //
-#define NUM_OF_GAUGES 1
+#define NUM_OF_GAUGES 9
 #define CALI_TIMEOUT ((unsigned long)15000)
 // #define BROKEN_OMIT
 
 #define TARGET_VAL_MIN_AMP 5
-#define TARGET_VAL_WITH_AMP 650
+#define TARGET_VAL_WITH_AMP 400
 
 #define NUM_OF_CALI_INFO 5
 
@@ -84,6 +84,7 @@ private:
    void calibrateBridgeAtMinAmp();
    void calibrateAmpAtConstBridge();
    void calibrateBridgeAtConstAmp();
+   uint16_t filterValue(int i);
 
    boolean calibrateBridgePotMinAmp(int);
    boolean calibrateAmpPotAtConstBridge(int);

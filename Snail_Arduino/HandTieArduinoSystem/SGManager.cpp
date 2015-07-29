@@ -79,19 +79,21 @@ void SGManager::serialPrint(int protocol){
 
       ad5231->resistance_write(gauges[i]->getBridgePotPos());
 
+      // Serial.print(analogMux->AnalogRead(i));
       //we only do software filter in final stage(after calibrating)
       if(protocol == SEND_NORMAL_VALS) {
-         uint16_t unfilteredVal = analogMux->AnalogRead(i);
-         gauges[i]->updateInputVals(unfilteredVal);
-         config->inputVals = gauges[i]->getInputVals();
-         config->numInputVals = StrainGauge::numValsToCached;
-         uint16_t filteredVal = Filter::compute(config);
-         if(filteredVal != 0) {
-            Serial.print(filteredVal);
-         }
-         else { //number of data points is not enough 
-            Serial.print(unfilteredVal);
-         }
+         // uint16_t unfilteredVal = analogMux->AnalogRead(i);
+         // gauges[i]->updateInputVals(unfilteredVal);
+         // config->inputVals = gauges[i]->getInputVals();
+         // config->numInputVals = StrainGauge::numValsToCached;
+         // uint16_t filteredVal = Filter::compute(config);
+         // if(filteredVal != 0) {
+         //    Serial.print(filteredVal);
+         // }
+         // else { //number of data points is not enough 
+         //    Serial.print(unfilteredVal);
+         // }
+         Serial.print(filterValue(i));
       }
       else {
          Serial.print(analogMux->AnalogRead(i));
@@ -100,6 +102,23 @@ void SGManager::serialPrint(int protocol){
       Serial.print(" ");
    }
 }
+
+uint16_t SGManager::filterValue(int i)
+{
+   uint16_t unfilteredVal = analogMux->AnalogRead(i);
+   gauges[i]->updateInputVals(unfilteredVal);
+   config->inputVals = gauges[i]->getInputVals();
+   config->numInputVals = StrainGauge::numValsToCached;
+   uint16_t filteredVal = Filter::compute(config);
+   if(filteredVal != 0) {
+     return filteredVal;
+   }
+   else { //number of data points is not enough 
+      // Serial.print(unfilteredVal);
+      return unfilteredVal;
+   }
+}
+
 
 void SGManager::sendStoredValues(int protocol){
    Serial.print(protocol);
@@ -119,7 +138,12 @@ void SGManager::sendStoredValues(int protocol){
             Serial.print(gauges[i]->getAmpPotPos());
             break;
       }
+
       Serial.print(" ");
+      // Serial.print(i);
+      // Serial.print(":");
+      // Serial.print(analogMux->AnalogRead(i));
+      // Serial.print(" ");
    }
    if (++stateMachine > SEND_AMP_POT_POS_VALS){
       stateMachine = SEND_NORMAL_VALS;
@@ -193,8 +217,8 @@ void SGManager::calibrateBridgeAtConstAmp(){
       // Serial.print(" calibrateBridgeAtConstAmpNumber:");
       // Serial.print(i);
       // Serial.print(" ");
-      Serial.print(i);
-      Serial.print("/ ");
+      // Serial.print(i);
+      // Serial.print("/ ");
       if (!calibrateBridgePotAtConstAmp(i))
          complete = false;
    }
@@ -294,6 +318,7 @@ boolean SGManager::calibrateBridgePotAtConstAmp(int i){
    // mcp4251->wiper0_pos(gauges[i]->getAmpPotPos());
    ad5231->resistance_write(potPos);
 
+// filterValue(i);
    uint16_t analogVal = analogMux->AnalogRead(i);
    #ifdef BROKEN_OMIT
    if (gauges[i]->isBridgeCaliComplete() || gauges[i]->isBroken())
@@ -304,11 +329,11 @@ boolean SGManager::calibrateBridgePotAtConstAmp(int i){
    
     // Serial.print("calibrateBridgePotAtConstAmp/analogVal:");
     // Serial.println(analogVal);
-    // Serial.print(" ");
-    // Serial.print(i);
-    // Serial.print("/potPos:");
-    // Serial.print(potPos);
-    // Serial.print(" ");
+    Serial.print(" ");
+    Serial.print(i);
+    Serial.print("/potPos:");
+    Serial.print(potPos);
+    Serial.print(" ");
    
      //Serial.print("/getTargetValWithAmp:");
      //Serial.println(gauges[i]->getTargetValWithAmp());
@@ -320,6 +345,7 @@ boolean SGManager::calibrateBridgePotAtConstAmp(int i){
    } else {
       gauges[i]->setBridgeCaliComplete();
    }
+
 
    gauges[i]->setBridgePotPos((uint16_t)potPos);
 

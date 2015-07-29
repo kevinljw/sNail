@@ -87,8 +87,6 @@ void AnalogMux::SelectPin(uint8_t pin) {
     } else {
         WriteSelectionPins(_MS0, _MS1, _MS2, pin);
     }
-
-    // delay(20);
 }
 
 uint16_t AnalogMux::AnalogRead() {
@@ -102,7 +100,7 @@ uint16_t AnalogMux::AnalogRead(uint8_t pin) {
   //Serial.print( AnalogMux::AnalogRead() );
   //Serial.print( " " );
   SelectPin(pin);
-  delayMicroseconds(100);
+  delayMicroseconds(3000);
   // delay(1000);
   return AnalogMux::AnalogRead();
 }

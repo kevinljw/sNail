@@ -37,7 +37,7 @@
 // #define BROKEN_OMIT
 
 #define TARGET_VAL_MIN_AMP 5
-#define TARGET_VAL_WITH_AMP 400
+#define TARGET_VAL_WITH_AMP 600
 
 #define NUM_OF_CALI_INFO 5
 

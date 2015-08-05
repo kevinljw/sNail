@@ -48,6 +48,12 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static String ENABLE_STRAIN_GAUGE = "enable\nsg";
    public final static String ENABLE_ACCEL = "enable\nacc";
    public final static String ENABLE_SIGNAL_TO_ROBOT = "send to robot\n(on/off)";
+   
+
+   //draw sensors enable
+   public final static String ENABLE_9DOF_DISPLAY = "enable\nDisplay 9DOF";
+   public final static String ENABLE_WEIGHT_DISPLAY = "enable\nDisplay Weight";
+
 
    // dropdown list
    public final static String DROPDOWN_ARDUINO_SERIAL_LIST = "Arduino Serial";
@@ -307,6 +313,22 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setBroadcast(false)
          .setValue(0)
          .setPosition(width*0.85, height*0.5)
+         .setSize(50,30)
+         .setBroadcast(true)
+      ;
+      cp5.addToggle(ENABLE_9DOF_DISPLAY)
+         .setColorLabel(color(0))
+         .setBroadcast(false)
+         .setValue(0)
+         .setPosition(width*0.85, height*0.6)
+         .setSize(50,30)
+         .setBroadcast(true)
+      ;
+      cp5.addToggle(ENABLE_WEIGHT_DISPLAY)
+         .setColorLabel(color(0))
+         .setBroadcast(false)
+         .setValue(0)
+         .setPosition(width*0.85, height*0.7)
          .setSize(50,30)
          .setBroadcast(true)
       ;

@@ -27,6 +27,7 @@ void draw() {
    sgManager.draw();
    accelMgr.draw();
    grtMgr.draw();
+   sensors.draw();
 }
 
 void listenerRegistrations(){

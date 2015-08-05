@@ -1,15 +1,26 @@
+import processing.opengl.*;
+import java.awt.Frame;
+import java.awt.BorderLayout;
+import controlP5.*;
+
 public class ExternalSensors implements ControlListener{
 	
 	final static int SERIAL_PORT_BAUD_RATE = 57600;
 	private static final boolean ENABLE_9DOF = true;
 	private static final boolean ENABLE_WEIGHT = true;
 
-	public float raw = 0.0;
+	boolean display9DOF = false;
+	boolean displayWeight = false;
+
+	public float roll = 0.0;
 	public float yaw = 0.0;
 	public float pitch = 0.0;
 
 	public float weight = 0.0;
-
+	
+	
+	boolean showAnotherWindow = false;
+	ControlFrame cf = null;
 
 	PApplet mainClass;
 	Serial sensorsPort;
@@ -51,13 +62,19 @@ public class ExternalSensors implements ControlListener{
 		if (theEvent.getName().equals(UIInteractionMgr.DROPDOWN_SENSORS_SERIAL_LIST)){
         	connectToSerial((int)(theEvent.getValue()));
       	}
+      	else if (theEvent.getName().equals(UIInteractionMgr.ENABLE_9DOF_DISPLAY)) {
+      		display9DOF = !display9DOF;
+      	}
+      	else if (theEvent.getName().equals(UIInteractionMgr.ENABLE_WEIGHT_DISPLAY)) {
+      		displayWeight = !displayWeight;
+      	}
 	}
 
 	public void parseDataFromSerial(Serial port) throws Exception{
       if (port.equals(sensorsPort)) {
          parseDataFromSensors(port);
       }
-  }
+	}
 
 	private void parseDataFromSensors(Serial port) throws Exception{
 		float [] parsedData = parseSpaceSeparatedData(port);
@@ -65,9 +82,9 @@ public class ExternalSensors implements ControlListener{
 
 		//updating values
 		if (ENABLE_9DOF) {
-			raw = parsedData[i++];
 			yaw = parsedData[i++];
 			pitch = parsedData[i++];
+			roll = parsedData[i++];
 		}
 		
 		if (ENABLE_WEIGHT) {
@@ -89,8 +106,163 @@ public class ExternalSensors implements ControlListener{
       return parsedDataArr;
    }
 
-	public void performKeyPress(char k){  
+	public void performKeyPress(char k){
+		switch (k) {
+		    case 'a':  // Align screen with Razor
+		      if (showAnotherWindow) {
+		      	cf.yawOffset = yaw;
+		      }
+		}
+	}
+
+	public void draw(){
+		if (showAnotherWindow == false) {
+			cf = addControlFrame("showingSensorData", 640,480, this);
+			showAnotherWindow = true;	
+		}
+	  
+	    if (displayWeight){
+	    	
+	     }
+	     if (display9DOF){
+	     	
+	     }
+	  // }
 	}
 
 
+
+	
+}
+
+
+ControlFrame addControlFrame(String theName, int theWidth, int theHeight, ExternalSensors sensor) {
+  Frame f = new Frame(theName);
+  ControlFrame p = new ControlFrame(this, theWidth, theHeight);
+  f.add(p);
+  p.init();
+  p.sensorclass = sensor;
+  f.setTitle(theName);
+  f.setSize(p.w, p.h);
+  f.setLocation(100, 100);
+  f.setResizable(false);
+  f.setVisible(true);
+  return p;
+}
+
+public class ControlFrame extends PApplet {
+
+  int w, h;
+
+  int abc = 100;
+
+  float yawOffset = 0.0f;
+  ExternalSensors sensorclass = null;
+  public void setup() {
+    size(640, 480, OPENGL);
+	smooth();
+	noStroke();
+	frameRate(50);
+  }
+
+  public void draw() {
+    background(0);
+  	lights();
+
+  	pushMatrix();
+	translate(width/2, height/2, -350);
+	drawBoard();
+	popMatrix();
+	
+	// textFont(font, 20);
+	fill(255);
+	textAlign(LEFT);
+	// // Output info text
+	text("Point FTDI connector towards screen and press 'a' to align", 10, 25);
+	// // // Output angles
+	pushMatrix();
+	translate(10, height - 10);
+	textAlign(LEFT);
+	text("Yaw: " + ((int) sensorclass.yaw), 0, 0);
+	text("Pitch: " + ((int) sensorclass.pitch), 150, 0);
+	text("Roll: " + ((int) sensorclass.roll), 300, 0);
+	popMatrix();
+  }
+  
+  private ControlFrame() {
+  }
+
+  public ControlFrame(Object theParent, int theWidth, int theHeight) {
+    parent = theParent;
+    w = theWidth;
+    h = theHeight;
+  }
+
+
+  public ControlP5 control() {
+    return cp5;
+  }
+
+	void drawArrow(float headWidthFactor, float headLengthFactor) {
+	  float headWidth = headWidthFactor * 200.0f;
+	  float headLength = headLengthFactor * 200.0f;
+	  
+	  pushMatrix();
+	  
+	  // Draw base
+	  translate(0, 0, -100);
+	  box(100, 100, 200);
+	  
+	  // Draw pointer
+	  translate(-headWidth/2, -50, -100);
+	  beginShape(QUAD_STRIP);
+	    vertex(0, 0 ,0);
+	    vertex(0, 100, 0);
+	    vertex(headWidth, 0 ,0);
+	    vertex(headWidth, 100, 0);
+	    vertex(headWidth/2, 0, -headLength);
+	    vertex(headWidth/2, 100, -headLength);
+	    vertex(0, 0 ,0);
+	    vertex(0, 100, 0);
+	  endShape();
+	  beginShape(TRIANGLES);
+	    vertex(0, 0, 0);
+	    vertex(headWidth, 0, 0);
+	    vertex(headWidth/2, 0, -headLength);
+	    vertex(0, 100, 0);
+	    vertex(headWidth, 100, 0);
+	    vertex(headWidth/2, 100, -headLength);
+	  endShape();
+	  
+	  popMatrix();
+	}
+
+	void drawBoard() {
+	  pushMatrix();
+
+	  rotateY(-radians(sensorclass.yaw - yawOffset));
+	  rotateX(-radians(sensorclass.pitch));
+	  rotateZ(radians(sensorclass.roll)); 
+
+	  // Board body
+	  fill(255, 0, 0);
+	  box(250, 20, 400);
+	  
+	  // Forward-arrow
+	  pushMatrix();
+	  translate(0, 0, -200);
+	  scale(0.5f, 0.2f, 0.25f);
+	  fill(0, 255, 0);
+	  drawArrow(1.0f, 2.0f);
+	  popMatrix();
+	    
+	  popMatrix();
+	}
+  
+  
+  ControlP5 cp5;
+
+  Object parent;
+
+  
 }

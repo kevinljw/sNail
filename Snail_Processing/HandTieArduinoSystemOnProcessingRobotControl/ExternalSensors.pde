@@ -94,7 +94,7 @@ public class ExternalSensors implements ControlListener{
 
 	private float [] parseSpaceSeparatedData(Serial port) throws Exception{
       String buf = port.readString();
-      print(buf);
+      // print(buf);
       String [] bufSplitArr = buf.split(" ");
       float [] parsedDataArr = new float[bufSplitArr.length];
 
@@ -120,14 +120,13 @@ public class ExternalSensors implements ControlListener{
 	    	if (showAnotherWindow == false) {
 				cf = addControlFrame("showingSensorData", 640,480, this);
 				showAnotherWindow = true;	
+			}	
+	    }
+	    else {
+	    	if (showAnotherWindow == true) {
+				cf.closeWindow();
+				showAnotherWindow = false;	
 			}
-
-	    	if (display9DOF){
-	     	
-	     	}
-	     	if (displayWeight){
-	     			
-	     	}	
 	    }
 	     
 	  // }
@@ -137,7 +136,7 @@ public class ExternalSensors implements ControlListener{
 
 ControlFrame addControlFrame(String theName, int theWidth, int theHeight, ExternalSensors sensor) {
   Frame f = new Frame(theName);
-  ControlFrame p = new ControlFrame(this, theWidth, theHeight);
+  ControlFrame p = new ControlFrame(this, theWidth, theHeight, f);
   f.add(p);
   p.init();
   p.sensorclass = sensor;
@@ -152,7 +151,7 @@ ControlFrame addControlFrame(String theName, int theWidth, int theHeight, Extern
 public class ControlFrame extends PApplet {
 
   int w, h;
-
+  Frame frame;
   int abc = 100;
 
   float yawOffset = 0.0f;
@@ -162,6 +161,10 @@ public class ControlFrame extends PApplet {
 	smooth();
 	noStroke();
 	frameRate(50);
+  }
+
+  public void closeWindow() {
+    frame.dispose();
   }
 
   public void draw() {
@@ -193,10 +196,11 @@ public class ControlFrame extends PApplet {
   private ControlFrame() {
   }
 
-  public ControlFrame(Object theParent, int theWidth, int theHeight) {
+  public ControlFrame(Object theParent, int theWidth, int theHeight, Frame f) {
     parent = theParent;
     w = theWidth;
     h = theHeight;
+    frame = f;
   }
 
 

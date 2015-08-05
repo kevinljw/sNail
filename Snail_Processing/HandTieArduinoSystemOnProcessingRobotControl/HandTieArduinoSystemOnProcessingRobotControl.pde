@@ -6,6 +6,7 @@ UIInteractionMgr uiInteractionMgr;
 AccelMgr accelMgr;
 RobotControl robotControl;
 GRTMgr grtMgr;
+ExternalSensors sensors;
 
 void setup() {
    size(900, 600);
@@ -14,8 +15,8 @@ void setup() {
    accelMgr = new AccelMgr();
    robotControl = new RobotControl(this);
    grtMgr = new GRTMgr(this);
+   sensors = new ExternalSensors(this);
    uiInteractionMgr = new UIInteractionMgr(this);
-
    listenerRegistrations();
    
    serialManager.notifyAllWithDiscoveredSerialPorts();
@@ -45,9 +46,16 @@ void keyPressed(){
    accelMgr.performKeyPress(key);
    robotControl.performKeyPress(key);
    grtMgr.performKeyPress(key);
+   sensors.performKeyPress(key);
 }
 
 void serialEvent(Serial port){
+   try {
+      sensors.parseDataFromSerial(port);
+   } catch (Exception e) {
+      println(e.getMessage());
+   }
+   
    try {
       serialManager.parseDataFromSerial(port);
    } catch (Exception e) {

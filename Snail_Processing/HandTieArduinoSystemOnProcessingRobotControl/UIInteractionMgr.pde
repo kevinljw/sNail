@@ -11,7 +11,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    // RadioButton properties
    RadioButton radioButton;
    DropdownList arduinoPortNamesDropdownList;
-   DropdownList robotPortNamesDropdownList;
+   DropdownList sensorsPortNamesDropdownList;
    public final static String RADIO_DISPLAY = "display";
    public final static float RADIO_HIDE_ITEMS = -1.0f;
    public final static float RADIO_SHOW_BAR_ITEM = 0.0f;
@@ -52,6 +52,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    // dropdown list
    public final static String DROPDOWN_ARDUINO_SERIAL_LIST = "Arduino Serial";
    public final static String DROPDOWN_ROBOT_SERIAL_LIST = "Robot Serial";
+   public final static String DROPDOWN_SENSORS_SERIAL_LIST = "Sensors Serial";
 
    public UIInteractionMgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
       this.mainClass = mainClass;
@@ -63,6 +64,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       cp5.addListener(mainClass.serialManager);
       cp5.addListener(mainClass.accelMgr);
       cp5.addListener(mainClass.robotControl);
+      cp5.addListener(mainClass.sensors);
       // cp5.addListener(mainClass.realtimeData);
       createUIForSerial();
    }
@@ -315,7 +317,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
                                         .setBackgroundColor(color(190))
                                         .setItemHeight(20)
                                     ;
-      robotPortNamesDropdownList = cp5.addDropdownList(DROPDOWN_ROBOT_SERIAL_LIST)
+      sensorsPortNamesDropdownList = cp5.addDropdownList(DROPDOWN_SENSORS_SERIAL_LIST)
                                         .setPosition(width*0.3, height*0.07)
                                         .setSize(200,200)
                                         .setBackgroundColor(color(190))
@@ -461,7 +463,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public void updateDiscoveredSerialPorts(String [] portNames){
       for (int i = 0; i < portNames.length; ++i) {
          arduinoPortNamesDropdownList.addItem(portNames[i], i);
-         robotPortNamesDropdownList.addItem(portNames[i], i);
+         sensorsPortNamesDropdownList.addItem(portNames[i], i);
       }
    }
    @Override

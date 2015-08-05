@@ -1,6 +1,6 @@
 #include <Wire.h>
 
-#define  ADXL345_ADDRESS (0xA6 >> 1)
+#define ADXL345_ADDRESS (0xA6 >> 1)
 #define ADXL345_REGISTER_XLSB (0x32)
 #define ADXL_REGISTER_PWRCTL (0x2D)
 #define ADXL_PWRCTL_MEASURE (1 << 3)
@@ -36,35 +36,95 @@ void setup() {
 }
 
 void loop() {
+
+  char buffer[10];
+  
+
    read_adxl345();
 
-   Serial.print("ACCEL: ");
-   Serial.print(accelerometer_data[0]);
-   Serial.print("\t");
-   Serial.print(accelerometer_data[1]);
-   Serial.print("\t");
-   Serial.print(accelerometer_data[2]);
-   Serial.print("\t");
 
-   read_hmc5843();
 
-   Serial.print("MAG: ");
-   Serial.print(magnetometer_data[0]);
-   Serial.print(",");
-   Serial.print(magnetometer_data[1]);
-   Serial.print(",");
-   Serial.print(magnetometer_data[2]);
-   Serial.print("\t");
+
+   // Serial.print("ACCEL: ");
+   // Serial.print(accelerometer_data[0]);
+   Serial.print(" ");
+   ltoa(accelerometer_data[0], buffer, 10);
+   // sprintf(buffer, "%lf" , );
+   Serial.print(buffer);
+   Serial.print(" ");
+   // Serial.print(accelerometer_data[1]);
+   Serial.print(" ");
+   ltoa(accelerometer_data[1], buffer, 10);
+   Serial.print(buffer);
+   Serial.print(" ");
+   // Serial.print(accelerometer_data[2]);
+   Serial.print(" ");
+   ltoa(accelerometer_data[2], buffer, 10);
+   Serial.print(buffer);
+   Serial.print(" ");
+
+   // read_hmc5843();
+
+   // Serial.print("MAG: ");
+   // Serial.print(magnetometer_data[0]);
+   // Serial.print(",");
+   // Serial.print(magnetometer_data[1]);
+   // Serial.print(",");
+   // Serial.print(magnetometer_data[2]);
+   // Serial.print("\t");
 
    read_itg3200();
 
-   Serial.print("GYRO: ");
-   Serial.print(gyro_data[0]);
-   Serial.print("\t");
-   Serial.print(gyro_data[1]);
-   Serial.print("\t");
-   Serial.print(gyro_data[2]);
-   Serial.print("\n");
+   // Serial.print("GYRO: ");
+   // Serial.print(gyro_data[0]);
+   // 
+   Serial.print(" ");
+   ltoa(gyro_data[0], buffer, 10);
+   Serial.print(buffer);
+   Serial.print(" ");
+   // Serial.print(gyro_data[1]);
+   // 
+   Serial.print(" ");
+   ltoa(gyro_data[1], buffer, 10);
+   Serial.print(buffer);
+   Serial.print(" ");
+   // Serial.print(gyro_data[2]);
+   Serial.print(" ");
+   ltoa(gyro_data[2], buffer, 10);
+   Serial.print(buffer);
+   Serial.print("\r\n");
+
+
+//16.4
+
+
+  dtostrf((double)accelerometer_data[0]/16384.0, 3, 5, buffer);
+
+   Serial.print(buffer);
+   Serial.print(" ");
+   // Serial.print(accelerometer_data[1]);
+   dtostrf((double)accelerometer_data[1]/16384.0, 3, 5, buffer);
+   Serial.print(buffer);
+   Serial.print(" ");
+   // Serial.print(accelerometer_data[2]);
+   dtostrf((double)accelerometer_data[2]/16384.0, 3, 5, buffer);
+   Serial.print(buffer);
+   Serial.print(" ");
+
+   dtostrf((double)gyro_data[0]/16.4, 3, 5, buffer);
+   Serial.print(buffer);
+   Serial.print(" ");
+   // Serial.print(gyro_data[1]);
+   // 
+   dtostrf((double)gyro_data[1]/16.4, 3, 5, buffer);
+   Serial.print(buffer);
+   Serial.print(" ");
+   // Serial.print(gyro_data[2]);
+   dtostrf((double)gyro_data[2]/16.4, 3, 5, buffer);
+   Serial.print(buffer);
+   Serial.print("\r\n");
+   Serial.print("\r\n");
+
 
    delay(10);
 }

@@ -5,8 +5,8 @@ public class GRTMgr implements SerialListener, GRTNotifier{
 
    //-----------------------------------GRT
    //Set the pipeline mode (CLASSIFICATION_MODE or REGRESSION_MODE), the number of inputs and the number of outputs
-   final int pipelineMode = GRT.CLASSIFICATION_MODE;
-   final int numInputs = SGManager.NUM_OF_GAUGES + AccelMgr.NUM_OF_AXIS;
+   final int pipelineMode = GRT.TIMESERIES_MODE;
+   final int numInputs = SGManager.NUM_OF_GAUGES;//AccelMgr.NUM_OF_AXIS;
    final int numOutputs = 1;
     
    public GRT grt = new GRT( pipelineMode, numInputs, numOutputs, "127.0.0.1", 5000, 5001, true );
@@ -39,9 +39,9 @@ public class GRTMgr implements SerialListener, GRTNotifier{
       for(int idx = 0; idx < SGManager.NUM_OF_GAUGES; idx++){
          data[idx] = mainClass.sgManager.getOneElongationValsOfGauges(idx);
       }
-      for(int idx = 0; idx < AccelMgr.NUM_OF_AXIS; idx++){
-         data[idx+SGManager.NUM_OF_GAUGES] = mainClass.accelMgr.getOneAxisDifference(idx);
-      }
+      // for(int idx = 0; idx < AccelMgr.NUM_OF_AXIS; idx++){
+      //    data[idx+SGManager.NUM_OF_GAUGES] = mainClass.accelMgr.getOneAxisDifference(idx);
+      // }
 
       grt.sendData( data );
 //        fill(color(200));

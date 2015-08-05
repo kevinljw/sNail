@@ -94,11 +94,11 @@ public class ExternalSensors implements ControlListener{
 
 	private float [] parseSpaceSeparatedData(Serial port) throws Exception{
       String buf = port.readString();
-      // print(buf);
+      print(buf);
       String [] bufSplitArr = buf.split(" ");
-      float [] parsedDataArr = new float[bufSplitArr.length-1];
+      float [] parsedDataArr = new float[bufSplitArr.length];
 
-      for (int i = 0; i < bufSplitArr.length-1; ++i){
+      for (int i = 0; i < bufSplitArr.length; ++i){
          parsedDataArr[i] = Float.parseFloat(bufSplitArr[i]);
          // print(parsedDataArr[i]+" ");
       }
@@ -116,23 +116,22 @@ public class ExternalSensors implements ControlListener{
 	}
 
 	public void draw(){
-		if (showAnotherWindow == false) {
-			cf = addControlFrame("showingSensorData", 640,480, this);
-			showAnotherWindow = true;	
-		}
-	  
-	    if (displayWeight){
-	    	
-	     }
-	     if (display9DOF){
+	    if (displayWeight || display9DOF){
+	    	if (showAnotherWindow == false) {
+				cf = addControlFrame("showingSensorData", 640,480, this);
+				showAnotherWindow = true;	
+			}
+
+	    	if (display9DOF){
 	     	
-	     }
+	     	}
+	     	if (displayWeight){
+	     			
+	     	}	
+	    }
+	     
 	  // }
 	}
-
-
-
-	
 }
 
 
@@ -181,11 +180,13 @@ public class ControlFrame extends PApplet {
 	text("Point FTDI connector towards screen and press 'a' to align", 10, 25);
 	// // // Output angles
 	pushMatrix();
-	translate(10, height - 10);
+	translate(10, height - 50);
 	textAlign(LEFT);
 	text("Yaw: " + ((int) sensorclass.yaw), 0, 0);
 	text("Pitch: " + ((int) sensorclass.pitch), 150, 0);
 	text("Roll: " + ((int) sensorclass.roll), 300, 0);
+
+	text("Weight: " + ((int) sensorclass.weight), 450, 0);
 	popMatrix();
   }
   

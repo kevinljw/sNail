@@ -1,6 +1,6 @@
 #include "AD5231.h"
 
-AD5231::AD5231(uint8_t slave_select){
+AD5231::AD5231(uint16_t slave_select){
 	SPI.begin();
 	SPI.setBitOrder(MSBFIRST);
 

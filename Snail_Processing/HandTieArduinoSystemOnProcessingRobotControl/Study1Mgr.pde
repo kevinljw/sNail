@@ -106,7 +106,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		userStudyFrame = addUserStudyOneFrame("User Study One", 320, 480, this);
 		sensors.showWindow();
 		//init the first time, wont receiving data immediately, need to press startRecording
-		// nextTask();
+		nextTask();
 		UserProfile.createProfile();
 	}
 

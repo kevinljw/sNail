@@ -127,18 +127,17 @@ public class ExternalSensors implements ControlListener{
 	}
 
 	public void draw(){
-	    if (displayWeight || display9DOF){
-	    	if (showAnotherWindow == false) {
-				cf = addControlFrame("showingSensorData", 640,480, this);
-				showAnotherWindow = true;	
-			}	
-	    }
-	    else {
-	    	if (showAnotherWindow == true) {
-				cf.closeWindow();
-				showAnotherWindow = false;	
-			}
-	    }
+	}
+
+
+	public void showWindow() {
+		cf = addControlFrame("showingSensorData", 640,480, this);
+		showAnotherWindow = true;	
+	}
+
+	public void closeWindow() {
+		cf.closeWindow();
+		showAnotherWindow = false;	
 	}
 }
 

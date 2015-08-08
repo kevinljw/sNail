@@ -1,6 +1,23 @@
 import java.awt.Frame;
 import java.awt.BorderLayout;
 import controlP5.*;
+import java.util.ArrayList;
+
+
+public class StudyOneTask
+{
+	
+	public float pitch;
+	public float roll;
+	public float force;
+
+	public StudyOneTask(float pitch, float roll, float force) {
+		this.pitch = pitch;
+		this.roll = roll;
+		this.force = force;
+	}
+}
+
 
 public class Study1Mgr implements ControlListener, SerialListener {
 
@@ -8,10 +25,23 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	PApplet mainClass;
 	ExternalSensors sensors;
 
-	private StrainGauge [] gauges = new StrainGauge[SGManager.NUM_OF_GAUGES];
+	//self variable
 	private SerialNotifier serialNotifier;
-
 	boolean currentDoing = false;
+	boolean currentRecording = false;
+	int currentTaskNum = 0;
+	int currentSavedRawDataNum = 0;
+	Table table;
+
+	//task
+	public final static float TOLERANCE_OF_ROLL_YAW_PITCH = 5;
+	public final static float TOLERANCE_OF_FORCE = 20;
+	public final static float NEWTON_TO_GRAMS = 100.5;
+	public final static int AMOUNT_OF_RECEIVED_RAW_DATA = 50;
+	float pitch []= {65, 45, 25, 15};
+	float roll []= {-15, 0, 15, 45, 90};
+	float force []= {1, 2, 3, 4, 5};
+	ArrayList<StudyOneTask> tasks = new ArrayList<StudyOneTask>();
 
 	//external window
 	UserStudyOneFrame userStudyFrame = null;
@@ -20,6 +50,14 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	public Study1Mgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
 		this.mainClass = mainClass;
 		this.sensors = mainClass.sensors;
+
+		for (int i = 0; i < this.pitch.length; ++i) {
+			for (int j = 0; j < this.roll.length; ++j) {
+				for (int k = 0; k < this.force.length; ++k) {
+					tasks.add(new StudyOneTask(this.pitch[i], this.roll[j], this.force[k] * NEWTON_TO_GRAMS ));
+				}
+			}
+		}
 	}
 
 	@Override
@@ -41,29 +79,121 @@ public class Study1Mgr implements ControlListener, SerialListener {
       	if (userStudyFrame != null) {
       		if (!userStudyFrame.launchComplete)  return;
       		else if (theEvent.getName().equals(UserStudyOneFrame.START_RECORD)) {
-	      		println("START_RECORD");
+	      		startRecording();
 	      	}
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.STOP_RECORD)) {
-	      		println("STOP_RECORD");
+	      		stopRecording();
 	      	}
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.NEXT_TASK)) {
-	      		println("NEXT_TASK");
+	      		nextTask();
 	      	}
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.PREVIOUS_TASK)) {
-	      		println("PREVIOUS_TASK");
+	      		preTask();
 	      	}
       	}
 	}
 
+
 	void startStudy() {
 		userStudyFrame = addUserStudyOneFrame("User Study One", 320, 480, this);
+		sensors.showWindow();
+		UserProfile.createProfile();
 	}
 
 	void endStudy()
 	{
+		if (currentRecording) {
+			stopRecording();
+		}
 		userStudyFrame.closeWindow();
+		sensors.closeWindow();
 	}
 
+	void startRecording()
+	{
+		currentRecording = true;
+	}
+
+	void stopRecording()
+	{
+		currentRecording = false;
+		//this means pause for some users need to relax for a min
+		
+	}
+
+	void nextTask() {
+
+		table = new Table();
+  
+		table.addColumn("userID");
+		table.addColumn("roll");
+		table.addColumn("yaw");
+		table.addColumn("pitch");
+		table.addColumn("force");
+		for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+			table.addColumn("SG" + i);	
+		}
+		currentTaskNum++;
+		currentSavedRawDataNum = 0;
+	}
+
+	void preTask() {
+		currentTaskNum--;
+	}
+
+
+	boolean isApplicableForSaving(){
+		StudyOneTask currentTask = tasks.get(currentTaskNum);
+		if (!toleranceCalculation(sensors.roll, currentTask.roll, 0)){ 
+			return false; 
+		}
+		if (!toleranceCalculation(sensors.pitch, currentTask.pitch, 0)) { 
+			return false; 
+		}
+		if (!toleranceCalculation(sensors.weight, currentTask.force, 1)) { 
+			return false; 
+		}
+
+		return true;
+	}
+
+	boolean toleranceCalculation(float values, float traget, int type)
+	{
+		//type 0 - roll yaw pitch, 1 = force
+		//
+		if (type == 0) {
+			if ((traget + TOLERANCE_OF_ROLL_YAW_PITCH >= values) || (traget - TOLERANCE_OF_ROLL_YAW_PITCH <= values)) {
+				return true;	
+			}
+			else
+			{
+				return false;
+			}	
+		}
+		else if (type == 1) {
+			if ((traget + TOLERANCE_OF_FORCE >= values) || (traget - TOLERANCE_OF_FORCE <= values)) {
+				return true;	
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	void saveToFile(float [] values)
+	{
+		// table.addRow(UserProfile.USER_ID, sensors.roll, sensors.yaw, sensors.pitch, sensors.weight, values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8]);
+		currentSavedRawDataNum++;
+		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
+			// table.saveData();
+			nextTask();
+		}
+	}
 
 	//impelments -- SerialListener
 	public void registerToSerialNotifier(SerialNotifier notifier){
@@ -81,9 +211,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	@Override
 	public void updateAnalogVals(float [] values)
 	{
-		// for (int i = 0; i < axis.length; ++i) {
-		// 	axis[i].setNewValue(values[i+SGManager.NUM_OF_GAUGES]);
-		// }
+		if (isApplicableForSaving() && currentRecording) {
+			saveToFile(values);
+		}
 	}
 	@Override
 	public void updateCaliVals(float [] values){}

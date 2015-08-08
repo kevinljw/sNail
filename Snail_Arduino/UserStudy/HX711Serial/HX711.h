@@ -23,7 +23,7 @@ public:
 	Hx711(uint8_t pin_din, uint8_t pin_slk);
 	virtual ~Hx711();
 	long getValue();
-	long averageValue(byte times = 5);
+	long averageValue(byte times = 1);
 	void setOffset(long offset);
 	void setScale(float scale = 742.f);
 	float getGram();

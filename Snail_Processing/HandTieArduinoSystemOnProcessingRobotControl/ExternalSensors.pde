@@ -128,8 +128,6 @@ public class ExternalSensors implements ControlListener{
 				showAnotherWindow = false;	
 			}
 	    }
-	     
-	  // }
 	}
 }
 

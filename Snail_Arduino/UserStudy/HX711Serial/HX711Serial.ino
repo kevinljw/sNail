@@ -10,7 +10,7 @@ void setup() {
 
 void loop() {
 
-  Serial.print(scale.getGram(), 1);
-  Serial.println(" g");
+  Serial.println(scale.getGram(), 1);
+  // Serial.println();
 
 }

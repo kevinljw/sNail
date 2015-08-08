@@ -50,6 +50,11 @@ public class StrainGauge{
       return calibrationValue;
    }
 
+   public float getDifferenceValue(){
+      return enable ? (float)newValue - calibrationValue : 0.0f;
+   }
+
+
    public float getElongationValue(){
       // return random(-2, 4);
       return enable ? (float)newValue/calibrationValue : 0.0f;

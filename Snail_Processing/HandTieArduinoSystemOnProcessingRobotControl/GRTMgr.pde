@@ -37,7 +37,7 @@ public class GRTMgr implements SerialListener, GRTNotifier{
       //Grab the mouse data and send it to the GRT backend via OSC
       
       for(int idx = 0; idx < SGManager.NUM_OF_GAUGES; idx++){
-         data[idx] = mainClass.sgManager.getOneElongationValsOfGauges(idx);
+         data[idx] = mainClass.sgManager.getOneDifferenceValsOfGauges(idx);
       }
       // for(int idx = 0; idx < AccelMgr.NUM_OF_AXIS; idx++){
       //    data[idx+SGManager.NUM_OF_GAUGES] = mainClass.accelMgr.getOneAxisDifference(idx);

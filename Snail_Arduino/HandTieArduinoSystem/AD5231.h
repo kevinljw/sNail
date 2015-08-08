@@ -7,13 +7,13 @@
 class AD5231
 {
 public:
-   AD5231(uint8_t slave_select);
+   AD5231(uint16_t slave_select);
 
    void resistance_write(uint16_t value);
 
 private:
    byte command = 0xB0;
-   uint8_t slave_select; 
+   uint16_t slave_select; 
 };
 
 #endif // AD5231_h

@@ -72,6 +72,10 @@ public class SGManager implements ControlListener, SerialListener{
       return gauges[index].getElongationValue();
    }
 
+   public float getOneDifferenceValsOfGauges(int index){
+      return gauges[index].getDifferenceValue();
+   }
+
    public float [] getOneBarBaseCenterOfGauges(int index){
       return gauges[index].getBarBaseCenter();
    }

@@ -15,8 +15,12 @@ public class ExternalSensors implements ControlListener{
 	public float roll = 0.0;
 	public float yaw = 0.0;
 	public float pitch = 0.0;
-
-	public float weight = 0.0;
+   public float instruct_roll = 0.0;
+   public float instruct_yaw = -15.0;
+   public float instruct_pitch = 45.0;
+   
+   
+   public float weight = 0.0;
 	
 	
 	boolean showAnotherWindow = false;
@@ -112,7 +116,14 @@ public class ExternalSensors implements ControlListener{
 		      if (showAnotherWindow) {
 		      	cf.yawOffset = yaw;
 		      }
-		}
+                      if (showAnotherWindow) {
+                        cf.rollOffset = roll;
+                      }
+                      if (showAnotherWindow) {
+                        cf.pitchOffset = pitch;
+                      }
+                      
+      }
 	}
 
 	public void draw(){
@@ -153,6 +164,8 @@ public class ControlFrame extends PApplet {
   int abc = 100;
 
   float yawOffset = 0.0f;
+  float rollOffset = 0.0f;
+  float pitchOffset = 0.0f;
   ExternalSensors sensorclass = null;
   public void setup() {
     size(640, 480, OPENGL);
@@ -166,19 +179,24 @@ public class ControlFrame extends PApplet {
   }
 
   public void draw() {
-    background(0);
+        background(0);
   	lights();
 
   	pushMatrix();
 	translate(width/2, height/2, -350);
+   instructBoard(sensorclass.instruct_yaw, sensorclass.instruct_pitch, sensorclass.instruct_roll);
 	drawBoard();
-	popMatrix();
+   if(key == 'd'){
+      cleanInstruct();
+   }
+   popMatrix();
 	
 	// textFont(font, 20);
 	fill(255);
 	textAlign(LEFT);
 	// // Output info text
 	text("Point FTDI connector towards screen and press 'a' to align", 10, 25);
+   text("Perform gesture after you make two arrow overlap", 10, 40);
 	// // // Output angles
 	pushMatrix();
 	translate(10, height - 50);
@@ -186,6 +204,9 @@ public class ControlFrame extends PApplet {
 	text("Yaw: " + ((int) sensorclass.yaw), 0, 0);
 	text("Pitch: " + ((int) sensorclass.pitch), 150, 0);
 	text("Roll: " + ((int) sensorclass.roll), 300, 0);
+   text("Instruct : Yaw: " + ((int) sensorclass.instruct_yaw), 0, 20);
+   text("Pitch: " + ((int) sensorclass.instruct_pitch), 150, 20);
+   text("Roll: " + ((int) sensorclass.instruct_roll), 300, 20);
 
 	text("Weight: " + ((int) sensorclass.weight), 450, 0);
 	popMatrix();
@@ -239,13 +260,13 @@ public class ControlFrame extends PApplet {
 	  
 	  popMatrix();
 	}
-
+   
 	void drawBoard() {
 	  pushMatrix();
 
 	  rotateY(-radians(sensorclass.yaw - yawOffset));
-	  rotateX(-radians(sensorclass.pitch));
-	  rotateZ(radians(sensorclass.roll)); 
+	  rotateX(-radians(sensorclass.pitch - pitchOffset));
+	  rotateZ(radians(sensorclass.roll - rollOffset)); 
 
 	  // Board body
 	  fill(255, 0, 0);
@@ -262,6 +283,32 @@ public class ControlFrame extends PApplet {
 	  popMatrix();
 	}
   
+  void instructBoard(float Y, float X, float Z) {
+     pushMatrix();
+
+     rotateY(radians(Y));
+     rotateX(radians(X));
+     rotateZ(radians(sensorclass.roll)); 
+
+     // Board body
+     fill(255, 255, 0);
+     box(250, 20, 400);
+     
+     // Forward-arrow
+     pushMatrix();
+     translate(0, 0, -200);
+     scale(0.5f, 0.2f, 0.25f);
+     fill(0, 255, 0);
+     drawArrow(1.0f, 2.0f);
+     popMatrix();
+       
+     popMatrix();
+  }
+
+  void cleanInstruct(){
+     background(0, 0, 0);
+     drawBoard();
+  }
   
   ControlP5 cp5;
 

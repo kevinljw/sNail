@@ -7,7 +7,7 @@ public class StudyMgr implements SerialListener{
    public final static int NUM_OF_EACH_TRAINING_DATA = 20;
    public final static int SAMPLING_FPS = 20;
    public final static int SAMPLING_PERIOD = 1000/SAMPLING_FPS;
-
+   
    public final static int NUM_OF_SG = 19;
    public final static int NUM_OF_SG_FIRSTROW = 9;
 

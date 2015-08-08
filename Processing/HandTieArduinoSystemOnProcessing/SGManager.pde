@@ -1,6 +1,8 @@
 public class SGManager implements ControlListener, SerialListener{
    
    public final static int NUM_OF_GAUGES = 15;
+   public final static int TOLERANCE_FOR_USER_STUDY_1 = 30;
+   
    public boolean hideBar = false;
    public boolean hideNormalText = false;
    public boolean hideCalibratingText = true;

@@ -187,10 +187,19 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void saveToFile(float [] values)
 	{
-		// table.addRow(UserProfile.USER_ID, sensors.roll, sensors.yaw, sensors.pitch, sensors.weight, values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8]);
+		TableRow newRow = table.addRow();
+		newRow.setInt("userID", Integer.parseInt(UserProfile.USER_ID));
+		newRow.setFloat("roll", sensors.roll);
+		newRow.setFloat("yaw", sensors.yaw);
+		newRow.setFloat("pitch", sensors.pitch);
+		newRow.setFloat("weight", sensors.weight);
+
+		for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+			newRow.setFloat("SG" + i, values[i]);
+		}
 		currentSavedRawDataNum++;
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
-			// table.saveData();
+			saveTable(table, UserProfile.USER_ID + "/StudyOne/" +  currentTaskNum +".csv");
 			nextTask();
 		}
 	}

@@ -15,9 +15,9 @@ public class ExternalSensors implements ControlListener{
 	public float roll = 0.0;
 	public float yaw = 0.0;
 	public float pitch = 0.0;
-   public float instruct_roll = 0.0;
-   public float instruct_yaw = -15.0;
-   public float instruct_pitch = 45.0;
+	public float instruct_roll = 0.0;
+	public float instruct_yaw = -15.0;
+	public float instruct_pitch = 45.0;
    
    
    public float weight = 0.0;

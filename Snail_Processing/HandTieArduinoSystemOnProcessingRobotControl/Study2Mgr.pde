@@ -31,11 +31,13 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
 	void startStudy() {
 		userStudyFrame = addUserStudyTwoFrame("User Study Two", 320, 480, this);
+		sensors.showWindow();
 	}
 
 	void endStudy()
 	{
 		userStudyFrame.closeWindow();
+		sensors.closeWindow();
 	}
 
 	public void registerToSerialNotifier(SerialNotifier notifier){

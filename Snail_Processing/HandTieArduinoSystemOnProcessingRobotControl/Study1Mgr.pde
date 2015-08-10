@@ -93,6 +93,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	      	// 	stopRecording();
 	      	// }
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.NEXT_TASK)) {
+	      		currentTaskNum++;
 	      		nextTask();
 	      	}
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.PREVIOUS_TASK)) {
@@ -154,9 +155,13 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		else{
 			table = loadTable(nameOfFile, "header, csv");
 		}
+		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+		println("currentTask: "+currentTask);
+		sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
 	}
 
 	void preTask() {
+		stopRecording();
 		currentTaskNum--;
 		userStudyFrame.updateProgress(currentTaskNum);
 	}
@@ -165,15 +170,19 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	boolean isApplicableForSaving(){
 		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 		if (!toleranceCalculation(sensors.roll, currentTask.roll, 0)){ 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
 			return false; 
 		}
 		if (!toleranceCalculation(sensors.pitch, currentTask.pitch, 0)) { 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
 			return false; 
 		}
 		if (!toleranceCalculation(sensors.weight, currentTask.force, 1)) { 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
 			return false; 
 		}
 
+		sensors.cleanInstruct();
 		return true;
 	}
 

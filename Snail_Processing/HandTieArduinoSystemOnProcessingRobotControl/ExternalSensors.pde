@@ -139,6 +139,16 @@ public class ExternalSensors implements ControlListener{
 		cf.closeWindow();
 		showAnotherWindow = false;	
 	}
+
+
+	public void setCurrentInstruct(float pitch, float roll) {
+		this.instruct_pitch = pitch;
+		this.instruct_roll = roll;
+	}
+
+	public void cleanInstruct() {
+		cf.cleanInstruct();	
+	}
 }
 
 
@@ -178,7 +188,7 @@ public class ControlFrame extends PApplet {
   }
 
   public void draw() {
-        background(0);
+  	background(0);
   	lights();
 
   	pushMatrix();
@@ -282,12 +292,12 @@ public class ControlFrame extends PApplet {
 	  popMatrix();
 	}
   
-  void instructBoard(float Y, float X, float Z) {
+  void instructBoard(float y, float x, float z) {
      pushMatrix();
 
-     rotateY(radians(Y));
-     rotateX(radians(X));
-     rotateZ(radians(sensorclass.roll)); 
+     rotateY(radians(sensorclass.yaw));
+     rotateX(radians(x));
+     rotateZ(radians(z)); 
 
      // Board body
      fill(255, 255, 0);

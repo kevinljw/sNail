@@ -82,7 +82,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
       		if (!userStudyFrame.launchComplete)  return;
       		else if (theEvent.getName().equals(UserStudyOneFrame.START_RECORD)) {
 	      		if (currentRecording) {
-	      			stopRecording();	
+	      			stopRecording();
 	      		}
 	      		else {
 	      			startRecording();
@@ -127,6 +127,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void stopRecording()
 	{
+		userStudyFrame.toggle();
 		currentRecording = false;
 		//this means pause for some users need to relax for a min
 		
@@ -160,9 +161,28 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	}
 
 	void preTask() {
+		
+
+		
 		stopRecording();
-		currentTaskNum--;
-		userStudyFrame.updateProgress(currentTaskNum);
+
+		if (table.getRowCount() > 0) {
+			//just drop the rows by a new table
+			nextTask();
+		}
+		else
+		{
+			currentTaskNum--;
+			String nameOfFile = UserProfile.USER_ID + "/StudyOne/" +  currentTaskNum % taskCount +".csv";
+			table = loadTable(nameOfFile, "header, csv");
+
+			for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
+				table.removeRow(table.getRowCount() -1 );  // Removes the first row	
+			}
+
+			saveTable(table, nameOfFile);
+			userStudyFrame.updateProgress(currentTaskNum);
+		}		
 	}
 
 
@@ -322,6 +342,7 @@ public class UserStudyOneFrame extends PApplet {
   Object parent;
 
   private Knob progressKnob;
+  private Toggle toogleRecording;
   public boolean launchComplete = false;
 
   public void setup() {
@@ -344,7 +365,7 @@ public class UserStudyOneFrame extends PApplet {
   }
 
   void drawUI() {
-  	cp5.addToggle(START_RECORD)
+  	toogleRecording = cp5.addToggle(START_RECORD)
      .setColorLabel(color(0))
      .setBroadcast(false)
      .setValue(0)
@@ -389,6 +410,10 @@ public class UserStudyOneFrame extends PApplet {
 
   public void updateProgress(int num) {
   	progressKnob.setValue(num);
+  }
+
+  public void toggle() {
+  	toogleRecording.toggle();
   }
   
 

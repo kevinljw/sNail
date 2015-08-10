@@ -295,7 +295,7 @@ public class ControlFrame extends PApplet {
   void instructBoard(float y, float x, float z) {
      pushMatrix();
 
-     rotateY(radians(sensorclass.yaw));
+     rotateY(radians(0));
      rotateX(radians(x));
      rotateZ(radians(z)); 
 

@@ -116,8 +116,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (currentRecording) {
 			stopRecording();
 		}
-		userStudyFrame.closeWindow();
 		sensors.closeWindow();
+		userStudyFrame.closeWindow();
 	}
 
 	void startRecording()
@@ -156,7 +156,6 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			table = loadTable(nameOfFile, "header, csv");
 		}
 		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-		println("currentTask: "+currentTask);
 		sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
 	}
 

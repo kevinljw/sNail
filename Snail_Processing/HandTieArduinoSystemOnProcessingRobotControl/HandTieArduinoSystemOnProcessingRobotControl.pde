@@ -35,9 +35,10 @@ void draw() {
 void listenerRegistrations(){
    sgManager.registerToSerialNotifier(serialManager);
    uiInteractionMgr.registerToSerialNotifier(serialManager);
-   accelMgr.registerToSerialNotifier(serialManager);
+   // accelMgr.registerToSerialNotifier(serialManager);
    grtMgr.registerToSerialNotifier(serialManager);
    study1Mgr.registerToSerialNotifier(serialManager);
+   
 
    serialManager.registerToGRTNotifier(grtMgr);
    robotControl.registerToGRTNotifier(grtMgr);
@@ -47,7 +48,7 @@ void keyPressed(){
    uiInteractionMgr.performKeyPress(key);
    serialManager.performKeyPress(key);
    sgManager.performKeyPress(key);
-   accelMgr.performKeyPress(key);
+   // accelMgr.performKeyPress(key);
    robotControl.performKeyPress(key);
    grtMgr.performKeyPress(key);
    sensors.performKeyPress(key);

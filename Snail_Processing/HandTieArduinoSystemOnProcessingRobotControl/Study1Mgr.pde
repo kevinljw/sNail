@@ -187,21 +187,27 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 
 	boolean isApplicableForSaving(){
-		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-		if (!toleranceCalculation(sensors.roll, currentTask.roll, 0)){ 
-			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
-			return false; 
-		}
-		if (!toleranceCalculation(sensors.pitch, currentTask.pitch, 0)) { 
-			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
-			return false; 
-		}
-		if (!toleranceCalculation(sensors.weight, currentTask.force, 1)) { 
-			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
-			return false; 
-		}
 
-		sensors.cleanInstruct();
+		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+
+		float[] datas = sensors.getRollYawPitch();
+		println("datas[0]: "+datas[0] + "datas[2]: "+datas[2]);
+		if (toleranceCalculation(datas[0], currentTask.roll, 0) == false){ 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
+			return false; 
+		}
+		if (toleranceCalculation(datas[2], currentTask.pitch, 0) == false) { 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
+			return false; 
+		}
+		// if (toleranceCalculation(sensors.weight, currentTask.force, 1)  == false) { 
+		// 	sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
+		// 	return false; 
+		// }
+
+		println("isApplicableForSaving");
+
+		// sensors.cleanInstruct();
 		return true;
 	}
 
@@ -210,7 +216,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		//type 0 - roll yaw pitch, 1 = force
 		//
 		if (type == 0) {
-			if ((traget + TOLERANCE_OF_ROLL_YAW_PITCH >= values) || (traget - TOLERANCE_OF_ROLL_YAW_PITCH <= values)) {
+			if ((traget + TOLERANCE_OF_ROLL_YAW_PITCH >= values) && (traget - TOLERANCE_OF_ROLL_YAW_PITCH <= values)) {
 				return true;	
 			}
 			else
@@ -219,7 +225,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			}	
 		}
 		else if (type == 1) {
-			if ((traget + TOLERANCE_OF_FORCE >= values) || (traget - TOLERANCE_OF_FORCE <= values)) {
+			if ((traget + TOLERANCE_OF_FORCE >= values) && (traget - TOLERANCE_OF_FORCE <= values)) {
 				return true;	
 			}
 			else
@@ -235,17 +241,22 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void saveToFile(float [] values)
 	{
+		println("saveToFile!!");
+
+		float [] datas = sensors.getRollYawPitch();
 		TableRow newRow = table.addRow();
 		newRow.setInt("userID", Integer.parseInt(UserProfile.USER_ID));
-		newRow.setFloat("roll", sensors.roll);
-		newRow.setFloat("yaw", sensors.yaw);
-		newRow.setFloat("pitch", sensors.pitch);
-		newRow.setFloat("weight", sensors.weight);
-
+		newRow.setFloat("roll", datas[0]);
+		newRow.setFloat("yaw", datas[1]);
+		newRow.setFloat("pitch", datas[2]);
+		newRow.setFloat("force", sensors.weight);
 		for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
 			newRow.setFloat("SG" + i, values[i]);
 		}
+
 		currentSavedRawDataNum++;
+
+		println("currentSavedRawDataNum: "+currentSavedRawDataNum);
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
 			saveTable(table, UserProfile.USER_ID + "/StudyOne/" +  currentTaskNum % taskCount +".csv");
 			currentTaskNum++;
@@ -253,6 +264,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 			currentSavedRawDataNum = 0;
 			nextTask();
+
+			println("AMOUNT_OF_RECEIVED_RAW_DATA !!!!!");
 		}
 	}
 
@@ -266,8 +279,10 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		}
 	}
 
-	//impelments -- SerialListener
-	public void registerToSerialNotifier(SerialNotifier notifier){
+
+	@Override
+	public void registerToSerialNotifier(SerialNotifier notifier)
+	{
 		notifier.registerForSerialListener(this);
 	  	serialNotifier = notifier;
 	}
@@ -282,26 +297,28 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	@Override
 	public void updateAnalogVals(float [] values)
 	{
-		if (isApplicableForSaving() && currentRecording) {
-			saveToFile(values);
+		if (userStudyFrame != null) {
+			if (currentRecording && isApplicableForSaving()) {
+				saveToFile(values);
+			}
 		}
+		
 	}
 	@Override
 	public void updateCaliVals(float [] values){}
-
- 	@Override
+	@Override
 	public void updateTargetAnalogValsMinAmp(float [] values){}
- 	@Override
+	@Override
 	public void updateTargetAnalogValsWithAmp(float [] values){}
- 	@Override
+	@Override
 	public void updateBridgePotPosVals(float [] values){}
- 	@Override
+	@Override
 	public void updateAmpPotPosVals(float [] values){}
- 	@Override
+	@Override
 	public void updateCalibratingValsMinAmp(float [] values){}
- 	@Override
+	@Override
 	public void updateCalibratingValsWithAmp(float [] values){}
- 	@Override
+	@Override
 	public void updateReceiveRecordSignal(){}
 
 

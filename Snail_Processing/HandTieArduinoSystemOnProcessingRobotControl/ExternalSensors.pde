@@ -18,7 +18,9 @@ public class ExternalSensors implements ControlListener{
 	public float instruct_roll = 0.0;
 	public float instruct_yaw = -15.0;
 	public float instruct_pitch = 45.0;
-   
+	public float yawOffset = 0.0f;
+  	public float rollOffset = 0.0f;
+  	public float pitchOffset = 0.0f;
    
    public float weight = 0.0;
 	
@@ -28,6 +30,16 @@ public class ExternalSensors implements ControlListener{
 
 	PApplet mainClass;
 	Serial sensorsPort;
+
+	public float[] getRollYawPitch() {
+		float[] datas = new float[3];
+
+		datas[0] = roll - rollOffset;
+		datas[1] = yaw - yawOffset;
+		datas[2] = -(pitch - pitchOffset);
+
+		return datas;
+	}
 
 	public ExternalSensors(PApplet mainClass){
       this.mainClass = mainClass;
@@ -114,14 +126,14 @@ public class ExternalSensors implements ControlListener{
 		switch (k) {
 		    case 'a':  // Align screen with Razor
 		      if (showAnotherWindow) {
-		      	cf.yawOffset = yaw;
+		      	yawOffset = yaw;
 		      }
-                      if (showAnotherWindow) {
-                        cf.rollOffset = roll;
-                      }
-                      if (showAnotherWindow) {
-                        cf.pitchOffset = pitch;
-                      }
+              if (showAnotherWindow) {
+                rollOffset = roll;
+              }
+              if (showAnotherWindow) {
+                pitchOffset = pitch;
+              }
                       
       }
 	}
@@ -172,9 +184,7 @@ public class ControlFrame extends PApplet {
   Frame frame;
   int abc = 100;
 
-  float yawOffset = 0.0f;
-  float rollOffset = 0.0f;
-  float pitchOffset = 0.0f;
+  
   ExternalSensors sensorclass = null;
   public void setup() {
     size(640, 480, OPENGL);
@@ -210,9 +220,9 @@ public class ControlFrame extends PApplet {
 	pushMatrix();
 	translate(10, height - 50);
 	textAlign(LEFT);
-	text("Yaw: " + ((int) sensorclass.yaw), 0, 0);
-	text("Pitch: " + ((int) sensorclass.pitch), 150, 0);
-	text("Roll: " + ((int) sensorclass.roll), 300, 0);
+	text("Yaw: " + ((int) sensorclass.yaw - sensorclass.yawOffset), 0, 0);
+	text("Pitch: " + ((int) - (sensorclass.pitch - sensorclass.pitchOffset)), 150, 0);
+	text("Roll: " + ((int) sensorclass.roll - sensorclass.rollOffset), 300, 0);
    text("Instruct : Yaw: " + ((int) sensorclass.instruct_yaw), 0, 20);
    text("Pitch: " + ((int) sensorclass.instruct_pitch), 150, 20);
    text("Roll: " + ((int) sensorclass.instruct_roll), 300, 20);
@@ -229,6 +239,10 @@ public class ControlFrame extends PApplet {
     w = theWidth;
     h = theHeight;
     frame = f;
+  }
+  public void cleanInstruct(){
+     background(0, 0, 0);
+     drawBoard();
   }
 
 
@@ -273,9 +287,9 @@ public class ControlFrame extends PApplet {
 	void drawBoard() {
 	  pushMatrix();
 
-	  rotateY(-radians(sensorclass.yaw - yawOffset));
-	  rotateX(-radians(sensorclass.pitch - pitchOffset));
-	  rotateZ(radians(sensorclass.roll - rollOffset)); 
+	  rotateY(-radians(sensorclass.yaw - sensorclass.yawOffset));
+	  rotateX(-radians(sensorclass.pitch - sensorclass.pitchOffset));
+	  rotateZ(radians(sensorclass.roll - sensorclass.rollOffset)); 
 
 	  // Board body
 	  fill(255, 0, 0);
@@ -307,17 +321,14 @@ public class ControlFrame extends PApplet {
      pushMatrix();
      translate(0, 0, -200);
      scale(0.5f, 0.2f, 0.25f);
-     fill(0, 255, 0);
+     fill(0, 125, 0);
      drawArrow(1.0f, 2.0f);
      popMatrix();
        
      popMatrix();
   }
 
-  void cleanInstruct(){
-     background(0, 0, 0);
-     drawBoard();
-  }
+  
   
   ControlP5 cp5;
 

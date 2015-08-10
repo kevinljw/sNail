@@ -138,7 +138,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
 			endStudy();
 		}
-		String nameOfFile = UserProfile.USER_ID + "/StudyOne/" +  currentTaskNum % taskCount +".csv";
+		String nameOfFile = "StudyOne/" + UserProfile.USER_ID + "/" +  currentTaskNum % taskCount +".csv";
 
 		if(!checkIfFileExist(nameOfFile))
 		{
@@ -150,7 +150,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			table.addColumn("pitch");
 			table.addColumn("force");
 			for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
-				table.addColumn("SG" + i);	
+				table.addColumn("SG" + i);
+				table.addColumn("SG_E" + i);
+				table.addColumn("SG_D" + i);
 			}
 		}
 		else{
@@ -173,7 +175,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		else
 		{
 			currentTaskNum--;
-			String nameOfFile = UserProfile.USER_ID + "/StudyOne/" +  currentTaskNum % taskCount +".csv";
+			String nameOfFile = "StudyOne/" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv";
 			table = loadTable(nameOfFile, "header, csv");
 
 			for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
@@ -252,13 +254,15 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		newRow.setFloat("force", sensors.weight);
 		for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
 			newRow.setFloat("SG" + i, values[i]);
+			newRow.setFloat("SG_E" + i, sgManager.getOneElongationValsOfGauges(i));
+			newRow.setFloat("SG_D" + i, sgManager.getOneDifferenceValsOfGauges(i));
 		}
 
 		currentSavedRawDataNum++;
 
 		println("currentSavedRawDataNum: "+currentSavedRawDataNum);
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
-			saveTable(table, UserProfile.USER_ID + "/StudyOne/" +  currentTaskNum % taskCount +".csv");
+			saveTable(table, "StudyOne/" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv");
 			currentTaskNum++;
 			userStudyFrame.updateProgress(currentTaskNum);
 

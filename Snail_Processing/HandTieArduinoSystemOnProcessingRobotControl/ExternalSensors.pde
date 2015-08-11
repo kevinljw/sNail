@@ -7,7 +7,7 @@ public class ExternalSensors implements ControlListener{
 	
 	final static int SERIAL_PORT_BAUD_RATE = 57600;
 	private static final boolean ENABLE_9DOF = true;
-	private static final boolean ENABLE_WEIGHT = true;
+	private static final boolean ENABLE_FORCE = true;
 
 	boolean display9DOF = false;
 	boolean displayWeight = false;
@@ -18,9 +18,13 @@ public class ExternalSensors implements ControlListener{
 	public float instruct_roll = 0.0;
 	public float instruct_yaw = -15.0;
 	public float instruct_pitch = 45.0;
+	public float yawOffset = 0.0f;
+  	public float rollOffset = 0.0f;
+  	public float pitchOffset = 0.0f;
    
-   
-   public float weight = 0.0;
+
+   public float force = 0.0;
+   public float instruct_force = 1.0;
 	
 	
 	boolean showAnotherWindow = false;
@@ -28,6 +32,16 @@ public class ExternalSensors implements ControlListener{
 
 	PApplet mainClass;
 	Serial sensorsPort;
+
+	public float[] getRollYawPitch() {
+		float[] datas = new float[3];
+
+		datas[0] = roll - rollOffset;
+		datas[1] = yaw - yawOffset;
+		datas[2] = -(pitch - pitchOffset);
+
+		return datas;
+	}
 
 	public ExternalSensors(PApplet mainClass){
       this.mainClass = mainClass;
@@ -91,8 +105,8 @@ public class ExternalSensors implements ControlListener{
 			roll = parsedData[i++];
 		}
 		
-		if (ENABLE_WEIGHT) {
-			weight = parsedData[i++];	
+		if (ENABLE_FORCE) {
+			force = parsedData[i++];	
 		}
 	}
 
@@ -114,14 +128,14 @@ public class ExternalSensors implements ControlListener{
 		switch (k) {
 		    case 'a':  // Align screen with Razor
 		      if (showAnotherWindow) {
-		      	cf.yawOffset = yaw;
+		      	yawOffset = yaw;
 		      }
-                      if (showAnotherWindow) {
-                        cf.rollOffset = roll;
-                      }
-                      if (showAnotherWindow) {
-                        cf.pitchOffset = pitch;
-                      }
+              if (showAnotherWindow) {
+                rollOffset = roll;
+              }
+              if (showAnotherWindow) {
+                pitchOffset = pitch;
+              }
                       
       }
 	}
@@ -138,6 +152,17 @@ public class ExternalSensors implements ControlListener{
 	public void closeWindow() {
 		cf.closeWindow();
 		showAnotherWindow = false;	
+	}
+
+
+	public void setCurrentInstruct(float pitch, float roll, float force) {
+		this.instruct_pitch = pitch;
+		this.instruct_roll = roll;
+		this.instruct_force = force;
+	}
+
+	public void cleanInstruct() {
+		cf.cleanInstruct();	
 	}
 }
 
@@ -162,9 +187,7 @@ public class ControlFrame extends PApplet {
   Frame frame;
   int abc = 100;
 
-  float yawOffset = 0.0f;
-  float rollOffset = 0.0f;
-  float pitchOffset = 0.0f;
+  
   ExternalSensors sensorclass = null;
   public void setup() {
     size(640, 480, OPENGL);
@@ -178,7 +201,7 @@ public class ControlFrame extends PApplet {
   }
 
   public void draw() {
-        background(0);
+  	background(0);
   	lights();
 
   	pushMatrix();
@@ -200,25 +223,49 @@ public class ControlFrame extends PApplet {
 	pushMatrix();
 	translate(10, height - 50);
 	textAlign(LEFT);
-	text("Yaw: " + ((int) sensorclass.yaw), 0, 0);
-	text("Pitch: " + ((int) sensorclass.pitch), 150, 0);
-	text("Roll: " + ((int) sensorclass.roll), 300, 0);
-   text("Instruct : Yaw: " + ((int) sensorclass.instruct_yaw), 0, 20);
-   text("Pitch: " + ((int) sensorclass.instruct_pitch), 150, 20);
-   text("Roll: " + ((int) sensorclass.instruct_roll), 300, 20);
+	text("Yaw: " + ((float) sensorclass.yaw - sensorclass.yawOffset), 0, 0);
+	text("Pitch: " + ((float) - (sensorclass.pitch - sensorclass.pitchOffset)), 150, 0);
+	text("Roll: " + ((float) sensorclass.roll - sensorclass.rollOffset), 300, 0);
+   text("Instruct : Yaw: " + ( sensorclass.instruct_yaw), 0, 20);
+   text("Pitch: " + ( sensorclass.instruct_pitch), 150, 20);
+   text("Roll: " + ( sensorclass.instruct_roll), 300, 20);
 
-	text("Weight: " + ((int) sensorclass.weight), 450, 0);
+	text("Force: " + ( sensorclass.force), 450, 0);
+	text("Force: " + ( sensorclass.instruct_force), 450, 20);
 	popMatrix();
+
+	translate(0, 0);
+
+	// float elongRatio = (float)sensorclass.force/sensorclass.instruct_force;
+	// fill(getHeatmapRGB(elongRatio));
+	fill(0, 102, 255);
+  	rect(500, height*0.8, 30, -sensorclass.force);
   }
   
   private ControlFrame() {
   }
+
+  public color getHeatmapRGB(float value){
+     float minimum=0.6;
+     float maximum=1.4;
+     float ratio = 2 * (value-minimum) / (maximum - minimum);
+     
+     color heatmapRGB = color((int)max(0, 255*(ratio - 1)),
+                              255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)),
+                              (int)max(0, 255*(1 - ratio)) );
+     
+     return heatmapRGB;
+   }
 
   public ControlFrame(Object theParent, int theWidth, int theHeight, Frame f) {
     parent = theParent;
     w = theWidth;
     h = theHeight;
     frame = f;
+  }
+  public void cleanInstruct(){
+     background(0, 0, 0);
+     drawBoard();
   }
 
 
@@ -263,9 +310,9 @@ public class ControlFrame extends PApplet {
 	void drawBoard() {
 	  pushMatrix();
 
-	  rotateY(-radians(sensorclass.yaw - yawOffset));
-	  rotateX(-radians(sensorclass.pitch - pitchOffset));
-	  rotateZ(radians(sensorclass.roll - rollOffset)); 
+	  rotateY(-radians(sensorclass.yaw - sensorclass.yawOffset));
+	  rotateX(-radians(sensorclass.pitch - sensorclass.pitchOffset));
+	  rotateZ(radians(sensorclass.roll - sensorclass.rollOffset)); 
 
 	  // Board body
 	  fill(255, 0, 0);
@@ -282,12 +329,12 @@ public class ControlFrame extends PApplet {
 	  popMatrix();
 	}
   
-  void instructBoard(float Y, float X, float Z) {
+  void instructBoard(float y, float x, float z) {
      pushMatrix();
 
-     rotateY(radians(Y));
-     rotateX(radians(X));
-     rotateZ(radians(sensorclass.roll)); 
+     rotateY(radians(0));
+     rotateX(radians(x));
+     rotateZ(radians(z)); 
 
      // Board body
      fill(255, 255, 0);
@@ -297,17 +344,14 @@ public class ControlFrame extends PApplet {
      pushMatrix();
      translate(0, 0, -200);
      scale(0.5f, 0.2f, 0.25f);
-     fill(0, 255, 0);
+     fill(0, 125, 0);
      drawArrow(1.0f, 2.0f);
      popMatrix();
        
      popMatrix();
   }
 
-  void cleanInstruct(){
-     background(0, 0, 0);
-     drawBoard();
-  }
+  
   
   ControlP5 cp5;
 

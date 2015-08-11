@@ -21,6 +21,8 @@ public class StudyOneTask
 
 public class Study1Mgr implements ControlListener, SerialListener {
 
+	public final static String FOLDER_NAME = "StudyOne";
+
 	//holding other class object
 	PApplet mainClass;
 	ExternalSensors sensors;
@@ -35,12 +37,14 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	//task
 	public final static float TOLERANCE_OF_ROLL_YAW_PITCH = 5;
-	public final static float TOLERANCE_OF_FORCE = 20;
-	public final static float NEWTON_TO_GRAMS = 100.5;
+	public final static float TOLERANCE_OF_FORCE = 5;
+	public final static float NEWTON_TO_GRAMS = 101.971621298;
 	public final static int AMOUNT_OF_RECEIVED_RAW_DATA = 50;
+	public final static int TIMES_OF_EACH_TASK = 3;
 	float pitch []= {65, 45, 25, 15};
 	float roll []= {-15, 0, 15, 45, 90};
 	float force []= {1, 2, 3, 4, 5};
+	int taskCount = pitch.length * roll.length * force.length;
 	ArrayList<StudyOneTask> tasks = new ArrayList<StudyOneTask>();
 
 	//external window
@@ -66,11 +70,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (millis()<1000) return;
 	   	else if (theEvent.getName().equals(UIInteractionMgr.START_USER_STUDY_ONE)) {
       		if (currentDoing) {
-      			currentDoing = false;
-      			endStudy();
+      			endStudy(true);
       		}
       		else{
-      			currentDoing = true;
       			startStudy();
       		}
       		return;	
@@ -79,12 +81,15 @@ public class Study1Mgr implements ControlListener, SerialListener {
       	if (userStudyFrame != null) {
       		if (!userStudyFrame.launchComplete)  return;
       		else if (theEvent.getName().equals(UserStudyOneFrame.START_RECORD)) {
-	      		startRecording();
-	      	}
-	      	else if (theEvent.getName().equals(UserStudyOneFrame.STOP_RECORD)) {
-	      		stopRecording();
+	      		if (currentRecording) {
+	      			stopRecording(true);
+	      		}
+	      		else {
+	      			startRecording();
+	      		}
 	      	}
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.NEXT_TASK)) {
+	      		currentTaskNum++;
 	      		nextTask();
 	      	}
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.PREVIOUS_TASK)) {
@@ -97,16 +102,27 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	void startStudy() {
 		userStudyFrame = addUserStudyOneFrame("User Study One", 320, 480, this);
 		sensors.showWindow();
-		UserProfile.createProfile();
+		currentDoing = true;
+		//init the first time, wont receiving data immediately, need to press startRecording
+		nextTask();
+		new UserProfile().startDoingStudy(2);
 	}
 
-	void endStudy()
+	void endStudy(boolean fromUI)
 	{
 		if (currentRecording) {
-			stopRecording();
+			stopRecording(fromUI);
 		}
-		userStudyFrame.closeWindow();
+		// println("currentTaskNum: "+currentTaskNum);
+		// println("taskCount: "+taskCount);
+		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
+			new UserProfile().doneStudy(2);
+		}
+
+
+		currentDoing = false;
 		sensors.closeWindow();
+		userStudyFrame.closeWindow();
 	}
 
 	void startRecording()
@@ -114,8 +130,11 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		currentRecording = true;
 	}
 
-	void stopRecording()
+	void stopRecording(boolean fromUI)
 	{
+		if (fromUI == false) {
+			userStudyFrame.toggle();	
+		}
 		currentRecording = false;
 		//this means pause for some users need to relax for a min
 		
@@ -123,37 +142,93 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void nextTask() {
 
-		table = new Table();
-  
-		table.addColumn("userID");
-		table.addColumn("roll");
-		table.addColumn("yaw");
-		table.addColumn("pitch");
-		table.addColumn("force");
-		for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
-			table.addColumn("SG" + i);	
+		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
+			endStudy(false);
 		}
-		currentTaskNum++;
-		currentSavedRawDataNum = 0;
+		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+		int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
+
+		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv";
+
+		if(!checkIfFileExist(nameOfFile))
+		{
+			table = new Table();
+  
+			table.addColumn("taskNumber");
+			table.addColumn("roll");
+			table.addColumn("yaw");
+			table.addColumn("pitch");
+			table.addColumn("force");
+			for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+				table.addColumn("SG" + i);
+				table.addColumn("SG_E" + i);
+				table.addColumn("SG_D" + i);
+			}
+		}
+		else{
+			table = loadTable(nameOfFile, "header, csv");
+		}
+		sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 	}
 
 	void preTask() {
-		currentTaskNum--;
+		
+
+		
+		stopRecording(false);
+
+		if (table.getRowCount() > 0) {
+			//just drop the rows by a new table
+			nextTask();
+		}
+		else
+		{
+			currentTaskNum--;
+
+			StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+			int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);;
+
+			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv";
+			table = loadTable(nameOfFile, "header, csv");
+
+			// for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
+			// 	table.removeRow(table.getRowCount() -1 );
+			// }
+
+			int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
+
+			for (int i = needToDeleteRows.length-1 ; i >= 0 ;i-- ) {
+				table.removeRow(needToDeleteRows[i]);
+			}
+
+			saveTable(table, nameOfFile);
+			userStudyFrame.updateProgress(currentTaskNum);
+		}		
 	}
 
 
 	boolean isApplicableForSaving(){
-		StudyOneTask currentTask = tasks.get(currentTaskNum);
-		if (!toleranceCalculation(sensors.roll, currentTask.roll, 0)){ 
+
+		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+
+		float[] datas = sensors.getRollYawPitch();
+		println("datas[0]: "+datas[0] + "datas[2]: "+datas[2]);
+		if (toleranceCalculation(datas[0], currentTask.roll, 0) == false){ 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 			return false; 
 		}
-		if (!toleranceCalculation(sensors.pitch, currentTask.pitch, 0)) { 
+		if (toleranceCalculation(datas[2], currentTask.pitch, 0) == false) { 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 			return false; 
 		}
-		if (!toleranceCalculation(sensors.weight, currentTask.force, 1)) { 
+		if (toleranceCalculation(sensors.force, currentTask.force, 1)  == false) { 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 			return false; 
 		}
 
+		println("isApplicableForSaving");
+
+		// sensors.cleanInstruct();
 		return true;
 	}
 
@@ -162,7 +237,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		//type 0 - roll yaw pitch, 1 = force
 		//
 		if (type == 0) {
-			if ((traget + TOLERANCE_OF_ROLL_YAW_PITCH >= values) || (traget - TOLERANCE_OF_ROLL_YAW_PITCH <= values)) {
+			if ((traget + TOLERANCE_OF_ROLL_YAW_PITCH >= values) && (traget - TOLERANCE_OF_ROLL_YAW_PITCH <= values)) {
 				return true;	
 			}
 			else
@@ -171,7 +246,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			}	
 		}
 		else if (type == 1) {
-			if ((traget + TOLERANCE_OF_FORCE >= values) || (traget - TOLERANCE_OF_FORCE <= values)) {
+			if ((traget + TOLERANCE_OF_FORCE >= values) && (traget - TOLERANCE_OF_FORCE <= values)) {
 				return true;	
 			}
 			else
@@ -187,25 +262,52 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void saveToFile(float [] values)
 	{
-		TableRow newRow = table.addRow();
-		newRow.setInt("userID", Integer.parseInt(UserProfile.USER_ID));
-		newRow.setFloat("roll", sensors.roll);
-		newRow.setFloat("yaw", sensors.yaw);
-		newRow.setFloat("pitch", sensors.pitch);
-		newRow.setFloat("weight", sensors.weight);
 
+		float [] datas = sensors.getRollYawPitch();
+		TableRow newRow = table.addRow();
+		newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
+		newRow.setFloat("roll", datas[0]);
+		newRow.setFloat("yaw", datas[1]);
+		newRow.setFloat("pitch", datas[2]);
+		newRow.setFloat("force", sensors.force);
 		for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
 			newRow.setFloat("SG" + i, values[i]);
+			newRow.setFloat("SG_E" + i, sgManager.getOneElongationValsOfGauges(i));
+			newRow.setFloat("SG_D" + i, sgManager.getOneDifferenceValsOfGauges(i));
 		}
+
 		currentSavedRawDataNum++;
+
+		println("currentSavedRawDataNum: "+currentSavedRawDataNum);
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
-			saveTable(table, UserProfile.USER_ID + "/StudyOne/" +  currentTaskNum +".csv");
+
+			StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+			int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
+			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv");
+			currentTaskNum++;
+			userStudyFrame.updateProgress(currentTaskNum);
+
+			currentSavedRawDataNum = 0;
 			nextTask();
+
+			println("AMOUNT_OF_RECEIVED_RAW_DATA !!!!!");
 		}
 	}
 
-	//impelments -- SerialListener
-	public void registerToSerialNotifier(SerialNotifier notifier){
+	boolean checkIfFileExist(String nameOfFile) {
+		File f = new File(sketchPath("") + nameOfFile);
+		if (f.exists()) {
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+
+	@Override
+	public void registerToSerialNotifier(SerialNotifier notifier)
+	{
 		notifier.registerForSerialListener(this);
 	  	serialNotifier = notifier;
 	}
@@ -220,26 +322,28 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	@Override
 	public void updateAnalogVals(float [] values)
 	{
-		if (isApplicableForSaving() && currentRecording) {
-			saveToFile(values);
+		if (userStudyFrame != null) {
+			if (currentRecording && isApplicableForSaving()) {
+				saveToFile(values);
+			}
 		}
+		
 	}
 	@Override
 	public void updateCaliVals(float [] values){}
-
- 	@Override
+	@Override
 	public void updateTargetAnalogValsMinAmp(float [] values){}
- 	@Override
+	@Override
 	public void updateTargetAnalogValsWithAmp(float [] values){}
- 	@Override
+	@Override
 	public void updateBridgePotPosVals(float [] values){}
- 	@Override
+	@Override
 	public void updateAmpPotPosVals(float [] values){}
- 	@Override
+	@Override
 	public void updateCalibratingValsMinAmp(float [] values){}
- 	@Override
+	@Override
 	public void updateCalibratingValsWithAmp(float [] values){}
- 	@Override
+	@Override
 	public void updateReceiveRecordSignal(){}
 
 
@@ -266,9 +370,10 @@ public class UserStudyOneFrame extends PApplet {
 
 
 	public final static String START_RECORD = "Start Recording";
-	public final static String STOP_RECORD = "Stop Recording";
+	// public final static String STOP_RECORD = "Stop Recording";
 	public final static String NEXT_TASK = "Next Task";
 	public final static String PREVIOUS_TASK = "Previous Task";
+	public final static String CURRENT_PROGRESS = "Current Progress";
 
   int w, h;
   Frame frame;
@@ -277,6 +382,9 @@ public class UserStudyOneFrame extends PApplet {
   ControlP5 cp5;
 
   Object parent;
+
+  private Knob progressKnob;
+  private Toggle toogleRecording;
   public boolean launchComplete = false;
 
   public void setup() {
@@ -299,16 +407,12 @@ public class UserStudyOneFrame extends PApplet {
   }
 
   void drawUI() {
-  	cp5.addButton(START_RECORD)
+  	toogleRecording = cp5.addToggle(START_RECORD)
+     .setColorLabel(color(0))
+     .setBroadcast(false)
      .setValue(0)
-     .setPosition(50,50)
-     .setSize(200,19)
-     .setBroadcast(true)
-     ;
-    cp5.addButton(STOP_RECORD)
-     .setValue(0)
-     .setPosition(50,100)
-     .setSize(200,19)
+     .setPosition(width*0.85, height*0.8)
+     .setSize(50,30)
      .setBroadcast(true)
      ;
     cp5.addButton(NEXT_TASK)
@@ -323,6 +427,14 @@ public class UserStudyOneFrame extends PApplet {
      .setSize(200,19)
      .setBroadcast(true)
      ; 
+    progressKnob = cp5.addKnob(CURRENT_PROGRESS)
+     .setRange(0,300)
+     .setValue(0)
+     .setPosition(100,250)
+     .setRadius(50)
+     .setDragDirection(Knob.VERTICAL)
+     .setLock(true)
+     ;
   }
   
   private UserStudyOneFrame() {
@@ -336,6 +448,14 @@ public class UserStudyOneFrame extends PApplet {
   }
   public ControlP5 control() {
     return cp5;
+  }
+
+  public void updateProgress(int num) {
+  	progressKnob.setValue(num);
+  }
+
+  public void toggle() {
+  	toogleRecording.toggle();
   }
   
 

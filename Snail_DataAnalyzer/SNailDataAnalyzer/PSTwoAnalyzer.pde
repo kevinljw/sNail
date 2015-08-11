@@ -80,9 +80,9 @@ public class PSTwoAnalyzer implements ControlListener{
 	}
 
 	public void removeUI() {
-		listUsersDropdown.hide();
-		listForceDropdown.hide();
-		listDirectionDropdown.hide();
+		listUsersDropdown.remove();
+		listForceDropdown.remove();
+		listDirectionDropdown.remove();
 	}
 
 	void drawUI()

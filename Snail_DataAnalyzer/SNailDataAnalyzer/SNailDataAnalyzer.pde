@@ -23,12 +23,7 @@ int currentSeletedType = -1;
 void setup() {
 	cp5 = new ControlP5(this);
 	csvMerger = new CSVMerger(this);
-	psOneAnalyzer = new PSOneAnalyzer();
-	psTwoAnalyzer = new PSTwoAnalyzer(this);
-	usOneAnalyzer = new USOneAnalyzer();
-	usTwoAnalyzer = new USTwoAnalyzer();
 	
-
 	size(900, 600, P3D);
 	background(255);
 	drawUI();
@@ -79,24 +74,28 @@ public void controlEvent(ControlEvent theEvent) {
 		if (theEvent.getController().getName() == PILOT_STUDY_ONE) {
 			removeCurrentListener();
 			currentSeletedType = 0;
+			psOneAnalyzer = new PSOneAnalyzer();
 			cp5.addListener(psOneAnalyzer);
 			psOneAnalyzer.analysisData();
 		}
 		else if (theEvent.getController().getName() == PILOT_STUDY_TWO) {
 			removeCurrentListener();
 			currentSeletedType = 1;
+			psTwoAnalyzer = new PSTwoAnalyzer(this);
 			cp5.addListener(psTwoAnalyzer);
 			psTwoAnalyzer.analysisData();
 		}
 		else if (theEvent.getController().getName() == USER_STUDY_ONE) {
 			removeCurrentListener();
 			currentSeletedType = 2;
+			usOneAnalyzer = new USOneAnalyzer();
 			cp5.addListener(usOneAnalyzer);
 			usOneAnalyzer.analysisData();
 		}
 		else if (theEvent.getController().getName() == USER_STUDY_TWO) {
 			removeCurrentListener();
 			currentSeletedType = 3;
+			usTwoAnalyzer = new USTwoAnalyzer();
 			cp5.addListener(usTwoAnalyzer);
 			usTwoAnalyzer.analysisData();
 		}
@@ -109,16 +108,20 @@ void removeCurrentListener()
 		switch (currentSeletedType) {
 			case 0 :
 				cp5.removeListener(psOneAnalyzer);
+				psOneAnalyzer = null;
 				break;
 			case 1 :
 				cp5.removeListener(psTwoAnalyzer);
 				psTwoAnalyzer.removeUI();
+				psTwoAnalyzer = null;
 				break;
 			case 2 :
 				cp5.removeListener(usOneAnalyzer);
+				usOneAnalyzer = null;
 				break;
 			case 3 :
 				cp5.removeListener(usTwoAnalyzer);
+				usTwoAnalyzer = null;
 				break;	
 			
 			

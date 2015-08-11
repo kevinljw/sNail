@@ -26,6 +26,8 @@ void setup() {
    listenerRegistrations();
    
    serialManager.notifyAllWithDiscoveredSerialPorts();
+
+   new UserProfile().createProfile();
 }
 
 void draw() {

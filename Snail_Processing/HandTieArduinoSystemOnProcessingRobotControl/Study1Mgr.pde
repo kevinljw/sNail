@@ -21,6 +21,8 @@ public class StudyOneTask
 
 public class Study1Mgr implements ControlListener, SerialListener {
 
+	public final static String FOLDER_NAME = "StudyOne";
+
 	//holding other class object
 	PApplet mainClass;
 	ExternalSensors sensors;
@@ -103,7 +105,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		currentDoing = true;
 		//init the first time, wont receiving data immediately, need to press startRecording
 		nextTask();
-		UserProfile.createProfile();
+		new UserProfile().startDoingStudy(2);
 	}
 
 	void endStudy(boolean fromUI)
@@ -111,6 +113,13 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (currentRecording) {
 			stopRecording(fromUI);
 		}
+		// println("currentTaskNum: "+currentTaskNum);
+		// println("taskCount: "+taskCount);
+		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
+			new UserProfile().doneStudy(2);
+		}
+
+
 		currentDoing = false;
 		sensors.closeWindow();
 		userStudyFrame.closeWindow();
@@ -136,7 +145,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
 			endStudy(false);
 		}
-		String nameOfFile = "StudyOne/usr_" + UserProfile.USER_ID + "/" +  currentTaskNum % taskCount +".csv";
+		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" +  currentTaskNum % taskCount +".csv";
 
 		if(!checkIfFileExist(nameOfFile))
 		{
@@ -173,7 +182,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		else
 		{
 			currentTaskNum--;
-			String nameOfFile = "StudyOne/usr_" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv";
+			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv";
 			table = loadTable(nameOfFile, "header, csv");
 
 			for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
@@ -241,7 +250,6 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void saveToFile(float [] values)
 	{
-		println("saveToFile!!");
 
 		float [] datas = sensors.getRollYawPitch();
 		TableRow newRow = table.addRow();
@@ -260,7 +268,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 		println("currentSavedRawDataNum: "+currentSavedRawDataNum);
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
-			saveTable(table, "StudyOne/usr_" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv");
+			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv");
 			currentTaskNum++;
 			userStudyFrame.updateProgress(currentTaskNum);
 

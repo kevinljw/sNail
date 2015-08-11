@@ -74,17 +74,19 @@ public class PSOneAnalyzer {
 			totalLightAverage += perUserLightAverage;
 			totalHeavyAverage += perUserHeavyAverage;
 		}
-
-		totalNormalAverage = totalNormalAverage/ list.length;
-		totalLightAverage = totalLightAverage / list.length;
-		totalHeavyAverage = totalHeavyAverage / list.length;
-
+		if (list.length >0) {
+			totalNormalAverage = totalNormalAverage / list.length;
+			totalLightAverage = totalLightAverage / list.length;
+			totalHeavyAverage = totalHeavyAverage / list.length;	
+		}
 
 		TableRow newRow = table.addRow();
 		newRow.setString("user", "overall");
 		newRow.setFloat("light", totalNormalAverage);
 		newRow.setFloat("normal", totalLightAverage);
 		newRow.setFloat("heavy", totalHeavyAverage);
+
+		saveTable(table, PILOT_STUDY_ONE_DATA +"/result.csv");
 
 	}
 

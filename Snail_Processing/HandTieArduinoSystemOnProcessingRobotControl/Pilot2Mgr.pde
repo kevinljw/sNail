@@ -154,6 +154,8 @@ public class Pilot2Mgr implements ControlListener {
 		else{
 			table = loadTable(nameOfFile, "header, csv");
 		}
+
+		userStudyFrame.updateInstruct(currentTask.force, currentTask.direction);
 		
 		// sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 	}
@@ -183,6 +185,7 @@ public class Pilot2Mgr implements ControlListener {
 
 			saveTable(table, nameOfFile);
 			userStudyFrame.updateProgress(currentTaskNum);
+			nextTask();
 		}		
 	}
 
@@ -246,15 +249,19 @@ public class PilotTwoFrame extends PApplet {
 
   private Knob progressKnob;
   private Toggle toogleRecording;
+  private int force = 0;
+  private int direction = 0;
+
   public boolean launchComplete = false;
 
   public void setup() {
   	cp5 = new ControlP5(this);
   	println("mgr: "+mgr);
   	cp5.addListener(mgr);
-  	drawUI();
-  	launchComplete = true;
+  	
     size(w, h);
+    drawUI();
+    launchComplete = true;
 	frameRate(30);
   }
 
@@ -264,6 +271,51 @@ public class PilotTwoFrame extends PApplet {
   }
 
   public void draw() {
+  	background(255);
+  	fill(0);
+  	textSize(32);
+  	switch (force) {
+  		case 0 :
+  			text("Force:\nNormal", width * 0.2 , height*0.6);	
+  			break;		
+  		case 1:
+  			text("Force:\nLight", width * 0.2 , height*0.6);
+  			break;	
+  		case 2 :
+  			text("Force:\nHeavy", width * 0.2 , height*0.6);	
+  			break;	
+  		default :
+  			break;	
+  		
+  	}
+  	switch (direction) {
+  		case 0 :
+  			text("Direction:\nup", width * 0.2 , height*0.8);	
+  			break;		
+  		case 1:
+  			text("Direction:\nup right", width * 0.2 , height*0.8);
+  			break;	
+  		case 2 :
+  			text("Direction:\nright", width * 0.2 , height*0.8);
+  			break;
+  		case 3 :
+  			text("Direction:\nright down", width * 0.2 , height*0.8);	
+  			break;		
+  		case 4:
+  			text("Direction:\ndown", width * 0.2 , height*0.8);
+  			break;	
+  		case 5 :
+  			text("Direction:\nleft down", width * 0.2 , height*0.8);
+  		case 6 :
+  			text("Direction:\nleft", width * 0.2 , height*0.8);	
+  			break;		
+  		case 7:
+  			text("Direction:\nleft up", width * 0.2 , height*0.8);
+  			break;
+  		default :		
+  			break;	
+  		
+  	}
      
   }
 
@@ -272,26 +324,20 @@ public class PilotTwoFrame extends PApplet {
      .setColorLabel(color(0))
      .setBroadcast(false)
      .setValue(0)
-     .setPosition(width*0.85, height*0.8)
+     .setPosition(50, 50)
      .setSize(50,30)
      .setBroadcast(true)
      ;
-    // cp5.addButton(NEXT_TASK)
-    //  .setValue(0)
-    //  .setPosition(50,150)
-    //  .setSize(200,19)
-    //  .setBroadcast(true)
-    //  ;
     cp5.addButton(PREVIOUS_TASK)
      .setValue(0)
-     .setPosition(50,200)
-     .setSize(200,19)
+     .setPosition(50,100)
+     .setSize(100,19)
      .setBroadcast(true)
      ; 
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
      .setRange(0,72)
      .setValue(0)
-     .setPosition(100,250)
+     .setPosition(200,10)
      .setRadius(50)
      .setDragDirection(Knob.VERTICAL)
      .setLock(true)
@@ -312,5 +358,10 @@ public class PilotTwoFrame extends PApplet {
   } 
   public void updateProgress(int num) {
   	progressKnob.setValue(num);
+  }
+
+  public void updateInstruct(int force, int direction) {
+  	this.force = force;
+  	this.direction = direction;
   }
 }

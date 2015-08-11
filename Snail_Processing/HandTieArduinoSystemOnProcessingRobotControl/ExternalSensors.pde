@@ -233,10 +233,13 @@ public class ControlFrame extends PApplet {
 	text("Force: " + ( sensorclass.force), 450, 0);
 	text("Force: " + ( sensorclass.instruct_force), 450, 20);
 	popMatrix();
+
 	translate(0, 0);
-	float elongRatio = (float)sensorclass.force/sensorclass.instruct_force;
-	fill(getHeatmapRGB(elongRatio));
-  	rect(500, height*0.5, 30, (1-elongRatio)* 300);
+
+	// float elongRatio = (float)sensorclass.force/sensorclass.instruct_force;
+	// fill(getHeatmapRGB(elongRatio));
+	fill(0, 102, 255);
+  	rect(500, height*0.8, 30, -sensorclass.force);
   }
   
   private ControlFrame() {

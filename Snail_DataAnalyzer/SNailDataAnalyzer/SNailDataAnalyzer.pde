@@ -18,21 +18,27 @@ ControlP5 cp5;
 
 boolean uiCompleted = false;
 
+int currentSeletedType = -1;
+
 void setup() {
 	cp5 = new ControlP5(this);
 	csvMerger = new CSVMerger(this);
 	psOneAnalyzer = new PSOneAnalyzer();
-	psTwoAnalyzer = new PSTwoAnalyzer();
+	psTwoAnalyzer = new PSTwoAnalyzer(this);
 	usOneAnalyzer = new USOneAnalyzer();
 	usTwoAnalyzer = new USTwoAnalyzer();
 	
 
-	size(900, 600);
+	size(900, 600, P3D);
+	background(255);
 	drawUI();
 }
 
 void draw() {
-
+	background(255);
+	if (currentSeletedType == 1) {
+		psTwoAnalyzer.draw();
+	}
 }
 
 void drawUI()
@@ -65,16 +71,57 @@ void drawUI()
 
 public void controlEvent(ControlEvent theEvent) {
 	if (!uiCompleted) {return;}
-	if (theEvent.getController().getName() == PILOT_STUDY_ONE) {
-		psOneAnalyzer.analysisData();
+
+	if (theEvent.isGroup()) {
+
 	}
-	else if (theEvent.getController().getName() == PILOT_STUDY_TWO) {
-		psTwoAnalyzer.analysisData();
+	else if (theEvent.isController()) {
+		if (theEvent.getController().getName() == PILOT_STUDY_ONE) {
+			removeCurrentListener();
+			currentSeletedType = 0;
+			cp5.addListener(psOneAnalyzer);
+			psOneAnalyzer.analysisData();
+		}
+		else if (theEvent.getController().getName() == PILOT_STUDY_TWO) {
+			removeCurrentListener();
+			currentSeletedType = 1;
+			cp5.addListener(psTwoAnalyzer);
+			psTwoAnalyzer.analysisData();
+		}
+		else if (theEvent.getController().getName() == USER_STUDY_ONE) {
+			removeCurrentListener();
+			currentSeletedType = 2;
+			cp5.addListener(usOneAnalyzer);
+			usOneAnalyzer.analysisData();
+		}
+		else if (theEvent.getController().getName() == USER_STUDY_TWO) {
+			removeCurrentListener();
+			currentSeletedType = 3;
+			cp5.addListener(usTwoAnalyzer);
+			usTwoAnalyzer.analysisData();
+		}
 	}
-	else if (theEvent.getController().getName() == USER_STUDY_ONE) {
-		usOneAnalyzer.analysisData();
-	}
-	else if (theEvent.getController().getName() == USER_STUDY_TWO) {
-		usTwoAnalyzer.analysisData();
+}
+
+void removeCurrentListener()
+{
+	if (currentSeletedType != -1) {
+		switch (currentSeletedType) {
+			case 0 :
+				cp5.removeListener(psOneAnalyzer);
+				break;
+			case 1 :
+				cp5.removeListener(psTwoAnalyzer);
+				psTwoAnalyzer.removeUI();
+				break;
+			case 2 :
+				cp5.removeListener(usOneAnalyzer);
+				break;
+			case 3 :
+				cp5.removeListener(usTwoAnalyzer);
+				break;	
+			
+			
+		}
 	}
 }

@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-public class USTwoAnalyzer {
+public class USTwoAnalyzer implements ControlListener{
 
 	File dir = new File(sketchPath("") + DATA_FOLDER + "/StudyTwo");
 	String[] list = dir.list();
@@ -11,4 +11,7 @@ public class USTwoAnalyzer {
 	public void analysisData() {
 		
 	}
+
+	@Override
+	public void controlEvent(ControlEvent theEvent){}
 }

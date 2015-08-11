@@ -8,6 +8,7 @@ RobotControl robotControl;
 GRTMgr grtMgr;
 ExternalSensors sensors;
 Study1Mgr study1Mgr;
+Study2Mgr study2Mgr;
 Pilot2Mgr pilot2Mgr;
 
 void setup() {
@@ -19,6 +20,7 @@ void setup() {
    grtMgr = new GRTMgr(this);
    sensors = new ExternalSensors(this);
    study1Mgr = new Study1Mgr(this);
+   study2Mgr = new Study2Mgr(this);
    pilot2Mgr = new Pilot2Mgr(this);
    uiInteractionMgr = new UIInteractionMgr(this);
    listenerRegistrations();

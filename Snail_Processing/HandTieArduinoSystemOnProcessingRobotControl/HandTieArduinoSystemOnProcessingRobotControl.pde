@@ -10,8 +10,9 @@ ExternalSensors sensors;
 Study1Mgr study1Mgr;
 Study2Mgr study2Mgr;
 Pilot2Mgr pilot2Mgr;
-
+String currentSketchPath = null;
 void setup() {
+   currentSketchPath = sketchPath("");
    size(900, 600);
    sgManager = new SGManager();
    serialManager = new SerialManager(this);

@@ -135,6 +135,12 @@ public class ExternalSensors implements ControlListener{
 		showAnotherWindow = true;	
 	}
 
+   public void showPWindow() {
+      cf = addControlFrame("WeightingTest", 640, 480, this);
+      background(0, 0, 0);
+      showAnotherWindow = true;
+   }
+
 	public void closeWindow() {
 		cf.closeWindow();
 		showAnotherWindow = false;	
@@ -149,6 +155,10 @@ public class ExternalSensors implements ControlListener{
 	public void cleanInstruct() {
 		cf.cleanInstruct();	
 	}
+
+   public void weight(){
+      cf.weight();
+   }
 }
 
 
@@ -319,6 +329,10 @@ public class ControlFrame extends PApplet {
      drawBoard();
   }
   
+  public void weight(){
+     text("Weight: " + ((int) sensorclass.weight), 450, 0);
+   }
+
   ControlP5 cp5;
 
   Object parent;

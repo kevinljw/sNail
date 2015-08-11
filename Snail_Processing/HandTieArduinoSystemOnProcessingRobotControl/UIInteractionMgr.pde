@@ -65,6 +65,9 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static String START_USER_STUDY_ONE = "Start\nUser Study One";
    public final static String START_USER_STUDY_TWO = "Start\nUser Study Two";
 
+   //Pilot Study Btn
+   public final static String START_PILOT_STUDY_ONE = "Start\nPilot Study One";
+
    public UIInteractionMgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
       this.mainClass = mainClass;
 
@@ -77,6 +80,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       cp5.addListener(mainClass.robotControl);
       cp5.addListener(mainClass.sensors);
       cp5.addListener(mainClass.study1Mgr);
+      cp5.addListener(mainClass.studyPMgr);
       createUIForSerial();
    }
 
@@ -350,6 +354,14 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setBroadcast(false)
          .setValue(0)
          .setPosition(width*0.85, height*0.9)
+         .setSize(50,30)
+         .setBroadcast(true)
+      ;
+      cp5.addToggle(START_PILOT_STUDY_ONE)
+         .setColorLabel(color(0))
+         .setBroadcast(false)
+         .setValue(0)
+         .setPosition(width*0.925, height*0.9)
          .setSize(50,30)
          .setBroadcast(true)
       ;

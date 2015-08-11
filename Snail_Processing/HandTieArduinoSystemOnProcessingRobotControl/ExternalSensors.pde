@@ -7,7 +7,7 @@ public class ExternalSensors implements ControlListener{
 	
 	final static int SERIAL_PORT_BAUD_RATE = 57600;
 	private static final boolean ENABLE_9DOF = true;
-	private static final boolean ENABLE_WEIGHT = true;
+	private static final boolean ENABLE_FORCE = true;
 
 	boolean display9DOF = false;
 	boolean displayWeight = false;
@@ -22,7 +22,9 @@ public class ExternalSensors implements ControlListener{
   	public float rollOffset = 0.0f;
   	public float pitchOffset = 0.0f;
    
-   public float weight = 0.0;
+
+   public float force = 0.0;
+   public float instruct_force = 1.0;
 	
 	
 	boolean showAnotherWindow = false;
@@ -103,8 +105,8 @@ public class ExternalSensors implements ControlListener{
 			roll = parsedData[i++];
 		}
 		
-		if (ENABLE_WEIGHT) {
-			weight = parsedData[i++];	
+		if (ENABLE_FORCE) {
+			force = parsedData[i++];	
 		}
 	}
 
@@ -153,9 +155,10 @@ public class ExternalSensors implements ControlListener{
 	}
 
 
-	public void setCurrentInstruct(float pitch, float roll) {
+	public void setCurrentInstruct(float pitch, float roll, float force) {
 		this.instruct_pitch = pitch;
 		this.instruct_roll = roll;
+		this.instruct_force = force;
 	}
 
 	public void cleanInstruct() {
@@ -220,19 +223,36 @@ public class ControlFrame extends PApplet {
 	pushMatrix();
 	translate(10, height - 50);
 	textAlign(LEFT);
-	text("Yaw: " + ((int) sensorclass.yaw - sensorclass.yawOffset), 0, 0);
-	text("Pitch: " + ((int) - (sensorclass.pitch - sensorclass.pitchOffset)), 150, 0);
-	text("Roll: " + ((int) sensorclass.roll - sensorclass.rollOffset), 300, 0);
-   text("Instruct : Yaw: " + ((int) sensorclass.instruct_yaw), 0, 20);
-   text("Pitch: " + ((int) sensorclass.instruct_pitch), 150, 20);
-   text("Roll: " + ((int) sensorclass.instruct_roll), 300, 20);
+	text("Yaw: " + ((float) sensorclass.yaw - sensorclass.yawOffset), 0, 0);
+	text("Pitch: " + ((float) - (sensorclass.pitch - sensorclass.pitchOffset)), 150, 0);
+	text("Roll: " + ((float) sensorclass.roll - sensorclass.rollOffset), 300, 0);
+   text("Instruct : Yaw: " + ( sensorclass.instruct_yaw), 0, 20);
+   text("Pitch: " + ( sensorclass.instruct_pitch), 150, 20);
+   text("Roll: " + ( sensorclass.instruct_roll), 300, 20);
 
-	text("Weight: " + ((int) sensorclass.weight), 450, 0);
+	text("Force: " + ( sensorclass.force), 450, 0);
+	text("Force: " + ( sensorclass.instruct_force), 450, 20);
 	popMatrix();
+	translate(0, 0);
+	float elongRatio = (float)sensorclass.force/sensorclass.instruct_force;
+	fill(getHeatmapRGB(elongRatio));
+  	rect(500, height*0.5, 30, (1-elongRatio)* 300);
   }
   
   private ControlFrame() {
   }
+
+  public color getHeatmapRGB(float value){
+     float minimum=0.6;
+     float maximum=1.4;
+     float ratio = 2 * (value-minimum) / (maximum - minimum);
+     
+     color heatmapRGB = color((int)max(0, 255*(ratio - 1)),
+                              255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)),
+                              (int)max(0, 255*(1 - ratio)) );
+     
+     return heatmapRGB;
+   }
 
   public ControlFrame(Object theParent, int theWidth, int theHeight, Frame f) {
     parent = theParent;

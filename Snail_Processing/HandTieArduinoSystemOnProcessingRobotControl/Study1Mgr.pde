@@ -87,11 +87,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	      		else {
 	      			startRecording();
 	      		}
-	      		
 	      	}
-	      	// else if (theEvent.getName().equals(UserStudyOneFrame.STOP_RECORD)) {
-	      	// 	stopRecording();
-	      	// }
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.NEXT_TASK)) {
 	      		currentTaskNum++;
 	      		nextTask();
@@ -159,7 +155,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			table = loadTable(nameOfFile, "header, csv");
 		}
 		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-		sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
+		sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 	}
 
 	void preTask() {
@@ -179,7 +175,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			table = loadTable(nameOfFile, "header, csv");
 
 			for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
-				table.removeRow(table.getRowCount() -1 );  // Removes the first row	
+				table.removeRow(table.getRowCount() -1 );
 			}
 
 			saveTable(table, nameOfFile);
@@ -195,17 +191,17 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		float[] datas = sensors.getRollYawPitch();
 		println("datas[0]: "+datas[0] + "datas[2]: "+datas[2]);
 		if (toleranceCalculation(datas[0], currentTask.roll, 0) == false){ 
-			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 			return false; 
 		}
 		if (toleranceCalculation(datas[2], currentTask.pitch, 0) == false) { 
-			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 			return false; 
 		}
-		// if (toleranceCalculation(sensors.weight, currentTask.force, 1)  == false) { 
-		// 	sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll);
-		// 	return false; 
-		// }
+		if (toleranceCalculation(sensors.force, currentTask.force, 1)  == false) { 
+			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
+			return false; 
+		}
 
 		println("isApplicableForSaving");
 
@@ -251,7 +247,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		newRow.setFloat("roll", datas[0]);
 		newRow.setFloat("yaw", datas[1]);
 		newRow.setFloat("pitch", datas[2]);
-		newRow.setFloat("force", sensors.weight);
+		newRow.setFloat("force", sensors.force);
 		for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
 			newRow.setFloat("SG" + i, values[i]);
 			newRow.setFloat("SG_E" + i, sgManager.getOneElongationValsOfGauges(i));

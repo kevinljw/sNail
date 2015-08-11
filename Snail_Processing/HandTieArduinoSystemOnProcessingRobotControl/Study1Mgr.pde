@@ -37,7 +37,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	//task
 	public final static float TOLERANCE_OF_ROLL_YAW_PITCH = 5;
-	public final static float TOLERANCE_OF_FORCE = 20;
+	public final static float TOLERANCE_OF_FORCE = 5;
 	public final static float NEWTON_TO_GRAMS = 101.971621298;
 	public final static int AMOUNT_OF_RECEIVED_RAW_DATA = 50;
 	public final static int TIMES_OF_EACH_TASK = 3;
@@ -145,13 +145,16 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
 			endStudy(false);
 		}
-		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" +  currentTaskNum % taskCount +".csv";
+		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+		int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
+
+		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv";
 
 		if(!checkIfFileExist(nameOfFile))
 		{
 			table = new Table();
   
-			table.addColumn("userID");
+			table.addColumn("taskNumber");
 			table.addColumn("roll");
 			table.addColumn("yaw");
 			table.addColumn("pitch");
@@ -165,7 +168,6 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		else{
 			table = loadTable(nameOfFile, "header, csv");
 		}
-		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 		sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 	}
 
@@ -182,11 +184,21 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		else
 		{
 			currentTaskNum--;
-			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv";
+
+			StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+			int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);;
+
+			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv";
 			table = loadTable(nameOfFile, "header, csv");
 
-			for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
-				table.removeRow(table.getRowCount() -1 );
+			// for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
+			// 	table.removeRow(table.getRowCount() -1 );
+			// }
+
+			int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
+
+			for (int i = needToDeleteRows.length-1 ; i >= 0 ;i-- ) {
+				table.removeRow(needToDeleteRows[i]);
 			}
 
 			saveTable(table, nameOfFile);
@@ -253,7 +265,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 		float [] datas = sensors.getRollYawPitch();
 		TableRow newRow = table.addRow();
-		newRow.setInt("userID", Integer.parseInt(UserProfile.USER_ID));
+		newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
 		newRow.setFloat("roll", datas[0]);
 		newRow.setFloat("yaw", datas[1]);
 		newRow.setFloat("pitch", datas[2]);
@@ -268,7 +280,10 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 		println("currentSavedRawDataNum: "+currentSavedRawDataNum);
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
-			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv");
+
+			StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+			int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
+			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv");
 			currentTaskNum++;
 			userStudyFrame.updateProgress(currentTaskNum);
 

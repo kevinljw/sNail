@@ -62,6 +62,8 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
 
 
    //User Study Btn
+   public final static String START_PILOT_STUDY_ONE = "Start\nPilot Study One";
+   public final static String START_PILOT_STUDY_TWO = "Start\nPilot Study Two";
    public final static String START_USER_STUDY_ONE = "Start\nUser Study One";
    public final static String START_USER_STUDY_TWO = "Start\nUser Study Two";
 
@@ -77,6 +79,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       cp5.addListener(mainClass.robotControl);
       cp5.addListener(mainClass.sensors);
       cp5.addListener(mainClass.study1Mgr);
+      cp5.addListener(mainClass.pilot2Mgr);
       createUIForSerial();
    }
 
@@ -321,7 +324,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setSize(50,30)
          .setBroadcast(true)
       ;
-      cp5.addToggle(ENABLE_9DOF_DISPLAY)
+      cp5.addToggle(START_PILOT_STUDY_ONE)
          .setColorLabel(color(0))
          .setBroadcast(false)
          .setValue(0)
@@ -329,7 +332,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setSize(50,30)
          .setBroadcast(true)
       ;
-      cp5.addToggle(ENABLE_WEIGHT_DISPLAY)
+      cp5.addToggle(START_PILOT_STUDY_TWO)
          .setColorLabel(color(0))
          .setBroadcast(false)
          .setValue(0)

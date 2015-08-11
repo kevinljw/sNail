@@ -68,11 +68,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (millis()<1000) return;
 	   	else if (theEvent.getName().equals(UIInteractionMgr.START_USER_STUDY_ONE)) {
       		if (currentDoing) {
-      			currentDoing = false;
-      			endStudy();
+      			endStudy(true);
       		}
       		else{
-      			currentDoing = true;
       			startStudy();
       		}
       		return;	
@@ -82,7 +80,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
       		if (!userStudyFrame.launchComplete)  return;
       		else if (theEvent.getName().equals(UserStudyOneFrame.START_RECORD)) {
 	      		if (currentRecording) {
-	      			stopRecording();
+	      			stopRecording(true);
 	      		}
 	      		else {
 	      			startRecording();
@@ -102,16 +100,18 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	void startStudy() {
 		userStudyFrame = addUserStudyOneFrame("User Study One", 320, 480, this);
 		sensors.showWindow();
+		currentDoing = true;
 		//init the first time, wont receiving data immediately, need to press startRecording
 		nextTask();
 		UserProfile.createProfile();
 	}
 
-	void endStudy()
+	void endStudy(boolean fromUI)
 	{
 		if (currentRecording) {
-			stopRecording();
+			stopRecording(fromUI);
 		}
+		currentDoing = false;
 		sensors.closeWindow();
 		userStudyFrame.closeWindow();
 	}
@@ -121,9 +121,11 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		currentRecording = true;
 	}
 
-	void stopRecording()
+	void stopRecording(boolean fromUI)
 	{
-		userStudyFrame.toggle();
+		if (fromUI == false) {
+			userStudyFrame.toggle();	
+		}
 		currentRecording = false;
 		//this means pause for some users need to relax for a min
 		
@@ -132,9 +134,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	void nextTask() {
 
 		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
-			endStudy();
+			endStudy(false);
 		}
-		String nameOfFile = "StudyOne/" + UserProfile.USER_ID + "/" +  currentTaskNum % taskCount +".csv";
+		String nameOfFile = "StudyOne/usr_" + UserProfile.USER_ID + "/" +  currentTaskNum % taskCount +".csv";
 
 		if(!checkIfFileExist(nameOfFile))
 		{
@@ -162,7 +164,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		
 
 		
-		stopRecording();
+		stopRecording(false);
 
 		if (table.getRowCount() > 0) {
 			//just drop the rows by a new table
@@ -171,7 +173,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		else
 		{
 			currentTaskNum--;
-			String nameOfFile = "StudyOne/" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv";
+			String nameOfFile = "StudyOne/usr_" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv";
 			table = loadTable(nameOfFile, "header, csv");
 
 			for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
@@ -258,7 +260,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 		println("currentSavedRawDataNum: "+currentSavedRawDataNum);
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
-			saveTable(table, "StudyOne/" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv");
+			saveTable(table, "StudyOne/usr_" + UserProfile.USER_ID + "/" + currentTaskNum % taskCount +".csv");
 			currentTaskNum++;
 			userStudyFrame.updateProgress(currentTaskNum);
 

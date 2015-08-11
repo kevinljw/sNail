@@ -160,7 +160,9 @@ public class Pilot2Mgr implements ControlListener {
 
 	void preTask() {
 		
-		stopRecording();
+		println("preTaskCalled");
+
+		currentRecording = false;
 
 		if (table.getRowCount() > 0) {
 			//just drop the rows by a new table
@@ -173,8 +175,10 @@ public class Pilot2Mgr implements ControlListener {
 			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force+"/"+ currentTask.direction +".csv";
 			table = loadTable(nameOfFile, "header, csv");
 
-			for (int row : table.findRowIndices( Integer.toString(currentTaskNum % taskCount), "taskNumber")) {
-				table.removeRow(row);
+			int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
+
+			for (int i = needToDeleteRows.length-1 ; i >= 0 ;i-- ) {
+				table.removeRow(needToDeleteRows[i]);
 			}
 
 			saveTable(table, nameOfFile);

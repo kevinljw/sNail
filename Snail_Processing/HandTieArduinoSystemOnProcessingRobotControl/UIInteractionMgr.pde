@@ -81,6 +81,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       cp5.addListener(mainClass.study1Mgr);
       cp5.addListener(mainClass.study2Mgr);
       cp5.addListener(mainClass.pilot2Mgr);
+      cp5.addListener(mainClass.studyPMgr);
       createUIForSerial();
    }
 

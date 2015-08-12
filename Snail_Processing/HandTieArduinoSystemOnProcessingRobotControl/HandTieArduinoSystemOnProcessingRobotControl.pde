@@ -10,6 +10,7 @@ ExternalSensors sensors;
 Study1Mgr study1Mgr;
 Study2Mgr study2Mgr;
 Pilot2Mgr pilot2Mgr;
+StudyPMgr studyPMgr;
 
 void setup() {
    size(900, 600);
@@ -22,6 +23,8 @@ void setup() {
    study1Mgr = new Study1Mgr(this);
    study2Mgr = new Study2Mgr(this);
    pilot2Mgr = new Pilot2Mgr(this);
+   studyPMgr = new StudyPMgr(this);
+
    uiInteractionMgr = new UIInteractionMgr(this);
    listenerRegistrations();
    
@@ -45,7 +48,6 @@ void listenerRegistrations(){
    // accelMgr.registerToSerialNotifier(serialManager);
    grtMgr.registerToSerialNotifier(serialManager);
    study1Mgr.registerToSerialNotifier(serialManager);
-   
 
    serialManager.registerToGRTNotifier(grtMgr);
    robotControl.registerToGRTNotifier(grtMgr);

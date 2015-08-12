@@ -170,10 +170,6 @@ public class ExternalSensors implements ControlListener{
 	public void cleanInstruct() {
 		cf.cleanInstruct();	
 	}
-
-   public void weight(){
-      cf.weight();
-   }
 }
 
 
@@ -360,12 +356,6 @@ public class ControlFrame extends PApplet {
        
      popMatrix();
   }
-
-  
-  
-  public void weight(){
-     text("Weight: " + ((int) sensorclass.weight), 450, 0);
-   }
 
   ControlP5 cp5;
 

@@ -403,7 +403,7 @@ public class UserStudyOneFrame extends PApplet {
   }
 
   public void draw() {
-     
+  	  
   }
 
   void drawUI() {

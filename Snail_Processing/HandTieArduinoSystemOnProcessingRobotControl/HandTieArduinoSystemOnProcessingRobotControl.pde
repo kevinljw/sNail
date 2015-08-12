@@ -39,6 +39,7 @@ void draw() {
    accelMgr.draw();
    grtMgr.draw();
    sensors.draw();
+   studyPMgr.draw();
    pilot2Mgr.draw();
 }
 

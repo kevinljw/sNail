@@ -62,6 +62,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
 	void startStudy() {
 		userStudyFrame = addUserStudyTwoFrame("User Study Two", 320, 720, this);
     movieFrame = addMovieFrame("User Study Two movie", 550, 400, this);
+
 	}
 
 	void endStudy()

@@ -5,7 +5,7 @@ public class GRTMgr implements SerialListener, GRTNotifier{
 
    //-----------------------------------GRT
    //Set the pipeline mode (CLASSIFICATION_MODE or REGRESSION_MODE), the number of inputs and the number of outputs
-   final int pipelineMode = GRT.TIMESERIES_MODE;
+   final int pipelineMode = GRT.CLASSIFICATION_MODE;
    final int numInputs = SGManager.NUM_OF_GAUGES;//AccelMgr.NUM_OF_AXIS;
    final int numOutputs = 1;
     

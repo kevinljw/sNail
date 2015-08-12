@@ -5,24 +5,93 @@ import java.util.ArrayList;
 import java.util.Collections;
 import processing.video.*;
 
+
+public class StudyTwoTask
+{
+  
+  public int speed;
+  public int force;
+  public int direction;
+
+  public StudyTwoTask(int speed, int force, int direction) {
+    this.speed = speed;
+    this.force = force;
+    this.direction = direction;
+  }
+}
+
+public class StudyTwoDataStructure
+{
+  int taskNumber;
+  float roll;
+  float yaw;
+  float pitch;
+  float force;
+
+  float [] sgs = new float[8];
+  float [] sgs_E = new float[8];
+  float [] sgs_D = new float[8];
+
+  public StudyTwoDataStructure(int taskNumber, float roll, float yaw, float pitch, float force, float [] sgs, float [] sgs_E, float [] sgs_D)
+  {
+    this.taskNumber = taskNumber;
+    this.roll = roll;
+    this.yaw = yaw;
+    this.pitch = pitch;
+    this.force = force;
+    this.sgs = sgs;
+    this.sgs_E = sgs_E;
+    this.sgs_D = sgs_D;
+
+  }
+}
+
+
 public class Study2Mgr implements ControlListener, SerialListener {
 
+  public final static String FOLDER_NAME = "StudyTwo";
   PApplet mainClass;
   ExternalSensors sensors;
 	UserStudyTwoFrame userStudyFrame = null;
   MovieFrame movieFrame = null;
 	boolean currentDoing = false;
-  ArrayList<Integer> tasks = new ArrayList<Integer>();
+  ArrayList<StudyTwoTask> tasks = new ArrayList<StudyTwoTask>();
+  ArrayList<StudyTwoDataStructure> currentDatasForOneTask = new ArrayList<StudyTwoDataStructure>();
+
+  private SerialNotifier serialNotifier;
+  public int currentTaskNum = 0;
+  int currentSavedRawDataNum = 0;
+
+
+  int speed []= {0, 1, 2};
+  int force []= {0, 1, 2, 3, 4};
+  int direction []= {0, 1, 2, 3, 4, 5, 6, 7};
+
+  public int taskCount = speed.length * force.length * direction.length;
+  public final static int TIMES_OF_EACH_TASK = 3;
 
   int run = 0;
   int runIndex = 0;
 
+  Table table;
+
+  boolean currentRecording = false;
+
 	public Study2Mgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
     this.mainClass = mainClass;
     this.sensors = mainClass.sensors;
-    for(int i = 0; i < 8; i++){
-        tasks.add(i);
+
+    for (int i = 0; i < speed.length; ++i) {
+      for (int j = 0; j < force.length; ++j) {
+        for (int k = 0; k < direction.length; ++k) {
+          tasks.add(new StudyTwoTask(speed[i], force[j], direction[k]));
+        }
+      }
     }
+
+    // for(int i = 0; i < 8; i++){
+    //     tasks.add(i);
+    // }
 
     Collections.shuffle(tasks);
   }
@@ -35,7 +104,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
 	  else if (theEvent.getName().equals(UIInteractionMgr.START_USER_STUDY_TWO)) {
       if (currentDoing) {
       	currentDoing = false;
-      	endStudy();
+      	endStudy(true);
       }
       else{
       	currentDoing = true;
@@ -47,25 +116,53 @@ public class Study2Mgr implements ControlListener, SerialListener {
     if (userStudyFrame != null) {
           if (!userStudyFrame.launchComplete)  return;
           else if (theEvent.getName().equals(UserStudyOneFrame.START_RECORD)) {
-
+            if (currentRecording) {
+              stopRecording(true);
+            }
+            else {
+              startRecording();
+            }
           }
           else if (theEvent.getName().equals(UserStudyOneFrame.NEXT_TASK)) {
+            currentTaskNum++;
             nextTask();
           }
           else if (theEvent.getName().equals(UserStudyOneFrame.PREVIOUS_TASK)) {
+            preTask();
           }
         }
 
 	}
 
+  void startRecording()
+  {
+    currentRecording = true;
+  }
+
+  void stopRecording(boolean fromUI)
+  {
+    // if (fromUI == false) {
+    //   userStudyFrame.toggle();  
+    // }
+    currentRecording = false;
+
+    StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.speed +"/"+ currentTask.direction +".csv");
+    currentTaskNum++;
+    userStudyFrame.updateProgress(currentTaskNum);
+    nextTask();
+    //this means pause for some users need to relax for a min
+    
+  }
+
 
 	void startStudy() {
 		userStudyFrame = addUserStudyTwoFrame("User Study Two", 320, 720, this);
     movieFrame = addMovieFrame("User Study Two movie", 550, 400, this);
-
+    nextTask();
 	}
 
-	void endStudy()
+	void endStudy(boolean fromUI)
 	{
 		userStudyFrame.closeWindow();
     movieFrame.closeWindow();
@@ -73,30 +170,149 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
   void nextTask()
   {
-    if( runIndex < 7 && run < 5 ){
-      runIndex++;
-      movieFrame.video(tasks.get(runIndex).intValue());
+    if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
+      endStudy(false);
     }
-    else{
-      run++;
-      runIndex = 0;
+
+    if (currentTaskNum % taskCount == 0) {
       Collections.shuffle(tasks);
     }
 
+    StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+    // int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
+
+    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.speed +"/"+ currentTask.direction +".csv";
+
+    if(!checkIfFileExist(nameOfFile))
+    {
+      table = new Table();
+  
+      table.addColumn("taskNumber");
+      table.addColumn("roll");
+      table.addColumn("yaw");
+      table.addColumn("pitch");
+      table.addColumn("force");
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+        table.addColumn("SG" + i);
+        table.addColumn("SG_E" + i);
+        table.addColumn("SG_D" + i);
+      }
+    }
+    else{
+      table = loadTable(nameOfFile, "header, csv");
+    }
+    movieFrame.video(currentTask.direction);
+    // sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
+
+
+    // if( runIndex < 7 && run < 5 ){
+    //   runIndex++;
+    //   println("tasks.get(runIndex).intValue(): "+tasks.get(runIndex).intValue());
+    //   movieFrame.video(tasks.get(runIndex).intValue());
+    // }
+    // else{
+    //   run++;
+    //   runIndex = 0;
+    //   Collections.shuffle(tasks);
+    // }
+
+  }
+  void preTask() {
+    println("preTaskCalled");
+
+    currentRecording = false;
+
+    if (table.getRowCount() > 0) {
+      //just drop the rows by a new table
+      nextTask();
+    }
+    else
+    {
+      currentTaskNum--;
+      StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.speed +"/"+ currentTask.direction +".csv";
+      table = loadTable(nameOfFile, "header, csv");
+
+      int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
+
+      for (int i = needToDeleteRows.length-1 ; i >= 0 ;i-- ) {
+        table.removeRow(needToDeleteRows[i]);
+      }
+
+      saveTable(table, nameOfFile);
+      userStudyFrame.updateProgress(currentTaskNum);
+      nextTask();
+    }
   }
 
-	public void registerToSerialNotifier(SerialNotifier notifier){
-	}
+  void saveToFile(float [] values)
+  {
+
+    float [] datas = sensors.getRollYawPitch();
+    TableRow newRow = table.addRow();
+    newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
+    newRow.setFloat("roll", datas[0]);
+    newRow.setFloat("yaw", datas[1]);
+    newRow.setFloat("pitch", datas[2]);
+    newRow.setFloat("force", sensors.force);
+    for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+      newRow.setFloat("SG" + i, values[i]);
+      newRow.setFloat("SG_E" + i, sgManager.getOneElongationValsOfGauges(i));
+      newRow.setFloat("SG_D" + i, sgManager.getOneDifferenceValsOfGauges(i));
+    }
+
+    // currentSavedRawDataNum++;
+
+    // println("currentSavedRawDataNum: "+currentSavedRawDataNum);
+    // if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
+
+    //   StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+      
+    //   saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.speed +"/"+ currentTask.direction +".csv");
+    //   currentTaskNum++;
+    //   userStudyFrame.updateProgress(currentTaskNum);
+
+    //   currentSavedRawDataNum = 0;
+    //   nextTask();
+
+    //   println("AMOUNT_OF_RECEIVED_RAW_DATA !!!!!");
+    // }
+
+  }
+
+  boolean checkIfFileExist(String nameOfFile) {
+    File f = new File(sketchPath("") + nameOfFile);
+    if (f.exists()) {
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
 	@Override
-	public void removeToSerialNotifier(SerialNotifier notifier)
-	{
-	}
+  public void registerToSerialNotifier(SerialNotifier notifier)
+  {
+    notifier.registerForSerialListener(this);
+    serialNotifier = notifier;
+  }
+  @Override
+  public void removeToSerialNotifier(SerialNotifier notifier)
+  {
+    notifier.removeSerialListener(this);
+    serialNotifier = null;
+  }
 	@Override
 	public void updateDiscoveredSerialPorts(String [] portNames){}
 	@Override
 	public void updateAnalogVals(float [] values)
 	{
-
+    println("updateAnalogVals user2");
+    if (userStudyFrame != null) {
+      if (currentRecording) {
+        saveToFile(values);
+      }
+    }
 	}
 	@Override
 	public void updateCaliVals(float [] values){}
@@ -156,6 +372,7 @@ public class UserStudyTwoFrame extends PApplet {
 	public final static String NEXT_TASK = "Next Task";
 	public final static String PREVIOUS_TASK = "Previous Task";
   public final static String ARROW_UP = "test";
+  public final static String CURRENT_PROGRESS = "Current Progress";
 
   int w, h;
   Frame frame;
@@ -182,6 +399,9 @@ public class UserStudyTwoFrame extends PApplet {
   Object parent;
   public boolean launchComplete = false;
 
+  private Toggle toogleRecording;
+  private Knob progressKnob;
+
   public void setup() {
   	cp5 = new ControlP5(this);
   	println("mgr: "+mgr);
@@ -198,8 +418,9 @@ public class UserStudyTwoFrame extends PApplet {
   }
 
   public void draw() {
-    int index = mgr.tasks.get(mgr.runIndex).intValue();
-    println("runIndex:"+mgr.runIndex+",realindex:"+index);
+    StudyTwoTask currentTask = mgr.tasks.get( mgr.currentTaskNum % mgr.taskCount);
+    // int index = mgr.tasks.get(mgr.runIndex).intValue();
+    // println("runIndex:"+mgr.runIndex+",realindex:"+index);
 
     image(arrow_up_off,125,30,50,100);
     image(arrow_right_off,175,130,100,50);
@@ -210,66 +431,70 @@ public class UserStudyTwoFrame extends PApplet {
     image(arrow_rightup_off,170,60,80,80);
     image(arrow_rightdown_off,170,175,80,80);
 
-    if( mgr.run < 5 ){
-      switch (index) {
-        case 0:
-          // do something
-          image(arrow_up_on,125,30,50,100);
-          break;
-        case 1:
-          // do something
-          image(arrow_rightup_on,170,60,80,80);
-          break;
-        case 2:
-          image(arrow_right_on,175,130,100,50);
-          break;
-        case 3:
-          image(arrow_rightdown_on,170,175,80,80);
-          break;
-        case 4:
-          image(arrow_down_on,125,180,50,100);
-          break;
-        case 5:
-          image(arrow_leftdown_on,50,175,80,80);
-          break;
-        case 6:
-          image(arrow_left_on,25,130,100,50);
-          break;
-        case 7:
-          image(arrow_leftup_off,50,60,80,80);
-          break;
-        default:
-          // do something
-      }
+    // if( mgr.run < 5 ){
+    switch (currentTask.direction) {
+      case 0:
+        // do something
+        image(arrow_up_on,125,30,50,100);
+        break;
+      case 1:
+        // do something
+        image(arrow_rightup_on,170,60,80,80);
+        break;
+      case 2:
+        image(arrow_right_on,175,130,100,50);
+        break;
+      case 3:
+        image(arrow_rightdown_on,170,175,80,80);
+        break;
+      case 4:
+        image(arrow_down_on,125,180,50,100);
+        break;
+      case 5:
+        image(arrow_leftdown_on,50,175,80,80);
+        break;
+      case 6:
+        image(arrow_left_on,25,130,100,50);
+        break;
+      case 7:
+        image(arrow_leftup_on,50,60,80,80);
+        break;
+      default:
+        // do something
     }
+    // }
 
   }
 
   void drawUI() {
-  	cp5.addButton(START_RECORD)
+  	toogleRecording = cp5.addToggle(START_RECORD)
+     .setColorLabel(color(0))
+     .setBroadcast(false)
      .setValue(0)
-     .setPosition(50,350)
-     .setSize(200,19)
-     .setBroadcast(true)
-     ;
-    cp5.addButton(STOP_RECORD)
-     .setValue(0)
-     .setPosition(50,400)
-     .setSize(200,19)
+     .setPosition(50, 300)
+     .setSize(50,30)
      .setBroadcast(true)
      ;
     cp5.addButton(NEXT_TASK)
      .setValue(0)
-     .setPosition(50,450)
+     .setPosition(50,380)
      .setSize(200,19)
      .setBroadcast(true)
      ;
     cp5.addButton(PREVIOUS_TASK)
      .setValue(0)
-     .setPosition(50,500)
+     .setPosition(50,450)
      .setSize(200,19)
      .setBroadcast(true)
      ; 
+    progressKnob = cp5.addKnob(CURRENT_PROGRESS)
+     .setRange(0,600)
+     .setValue(0)
+     .setPosition(50,500)
+     .setRadius(50)
+     .setDragDirection(Knob.VERTICAL)
+     .setLock(true)
+     ;
   }
   
   private UserStudyTwoFrame() {
@@ -283,6 +508,12 @@ public class UserStudyTwoFrame extends PApplet {
   }
   public ControlP5 control() {
     return cp5;
+  }
+  public void toggle() {
+    toogleRecording.toggle();
+  }
+  public void updateProgress(int num) {
+    progressKnob.setValue(num);
   }
 }
   
@@ -319,44 +550,48 @@ public class UserStudyTwoFrame extends PApplet {
     } 
 
     public void video(int index) {
+      // println("video index :" + index);
       switch (index) {
         case 0:
           movie = new Movie(this, currentSketchPath+"videos/up.mov");
-          movie.play();
+          movie.loop();
           break ;
         case 1:
           movie = new Movie(this, currentSketchPath+"videos/rightup.mov");
-          movie.play();
+          movie.loop();
           break ;
         case 2:
           movie = new Movie(this, currentSketchPath+"videos/right.mov");
-          movie.play();
+          movie.loop();
           break ;
         case 3:
           movie = new Movie(this, currentSketchPath+"videos/rightdown.mov");
-          movie.play();
+          movie.loop();
           break ;
         case 4:
           movie = new Movie(this, currentSketchPath+"videos/down.mov");
-          movie.play();
+          movie.loop();
           break ;
         case 5:
           movie = new Movie(this, currentSketchPath+"videos/leftdown.mov");
-          movie.play();
+          movie.loop();
           break ;
         case 6:
           movie = new Movie(this, currentSketchPath+"videos/left.mov");
-          movie.play();
+          movie.loop();
           break ;
         case 7:
           movie = new Movie(this, currentSketchPath+"videos/leftup.mov");
-          movie.play();
+          movie.loop();
 
           break ;
         default :
       }
-    }
-
+      // println("movie: "+movie);
   }
+  void movieEvent(Movie m) {
+    m.read();
+  }
+}
 
 

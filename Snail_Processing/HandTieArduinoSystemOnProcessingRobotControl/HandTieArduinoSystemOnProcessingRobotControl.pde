@@ -51,6 +51,7 @@ void listenerRegistrations(){
    // accelMgr.registerToSerialNotifier(serialManager);
    grtMgr.registerToSerialNotifier(serialManager);
    study1Mgr.registerToSerialNotifier(serialManager);
+   study2Mgr.registerToSerialNotifier(serialManager);
 
    serialManager.registerToGRTNotifier(grtMgr);
    robotControl.registerToGRTNotifier(grtMgr);

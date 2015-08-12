@@ -265,18 +265,6 @@ public class PilotStudyOneFrame extends PApplet {
      .setSize(50,30)
      .setBroadcast(true)
      ;
-    // cp5.addButton(START_TASK)
-    //  .setValue(0)
-    //  .setPosition(50,150)
-    //  .setSize(200,19)
-    //  .setBroadcast(true)
-    //  ;
-    // cp5.addButton(CONFIRM_START)
-    //  .setValue(0)
-    //  .setPosition(50,200)
-    //  .setSize(200,19)
-    //  .setBroadcast(true)
-    //  ;
     cp5.addButton(NEXT_TASK)
      .setValue(0)
      .setPosition(50,250)

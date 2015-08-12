@@ -39,7 +39,7 @@ void draw() {
    background(255, 255, 255, 0);
    sgManager.draw();
    accelMgr.draw();
-   //grtMgr.draw();
+   grtMgr.draw();
    sensors.draw();
    studyPMgr.draw();
    pilot2Mgr.draw();

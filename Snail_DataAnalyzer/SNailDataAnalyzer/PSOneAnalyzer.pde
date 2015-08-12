@@ -75,8 +75,8 @@ public class PSOneAnalyzer implements ControlListener{
 
 			TableRow newRow = table.addRow();
 			newRow.setString("user", "user_"+i );
-			newRow.setFloat("light", perUserNormalAverage);
-			newRow.setFloat("normal", perUserLightAverage);
+			newRow.setFloat("light", perUserLightAverage);
+			newRow.setFloat("normal", perUserNormalAverage);
 			newRow.setFloat("heavy", perUserHeavyAverage);
 
 			totalNormalAverage += perUserNormalAverage;
@@ -91,8 +91,8 @@ public class PSOneAnalyzer implements ControlListener{
 
 		TableRow newRow = table.addRow();
 		newRow.setString("user", "overall");
-		newRow.setFloat("light", totalNormalAverage);
-		newRow.setFloat("normal", totalLightAverage);
+		newRow.setFloat("light", totalLightAverage);
+		newRow.setFloat("normal", totalNormalAverage);
 		newRow.setFloat("heavy", totalHeavyAverage);
 
 		saveTable(table, PILOT_STUDY_ONE_DATA +"/result.csv");

@@ -96,13 +96,16 @@ public class Pilot2Mgr implements ControlListener {
 		currentDoing = true;
 		sensors.showWindow();
 		nextTask();
-		UserProfile.createProfile();
+		new UserProfile().startDoingStudy(1);
 	}
 
 	void endStudy()
 	{
 		if (currentRecording) {
 			stopRecording();
+		}
+		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
+			new UserProfile().doneStudy(1);
 		}
 		currentDoing = false;
 		sensors.closeWindow();
@@ -191,7 +194,7 @@ public class Pilot2Mgr implements ControlListener {
 
 	void saveToFile()
 	{
-		println("saveToFile!!");
+		// println("saveToFile!!");
 
 		float [] datas = sensors.getRollYawPitch();
 		TableRow newRow = table.addRow();

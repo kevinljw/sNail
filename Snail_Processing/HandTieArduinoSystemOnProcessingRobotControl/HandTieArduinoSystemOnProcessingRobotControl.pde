@@ -11,6 +11,8 @@ Study1Mgr study1Mgr;
 Study2Mgr study2Mgr;
 Pilot2Mgr pilot2Mgr;
 String currentSketchPath = null;
+StudyPMgr studyPMgr;
+
 void setup() {
    currentSketchPath = sketchPath("");
    size(900, 600);
@@ -23,10 +25,14 @@ void setup() {
    study1Mgr = new Study1Mgr(this);
    study2Mgr = new Study2Mgr(this);
    pilot2Mgr = new Pilot2Mgr(this);
+   studyPMgr = new StudyPMgr(this);
+
    uiInteractionMgr = new UIInteractionMgr(this);
    listenerRegistrations();
    
    serialManager.notifyAllWithDiscoveredSerialPorts();
+
+   new UserProfile().createProfile();
 }
 
 void draw() {
@@ -35,6 +41,7 @@ void draw() {
    accelMgr.draw();
    //grtMgr.draw();
    sensors.draw();
+   studyPMgr.draw();
    pilot2Mgr.draw();
 }
 
@@ -44,7 +51,6 @@ void listenerRegistrations(){
    // accelMgr.registerToSerialNotifier(serialManager);
    grtMgr.registerToSerialNotifier(serialManager);
    study1Mgr.registerToSerialNotifier(serialManager);
-   
 
    serialManager.registerToGRTNotifier(grtMgr);
    robotControl.registerToGRTNotifier(grtMgr);

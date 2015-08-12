@@ -149,6 +149,12 @@ public class ExternalSensors implements ControlListener{
 		showAnotherWindow = true;	
 	}
 
+   public void showPWindow() {
+      cf = addControlFrame("WeightingTest", 640, 480, this);
+      background(0, 0, 0);
+      showAnotherWindow = true;
+   }
+
 	public void closeWindow() {
 		cf.closeWindow();
 		showAnotherWindow = false;	
@@ -351,8 +357,6 @@ public class ControlFrame extends PApplet {
      popMatrix();
   }
 
-  
-  
   ControlP5 cp5;
 
   Object parent;

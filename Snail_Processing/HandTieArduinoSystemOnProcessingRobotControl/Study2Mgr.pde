@@ -201,7 +201,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     else{
       table = loadTable(nameOfFile, "header, csv");
     }
-    movieFrame.video(currentTask.direction);
+    movieFrame.videoInstruction(currentTask.direction, currentTask.speed);
     // sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 
 
@@ -549,44 +549,54 @@ public class UserStudyTwoFrame extends PApplet {
        image(movie, 0, 0);
     } 
 
-    public void video(int index) {
+    public void videoInstruction(int index, int speed) {
       // println("video index :" + index);
       switch (index) {
         case 0:
           movie = new Movie(this, currentSketchPath+"videos/up.mov");
-          movie.loop();
           break ;
         case 1:
           movie = new Movie(this, currentSketchPath+"videos/rightup.mov");
-          movie.loop();
           break ;
         case 2:
           movie = new Movie(this, currentSketchPath+"videos/right.mov");
-          movie.loop();
           break ;
         case 3:
           movie = new Movie(this, currentSketchPath+"videos/rightdown.mov");
-          movie.loop();
           break ;
         case 4:
           movie = new Movie(this, currentSketchPath+"videos/down.mov");
-          movie.loop();
           break ;
         case 5:
           movie = new Movie(this, currentSketchPath+"videos/leftdown.mov");
-          movie.loop();
           break ;
         case 6:
           movie = new Movie(this, currentSketchPath+"videos/left.mov");
-          movie.loop();
           break ;
         case 7:
           movie = new Movie(this, currentSketchPath+"videos/leftup.mov");
-          movie.loop();
 
           break ;
         default :
+          break ;
       }
+
+      switch (speed) {
+        case 0:
+          movie.speed(0.5);
+          break ;
+        case 1:
+          movie.speed(1);
+          break ;
+        case 2:
+          movie.speed(2);
+          break ;
+        default :
+          break ;
+      }
+
+      movie.loop();
+
       // println("movie: "+movie);
   }
   void movieEvent(Movie m) {

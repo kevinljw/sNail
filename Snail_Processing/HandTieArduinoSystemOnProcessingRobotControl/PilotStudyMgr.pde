@@ -33,7 +33,7 @@ public class StudyPMgr implements ControlListener {
    //task
    public final static float TOLERANCE_OF_FORCE = 20;
    public final static int AMOUNT_OF_RECEIVED_RAW_DATA = 50;
-   public final static int TIMES_OF_EACH_TASK = 5;
+   public final static int TIMES_OF_EACH_TASK = 10;
    int force []= {0, 1, 2};
    int taskCount = force.length;
    ArrayList<PilotStudyTask> tasks = new ArrayList<PilotStudyTask>();

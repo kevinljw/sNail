@@ -64,7 +64,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
 
   int speed []= {0, 1, 2};
-  int force []= {0, 1, 2, 3, 4};
+  int force []= {0, 1, 2};
   int direction []= {0, 1, 2, 3, 4, 5, 6, 7};
 
   public int taskCount = speed.length * force.length * direction.length;
@@ -147,7 +147,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     currentRecording = false;
 
     StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
-    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.speed +"/"+ currentTask.direction +".csv");
+    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force + "/" + currentTask.speed +"/"+ currentTask.direction +".csv");
     currentTaskNum++;
     userStudyFrame.updateProgress(currentTaskNum);
     nextTask();
@@ -181,7 +181,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
     // int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
 
-    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.speed +"/"+ currentTask.direction +".csv";
+    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force + "/" + currentTask.speed +"/"+ currentTask.direction +".csv";
 
     if(!checkIfFileExist(nameOfFile))
     {
@@ -230,7 +230,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     {
       currentTaskNum--;
       StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
-      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.speed +"/"+ currentTask.direction +".csv";
+      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force + "/" + currentTask.speed +"/"+ currentTask.direction +".csv";
       table = loadTable(nameOfFile, "header, csv");
 
       int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");

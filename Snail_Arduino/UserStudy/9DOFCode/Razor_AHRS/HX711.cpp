@@ -18,7 +18,7 @@ Hx711::Hx711(uint8_t pin_dout, uint8_t pin_slk) :
 	digitalWrite(_pin_slk, LOW);
 
 	averageValue();
-	this->setOffset(averageValue(15));
+	this->setOffset(averageValue(30));
 	this->setScale();
 }
 
@@ -77,5 +77,5 @@ void Hx711::setScale(float scale)
 float Hx711::getGram()
 {
 	long val = (averageValue(1) - _offset);
-	return (float) val / _scale;
+	return (float) val / _scale * 1.76;
 }

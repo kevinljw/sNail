@@ -19,6 +19,8 @@ public class GRTMgr implements SerialListener, GRTNotifier{
 
    public GRTMgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
       this.mainClass = mainClass;
+      boolean b = grt.setClassifier(GRT.ADABOOST, false, false, 2.0f);
+      println("b: "+b);
    }
 
    public void draw(){

@@ -211,23 +211,22 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 
-		float[] datas = sensors.getRollYawPitch();
-		println("datas[0]: "+datas[0] + "datas[2]: "+datas[2]);
-		if (toleranceCalculation(datas[0], currentTask.roll, 0) == false){ 
-			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
-			return false; 
-		}
-		if (toleranceCalculation(datas[2], currentTask.pitch, 0) == false) { 
-			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
-			return false; 
-		}
+		// float[] datas = sensors.getRollYawPitch();
+		// println("datas[0]: "+datas[0] + "datas[2]: "+datas[2]);
+		// if (toleranceCalculation(datas[0], currentTask.roll, 0) == false){ 
+		// 	sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
+		// 	return false; 
+		// }
+		// if (toleranceCalculation(datas[2], currentTask.pitch, 0) == false) { 
+		// 	sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
+		// 	return false; 
+		// }
 		if (toleranceCalculation(sensors.force, currentTask.force, 1)  == false) { 
 			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 			return false; 
 		}
 
 		println("isApplicableForSaving");
-
 		// sensors.cleanInstruct();
 		return true;
 	}
@@ -288,6 +287,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			userStudyFrame.updateProgress(currentTaskNum);
 
 			currentSavedRawDataNum = 0;
+			stopRecording(false);
 			nextTask();
 
 			println("AMOUNT_OF_RECEIVED_RAW_DATA !!!!!");
@@ -322,6 +322,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	@Override
 	public void updateAnalogVals(float [] values)
 	{
+		//&& isApplicableForSaving()
 		if (userStudyFrame != null) {
 			if (currentRecording && isApplicableForSaving()) {
 				saveToFile(values);

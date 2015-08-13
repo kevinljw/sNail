@@ -9,14 +9,14 @@ public class UserProfile {
 
 	public boolean createProfile() {
 		//create user folder and add a profile file at profile file
-			
+		Table tableForProfile;			
 		File f = new File(sketchPath("") + NAME_OF_FILE);
 		if (f.exists()) {
-			return false;
+			tableForProfile = loadTable(NAME_OF_FILE, "header, csv");
 		}
 		else{
 
-			Table tableForProfile = new Table();
+			tableForProfile = new Table();
 			tableForProfile.addColumn("userID");
 			tableForProfile.addColumn("name");
 			tableForProfile.addColumn("sex");
@@ -25,20 +25,24 @@ public class UserProfile {
 			tableForProfile.addColumn("pilotTwo");
 			tableForProfile.addColumn("studyOne");
 			tableForProfile.addColumn("studyTwo");
-
-			TableRow newRow = tableForProfile.addRow();
-			newRow.setString("userID", USER_ID);
-			newRow.setString("name", USER_NAME);
-			newRow.setString("sex", USER_SEX);
-			newRow.setString("hand", USER_HAND);
-			newRow.setInt("pilotOne", 0); // 0 - means didn't do, 1- means doing, 2- means done
-			newRow.setInt("pilotTwo", 0);
-			newRow.setInt("studyOne", 0);
-			newRow.setInt("studyTwo", 0);
-
-
-			saveTable(tableForProfile, NAME_OF_FILE);
 		}
+		TableRow result = tableForProfile.findRow(USER_ID, "userID");
+		if (result != null) {
+			return false;
+		}
+
+		TableRow newRow = tableForProfile.addRow();
+		newRow.setString("userID", USER_ID);
+		newRow.setString("name", USER_NAME);
+		newRow.setString("sex", USER_SEX);
+		newRow.setString("hand", USER_HAND);
+		newRow.setInt("pilotOne", 0); // 0 - means didn't do, 1- means doing, 2- means done
+		newRow.setInt("pilotTwo", 0);
+		newRow.setInt("studyOne", 0);
+		newRow.setInt("studyTwo", 0);
+
+
+		saveTable(tableForProfile, NAME_OF_FILE);
 		return true;
 		
 	}

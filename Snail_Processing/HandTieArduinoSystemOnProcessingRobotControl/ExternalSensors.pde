@@ -245,7 +245,7 @@ public class ControlFrame extends PApplet {
 	// float elongRatio = (float)sensorclass.force/sensorclass.instruct_force;
 	// fill(getHeatmapRGB(elongRatio));
 	fill(0, 102, 255);
-  	rect(500, height*0.8, 30, -sensorclass.force);
+  	rect(500, height*0.8, 30, -sensorclass.force * 0.5);
   }
   
   private ControlFrame() {

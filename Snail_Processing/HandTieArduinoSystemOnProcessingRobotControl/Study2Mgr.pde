@@ -160,10 +160,15 @@ public class Study2Mgr implements ControlListener, SerialListener {
 		userStudyFrame = addUserStudyTwoFrame("User Study Two", 320, 720, this);
     movieFrame = addMovieFrame("User Study Two movie", 1024, 640, this);
     nextTask();
+    new UserProfile().startDoingStudy(3);
 	}
 
 	void endStudy(boolean fromUI)
 	{
+    if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
+      new UserProfile().doneStudy(3);
+    }
+
 		userStudyFrame.closeWindow();
     movieFrame.closeWindow();
 	}

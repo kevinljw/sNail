@@ -522,8 +522,8 @@ void setup()
 void loop()
 {
   // Read incoming control messages
-//   if (Serial.available() >= 2)
-//   {
+   //if (Serial.available() >= 2)
+   //{
 //     if (Serial.read() == '#') // Start of new control message
 //     {
 //       int command = Serial.read(); // Commands
@@ -559,11 +559,12 @@ void loop()
 //           output_mode = OUTPUT__MODE_ANGLES;
 //           output_format = OUTPUT__FORMAT_BINARY;
 //         }
-//         else if (output_param == 'c') // Go to _c_alibration mode
-//         {
-//           output_mode = OUTPUT__MODE_CALIBRATE_SENSORS;
-//           reset_calibration_session_flag = true;
-//         }
+         //char output_param = readChar();
+         //if (output_param == 'c') // Go to _c_alibration mode
+         //{
+           //output_mode = OUTPUT__MODE_CALIBRATE_SENSORS;
+           //reset_calibration_session_flag = true;
+         //}
 //         else if (output_param == 's') // Output _s_ensor values
 //         {
 //           char values_param = readChar();
@@ -603,7 +604,7 @@ void loop()
 //             Serial.println(num_gyro_errors);
 //           }
 //         }
-//       }
+       //}
 
 // #if OUTPUT__HAS_RN_BLUETOOTH == true
 //       // Read messages from bluetooth module

@@ -15,6 +15,11 @@ public class ExternalSensors implements ControlListener{
 	public float roll = 0.0;
 	public float yaw = 0.0;
 	public float pitch = 0.0;
+
+	public float yaxis = 0.0;
+	public float xaxis = 0.0;
+	public float zaxis = 0.0;
+
 	public float instruct_roll = 0.0;
 	public float instruct_yaw = -15.0;
 	public float instruct_pitch = 45.0;
@@ -33,12 +38,12 @@ public class ExternalSensors implements ControlListener{
 	PApplet mainClass;
 	Serial sensorsPort;
 
-	public float[] getRollYawPitch() {
+	public float[] getRawAxis() {
 		float[] datas = new float[3];
 
-		datas[0] = roll - rollOffset;
-		datas[1] = yaw - yawOffset;
-		datas[2] = -(pitch - pitchOffset);
+		datas[0] = yaxis;//roll - rollOffset;
+		datas[1] = xaxis;//yaw - yawOffset;
+		datas[2] = zaxis;//-(pitch - pitchOffset);
 
 		return datas;
 	}
@@ -103,6 +108,9 @@ public class ExternalSensors implements ControlListener{
 			yaw = parsedData[i++];
 			pitch = parsedData[i++];
 			roll = parsedData[i++];
+			yaxis = parsedData[i++];
+			xaxis = parsedData[i++];
+			zaxis = parsedData[i++];
 		}
 		
 		if (ENABLE_FORCE) {
@@ -136,6 +144,9 @@ public class ExternalSensors implements ControlListener{
               if (showAnotherWindow) {
                 pitchOffset = pitch;
               }
+          //     	println("pressed A");
+        		// sensorsPort.write('c');
+        		break;
                       
       }
 	}
@@ -227,11 +238,23 @@ public class ControlFrame extends PApplet {
    text("Perform gesture after you make two arrow overlap", 10, 40);
 	// // // Output angles
 	pushMatrix();
+	
+	
+
+
 	translate(10, height - 50);
+	
 	textAlign(LEFT);
+	float [] values  = sensorclass.getRawAxis();
+	text("Y: " + values[0], 0, -20);
+	text("X: " + values[1], 150, -20);
+	text("Z: " + values[2], 300, -20);
 	text("Yaw: " + ((float) sensorclass.yaw - sensorclass.yawOffset), 0, 0);
 	text("Pitch: " + ((float) - (sensorclass.pitch - sensorclass.pitchOffset)), 150, 0);
 	text("Roll: " + ((float) sensorclass.roll - sensorclass.rollOffset), 300, 0);
+
+
+
    text("Instruct : Yaw: " + ( sensorclass.instruct_yaw), 0, 20);
    text("Pitch: " + ( sensorclass.instruct_pitch), 150, 20);
    text("Roll: " + ( sensorclass.instruct_roll), 300, 20);

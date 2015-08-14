@@ -154,9 +154,9 @@ public class Pilot2Mgr implements ControlListener {
 		{
 			table = new Table();
 			table.addColumn("taskNumber");
-			table.addColumn("roll");
-			table.addColumn("yaw");
-			table.addColumn("pitch");
+			table.addColumn("yaxis");
+			table.addColumn("xaxis");
+			table.addColumn("zaxis");
 			table.addColumn("force");
 		}
 		else{
@@ -201,12 +201,12 @@ public class Pilot2Mgr implements ControlListener {
 	{
 		// println("saveToFile!!");
 
-		float [] datas = sensors.getRollYawPitch();
+		float [] datas = sensors.getRawAxis();
 		TableRow newRow = table.addRow();
 		newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
-		newRow.setFloat("roll", datas[0]);
-		newRow.setFloat("yaw", datas[1]);
-		newRow.setFloat("pitch", datas[2]);
+		newRow.setFloat("yaxis", datas[0]);
+		newRow.setFloat("xaxis", datas[1]);
+		newRow.setFloat("zaxis", datas[2]);
 		newRow.setFloat("force", sensors.force);
 	}
 

@@ -16,7 +16,12 @@ void output_angles()
     // Serial.print("#YPR=");
     Serial.print(TO_DEG(yaw)); Serial.print(" ");
     Serial.print(TO_DEG(pitch)); Serial.print(" ");
-    Serial.print(TO_DEG(roll));
+    Serial.print(TO_DEG(roll)); Serial.print(" ");
+
+
+    Serial.print(accel[0]); Serial.print(" ");
+    Serial.print(accel[1]); Serial.print(" ");
+    Serial.print(accel[2]);
   }
 }
 

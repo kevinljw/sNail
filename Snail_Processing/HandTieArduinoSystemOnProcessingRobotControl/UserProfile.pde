@@ -2,7 +2,7 @@
 public class UserProfile {
 
 	public final static String USER_NAME = "jesse";
-	public final static String USER_ID = "0"; // staring from 0
+	public final static String USER_ID = "2"; // staring from 0
 	public final static String USER_SEX = "male"; // 1 - male, 0 - female
 	public final static String USER_HAND = "right"; // 1 - right, 0 - left
 	public final static String NAME_OF_FILE = "UsersProfile.csv";

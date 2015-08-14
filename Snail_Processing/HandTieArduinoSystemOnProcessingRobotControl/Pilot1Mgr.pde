@@ -137,10 +137,6 @@ public class Pilot1Mgr implements ControlListener {
       endStudy();
     }
 
-    if (currentTaskNum % taskCount == 0) {
-      Collections.shuffle(tasks);
-    }
-
     PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
     String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force+".csv";
 

@@ -286,10 +286,10 @@ public class PilotTwoFrame extends PApplet {
   		case 0 :
   			text("Slide", width * 0.2 , height*0.6);	
   			break;
-  		case 0 :
+  		case 1 :
   			text("Pivot", width * 0.2 , height*0.6);
   			break;	
-  		case 1:
+  		case 2:
   			text("Drag", width * 0.2 , height*0.6);
   			break;		
   		default :

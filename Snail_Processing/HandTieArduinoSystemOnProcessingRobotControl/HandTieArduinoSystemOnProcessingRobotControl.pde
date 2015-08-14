@@ -7,11 +7,12 @@ AccelMgr accelMgr;
 RobotControl robotControl;
 GRTMgr grtMgr;
 ExternalSensors sensors;
+Pilot1Mgr pilot1Mgr;
+Pilot2Mgr pilot2Mgr;
 Study1Mgr study1Mgr;
 Study2Mgr study2Mgr;
-Pilot2Mgr pilot2Mgr;
 String currentSketchPath = null;
-StudyPMgr studyPMgr;
+
 
 void setup() {
    currentSketchPath = sketchPath("");
@@ -24,8 +25,9 @@ void setup() {
    sensors = new ExternalSensors(this);
    study1Mgr = new Study1Mgr(this);
    study2Mgr = new Study2Mgr(this);
+   pilot1Mgr = new Pilot1Mgr(this);
    pilot2Mgr = new Pilot2Mgr(this);
-   studyPMgr = new StudyPMgr(this);
+   
 
    uiInteractionMgr = new UIInteractionMgr(this);
    listenerRegistrations();
@@ -41,7 +43,7 @@ void draw() {
    accelMgr.draw();
    grtMgr.draw();
    sensors.draw();
-   studyPMgr.draw();
+   pilot1Mgr.draw();
    pilot2Mgr.draw();
 }
 

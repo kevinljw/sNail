@@ -193,6 +193,7 @@ public class Pilot2Mgr implements ControlListener {
 
 			saveTable(table, nameOfFile);
 			userStudyFrame.updateProgress(currentTaskNum);
+			userStudyFrame.updateInstruct(currentTask.force, currentTask.direction);
 			nextTask();
 		}		
 	}

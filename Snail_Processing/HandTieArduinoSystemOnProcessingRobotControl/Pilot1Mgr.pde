@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class PilotOneTask
 {
   
-  public int force; // tap and press 0...1
+  public int force; // tap and press and zero to 9 , 0...11, 
 
   public PilotOneTask(int force) {
     this.force = force;
@@ -18,7 +18,7 @@ public class PilotOneTask
 public class Pilot1Mgr implements ControlListener {
 
   public final static String FOLDER_NAME = "PilotOne";
-  public final static int AMOUNT_OF_FORCE = 2;
+  public final static int AMOUNT_OF_FORCE = 12;
 
   //holding other class object
   PApplet mainClass;
@@ -33,7 +33,7 @@ public class Pilot1Mgr implements ControlListener {
   Table table;
 
   //task
-  public final static int TIMES_OF_EACH_TASK = 10;
+  public final static int TIMES_OF_EACH_TASK = 5;
   int taskCount = AMOUNT_OF_FORCE;
   ArrayList<PilotOneTask> tasks = new ArrayList<PilotOneTask>();
 
@@ -135,6 +135,10 @@ public class Pilot1Mgr implements ControlListener {
 
     if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
       endStudy();
+    }
+
+    if (currentTaskNum % taskCount == 0) {
+      Collections.shuffle(tasks);
     }
 
     PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
@@ -277,6 +281,36 @@ public class PilotOneFrame extends PApplet {
         break;
       case 1 :
         text("Press", width * 0.2 , height*0.6);
+        break;
+      case 2 :
+        text("Write 0", width * 0.2 , height*0.6);
+        break;
+      case 3 :
+        text("Write 1", width * 0.2 , height*0.6);
+        break;
+      case 4 :
+        text("Write 2", width * 0.2 , height*0.6);
+        break;
+      case 5 :
+        text("Write 3", width * 0.2 , height*0.6);
+        break;
+      case 6 :
+        text("Write 4", width * 0.2 , height*0.6);
+        break;
+      case 7 :
+        text("Write 5", width * 0.2 , height*0.6);
+        break;
+      case 8 :
+        text("Write 6", width * 0.2 , height*0.6);
+        break;
+      case 9 :
+        text("Write 7", width * 0.2 , height*0.6);
+        break;  
+      case 10 :
+        text("Write 8", width * 0.2 , height*0.6);
+        break;  
+      case 11 :
+        text("Write 9", width * 0.2 , height*0.6);
         break;  
       default :
         break;  
@@ -301,7 +335,7 @@ public class PilotOneFrame extends PApplet {
      .setBroadcast(true)
      ; 
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,20)
+     .setRange(0,60)
      .setValue(0)
      .setPosition(200,10)
      .setRadius(50)

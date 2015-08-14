@@ -1,9 +1,13 @@
 
 public class UserProfile {
 
-	public final static String USER_NAME = "jesse";
-	public final static String USER_ID = "2"; // staring from 0
-	public final static String USER_SEX = "male"; // 1 - male, 0 - female
+	public final static String USER_ID = "0"; // staring from 0
+	public final static String USER_NAME = "Cindy";
+	public final static String USER_ADDRESS = "";
+	public final static String USER_COMPANY = "";
+	public final static String USER_TITLE = "";
+	public final static String USER_TIME = "";
+	// public final static String USER_SEX = "male"; // 1 - male, 0 - female
 	public final static String USER_HAND = "right"; // 1 - right, 0 - left
 	public final static String NAME_OF_FILE = "UsersProfile.csv";
 
@@ -19,7 +23,11 @@ public class UserProfile {
 			tableForProfile = new Table();
 			tableForProfile.addColumn("userID");
 			tableForProfile.addColumn("name");
-			tableForProfile.addColumn("sex");
+			tableForProfile.addColumn("address");
+			tableForProfile.addColumn("company");
+			tableForProfile.addColumn("title");
+			tableForProfile.addColumn("time");
+			// tableForProfile.addColumn("sex");
 			tableForProfile.addColumn("hand");
 			tableForProfile.addColumn("pilotOne");
 			tableForProfile.addColumn("pilotTwo");
@@ -34,7 +42,11 @@ public class UserProfile {
 		TableRow newRow = tableForProfile.addRow();
 		newRow.setString("userID", USER_ID);
 		newRow.setString("name", USER_NAME);
-		newRow.setString("sex", USER_SEX);
+		// newRow.setString("sex", USER_SEX);
+		newRow.setString("address", USER_ADDRESS);
+		newRow.setString("company", USER_COMPANY);
+		newRow.setString("title", USER_TITLE);
+		newRow.setString("time", USER_TIME);
 		newRow.setString("hand", USER_HAND);
 		newRow.setInt("pilotOne", 0); // 0 - means didn't do, 1- means doing, 2- means done
 		newRow.setInt("pilotTwo", 0);

@@ -298,16 +298,16 @@ public class PilotTwoFrame extends PApplet {
   	}
   	switch (direction) {
   		case 0 :
-  			text("\nup", width * 0.2 , height*0.8);	
+  			text("up", width * 0.2 , height*0.7);	
   			break;		
   		case 1 :
-  			text("\nright", width * 0.2 , height*0.8);
+  			text("right", width * 0.2 , height*0.7);
   			break;
   		case 2:
-  			text("\ndown", width * 0.2 , height*0.8);
+  			text("down", width * 0.2 , height*0.7);
   			break;	
   		case 3 :
-  			text("\nleft", width * 0.2 , height*0.8);	
+  			text("left", width * 0.2 , height*0.7);	
   			break;		
   		default :		
   			break;	

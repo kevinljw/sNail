@@ -33,7 +33,7 @@ public class Pilot1Mgr implements ControlListener {
   Table table;
 
   //task
-  public final static int TIMES_OF_EACH_TASK = 5;
+  public final static int TIMES_OF_EACH_TASK = 10;
   int taskCount = AMOUNT_OF_FORCE;
   ArrayList<PilotOneTask> tasks = new ArrayList<PilotOneTask>();
 
@@ -54,7 +54,7 @@ public class Pilot1Mgr implements ControlListener {
   public void controlEvent(ControlEvent theEvent){
     //others
     if (millis()<1000) return;
-      else if (theEvent.getName().equals(UIInteractionMgr.START_PILOT_STUDY_TWO)) {
+      else if (theEvent.getName().equals(UIInteractionMgr.START_PILOT_STUDY_ONE)) {
           if (currentDoing) {
             endStudy();
           }
@@ -273,14 +273,11 @@ public class PilotOneFrame extends PApplet {
     textSize(32);
     switch (force) {
       case 0 :
-        text("Slide", width * 0.2 , height*0.6);  
+        text("Tap", width * 0.2 , height*0.6);  
         break;
       case 1 :
-        text("Pivot", width * 0.2 , height*0.6);
+        text("Press", width * 0.2 , height*0.6);
         break;  
-      case 2:
-        text("Drag", width * 0.2 , height*0.6);
-        break;    
       default :
         break;  
       
@@ -304,7 +301,7 @@ public class PilotOneFrame extends PApplet {
      .setBroadcast(true)
      ; 
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,60)
+     .setRange(0,20)
      .setValue(0)
      .setPosition(200,10)
      .setRadius(50)

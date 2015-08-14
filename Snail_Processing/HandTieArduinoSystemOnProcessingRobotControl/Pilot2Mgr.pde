@@ -8,7 +8,7 @@ public class PilotTwoTask
 {
 	
 	public int direction; // 4 direction starting from up, right, down, left
-	public int force; // 2 different forces, light, heavy, 0...2
+	public int force; // 3 different forces, slide, pivot, heavy, 0...2
 	//means that slide and drag
 
 	public PilotTwoTask(int direction, int force) {
@@ -22,7 +22,7 @@ public class Pilot2Mgr implements ControlListener {
 
 	public final static String FOLDER_NAME = "PilotTwo";
 	public final static int AMOUNT_OF_DIRECTION = 4;
-	public final static int AMOUNT_OF_FORCE = 2;
+	public final static int AMOUNT_OF_FORCE = 3;
 
 	//holding other class object
 	PApplet mainClass;
@@ -37,7 +37,7 @@ public class Pilot2Mgr implements ControlListener {
 	Table table;
 
 	//task
-	public final static int TIMES_OF_EACH_TASK = 3;
+	public final static int TIMES_OF_EACH_TASK = 5;
 	int taskCount = AMOUNT_OF_DIRECTION * AMOUNT_OF_FORCE;
 	ArrayList<PilotTwoTask> tasks = new ArrayList<PilotTwoTask>();
 
@@ -141,6 +141,10 @@ public class Pilot2Mgr implements ControlListener {
 
 		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
 			endStudy();
+		}
+
+		if (currentTaskNum % taskCount == 0) {
+			Collections.shuffle(tasks);
 		}
 
 		PilotTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
@@ -281,7 +285,10 @@ public class PilotTwoFrame extends PApplet {
   	switch (force) {
   		case 0 :
   			text("Slide", width * 0.2 , height*0.6);	
-  			break;		
+  			break;
+  		case 0 :
+  			text("Pivot", width * 0.2 , height*0.6);
+  			break;	
   		case 1:
   			text("Drag", width * 0.2 , height*0.6);
   			break;		
@@ -325,7 +332,7 @@ public class PilotTwoFrame extends PApplet {
      .setBroadcast(true)
      ; 
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,72)
+     .setRange(0,60)
      .setValue(0)
      .setPosition(200,10)
      .setRadius(50)

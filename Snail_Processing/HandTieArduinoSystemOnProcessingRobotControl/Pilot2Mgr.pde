@@ -7,8 +7,9 @@ import java.util.ArrayList;
 public class PilotTwoTask
 {
 	
-	public int direction; // 8 direction starting from up -> up_right ,0...7
-	public int force; // 3 different forces, normal, light, heavy, 0...2
+	public int direction; // 4 direction starting from up, right, down, left
+	public int force; // 2 different forces, light, heavy, 0...2
+	//means that slide and drag
 
 	public PilotTwoTask(int direction, int force) {
 		this.direction = direction;
@@ -20,8 +21,8 @@ public class PilotTwoTask
 public class Pilot2Mgr implements ControlListener {
 
 	public final static String FOLDER_NAME = "PilotTwo";
-	public final static int AMOUNT_OF_DIRECTION = 8;
-	public final static int AMOUNT_OF_FORCE = 3;
+	public final static int AMOUNT_OF_DIRECTION = 4;
+	public final static int AMOUNT_OF_FORCE = 2;
 
 	//holding other class object
 	PApplet mainClass;
@@ -279,42 +280,28 @@ public class PilotTwoFrame extends PApplet {
   	textSize(32);
   	switch (force) {
   		case 0 :
-  			text("Force:\nNormal", width * 0.2 , height*0.6);	
+  			text("Slide", width * 0.2 , height*0.6);	
   			break;		
   		case 1:
-  			text("Force:\nLight", width * 0.2 , height*0.6);
-  			break;	
-  		case 2 :
-  			text("Force:\nHeavy", width * 0.2 , height*0.6);	
-  			break;	
+  			text("Drag", width * 0.2 , height*0.6);
+  			break;		
   		default :
   			break;	
   		
   	}
   	switch (direction) {
   		case 0 :
-  			text("Direction:\nup", width * 0.2 , height*0.8);	
+  			text("\nup", width * 0.2 , height*0.8);	
   			break;		
-  		case 1:
-  			text("Direction:\nup right", width * 0.2 , height*0.8);
-  			break;	
-  		case 2 :
-  			text("Direction:\nright", width * 0.2 , height*0.8);
+  		case 1 :
+  			text("\nright", width * 0.2 , height*0.8);
   			break;
+  		case 2:
+  			text("\ndown", width * 0.2 , height*0.8);
+  			break;	
   		case 3 :
-  			text("Direction:\nright down", width * 0.2 , height*0.8);	
+  			text("\nleft", width * 0.2 , height*0.8);	
   			break;		
-  		case 4:
-  			text("Direction:\ndown", width * 0.2 , height*0.8);
-  			break;	
-  		case 5 :
-  			text("Direction:\nleft down", width * 0.2 , height*0.8);
-  		case 6 :
-  			text("Direction:\nleft", width * 0.2 , height*0.8);	
-  			break;		
-  		case 7:
-  			text("Direction:\nleft up", width * 0.2 , height*0.8);
-  			break;
   		default :		
   			break;	
   		

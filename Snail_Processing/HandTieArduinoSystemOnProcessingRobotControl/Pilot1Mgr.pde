@@ -46,8 +46,6 @@ public class Pilot1Mgr implements ControlListener {
     this.sensors = mainClass.sensors;
 
     for (int j = 0; j < TIMES_OF_EACH_TASK; ++j) {
-      // tasks.add(new ArrayList<PilotOneTask>());
-
       ArrayList<PilotOneTask> needToAddTask = new ArrayList<PilotOneTask>();
       for (int i = 0; i < AMOUNT_OF_FORCE; ++i) {
         needToAddTask.add(new PilotOneTask(i));
@@ -145,24 +143,25 @@ public class Pilot1Mgr implements ControlListener {
     if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
       endStudy();
     }
-
-    // PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+".csv";
-
-    if(!checkIfFileExist(nameOfFile))
-    {
-      table = new Table();
-      table.addColumn("taskNumber");
-      table.addColumn("yaxis");
-      table.addColumn("xaxis");
-      table.addColumn("zaxis");
-      table.addColumn("force");
-    }
     else{
-      table = loadTable(nameOfFile, "header, csv");
-    }
+      // PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+".csv";
 
-    userStudyFrame.updateInstruct(currentTask().force);
+      if(!checkIfFileExist(nameOfFile))
+      {
+        table = new Table();
+        table.addColumn("taskNumber");
+        table.addColumn("yaxis");
+        table.addColumn("xaxis");
+        table.addColumn("zaxis");
+        table.addColumn("force");
+      }
+      else{
+        table = loadTable(nameOfFile, "header, csv");
+      }
+
+      userStudyFrame.updateInstruct(currentTask().force);
+    }
     
     // sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
   }
@@ -173,12 +172,12 @@ public class Pilot1Mgr implements ControlListener {
 
     currentRecording = false;
 
-    if (table.getRowCount() > 0) {
-      //just drop the rows by a new table
-      nextTask();
-    }
-    else
-    {
+    // if (table.getRowCount() > 0) {
+    //   //just drop the rows by a new table
+    //   nextTask();
+    // }
+    // else
+    // {
       currentTaskNum--;
       // PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
       String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+".csv";
@@ -193,7 +192,7 @@ public class Pilot1Mgr implements ControlListener {
       saveTable(table, nameOfFile);
       userStudyFrame.updateProgress(currentTaskNum);
       nextTask();
-    }   
+    // }   
   }
 
   void saveToFile()

@@ -39,7 +39,7 @@ public class Pilot2Mgr implements ControlListener {
 	//task
 	public final static int TIMES_OF_EACH_TASK = 5;
 	int taskCount = AMOUNT_OF_DIRECTION * AMOUNT_OF_FORCE;
-	ArrayList<PilotTwoTask> tasks = new ArrayList<PilotTwoTask>();
+	ArrayList<ArrayList<PilotTwoTask>> tasks = new ArrayList<ArrayList<PilotTwoTask>>();
 
 	//external window
 	PilotTwoFrame userStudyFrame = null;
@@ -49,11 +49,22 @@ public class Pilot2Mgr implements ControlListener {
 		this.mainClass = mainClass;
 		this.sensors = mainClass.sensors;
 
-		for (int i = 0; i < AMOUNT_OF_DIRECTION; ++i) {
-			for (int j = 0; j < AMOUNT_OF_FORCE; ++j) {
-				tasks.add(new PilotTwoTask(i, j));
+
+		for (int k = 0; k < TIMES_OF_EACH_TASK; ++k) {
+			ArrayList<PilotTwoTask> needToAddTask = new ArrayList<PilotTwoTask>();
+
+			for (int i = 0; i < AMOUNT_OF_DIRECTION; ++i) {
+				for (int j = 0; j < AMOUNT_OF_FORCE; ++j) {
+					needToAddTask.add(new PilotTwoTask(i, j));
+				}
 			}
-		}
+			tasks.add(needToAddTask);
+			Collections.shuffle(tasks.get(k));
+	    }
+
+
+
+		
 	}
 
 	@Override
@@ -123,8 +134,8 @@ public class Pilot2Mgr implements ControlListener {
 		//means that the task end
 		currentRecording = false;
 
-		PilotTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
-		saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force+"/"+ currentTask.direction +".csv");
+		// PilotTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+		saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+"/"+ currentTask().direction +".csv");
 		currentTaskNum++;
 		userStudyFrame.updateProgress(currentTaskNum);
 		nextTask();
@@ -142,30 +153,26 @@ public class Pilot2Mgr implements ControlListener {
 		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
 			endStudy();
 		}
+		else {
+			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+"/"+ currentTask().direction +".csv";
 
-		if (currentTaskNum % taskCount == 0) {
-			Collections.shuffle(tasks);
+			if(!checkIfFileExist(nameOfFile))
+			{
+				table = new Table();
+				table.addColumn("taskNumber");
+				table.addColumn("yaxis");
+				table.addColumn("xaxis");
+				table.addColumn("zaxis");
+				table.addColumn("force");
+			}
+			else{
+				table = loadTable(nameOfFile, "header, csv");
+			}
+
+			userStudyFrame.updateInstruct(currentTask().force, currentTask().direction);
+			
+			// sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 		}
-
-		PilotTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
-		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force+"/"+ currentTask.direction +".csv";
-
-		if(!checkIfFileExist(nameOfFile))
-		{
-			table = new Table();
-			table.addColumn("taskNumber");
-			table.addColumn("yaxis");
-			table.addColumn("xaxis");
-			table.addColumn("zaxis");
-			table.addColumn("force");
-		}
-		else{
-			table = loadTable(nameOfFile, "header, csv");
-		}
-
-		userStudyFrame.updateInstruct(currentTask.force, currentTask.direction);
-		
-		// sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 	}
 
 	void preTask() {
@@ -174,15 +181,15 @@ public class Pilot2Mgr implements ControlListener {
 
 		currentRecording = false;
 
-		if (table.getRowCount() > 0) {
-			//just drop the rows by a new table
-			nextTask();
-		}
-		else
-		{
+		// if (table.getRowCount() > 0) {
+		// 	//just drop the rows by a new table
+		// 	nextTask();
+		// }
+		// else
+		// {
 			currentTaskNum--;
-			PilotTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
-			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force+"/"+ currentTask.direction +".csv";
+			// PilotTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+"/"+ currentTask().direction +".csv";
 			table = loadTable(nameOfFile, "header, csv");
 
 			int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
@@ -193,9 +200,9 @@ public class Pilot2Mgr implements ControlListener {
 
 			saveTable(table, nameOfFile);
 			userStudyFrame.updateProgress(currentTaskNum);
-			userStudyFrame.updateInstruct(currentTask.force, currentTask.direction);
+			userStudyFrame.updateInstruct(currentTask().force, currentTask().direction);
 			nextTask();
-		}		
+		// }		
 	}
 
 	void saveToFile()
@@ -220,6 +227,11 @@ public class Pilot2Mgr implements ControlListener {
 			return false;
 		}
 	}
+	PilotTwoTask currentTask()
+  	{
+    	PilotTwoTask currentTask = tasks.get((int) currentTaskNum / taskCount).get(currentTaskNum % taskCount);
+   		return currentTask;
+  	}
 }
 
 

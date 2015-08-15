@@ -61,7 +61,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			tasks.add(template);
 			Collections.shuffle(tasks.get(i));
 		}
-		taskCount = TIMES_OF_EACH_TASK * template.size();
+		taskCount = template.size();
 	}
 
 	@Override

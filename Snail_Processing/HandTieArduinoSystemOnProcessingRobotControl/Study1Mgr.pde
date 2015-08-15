@@ -41,12 +41,12 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	public final static float NEWTON_TO_GRAMS = 101.971621298;
 	public final static int AMOUNT_OF_RECEIVED_RAW_DATA = 50;
 	public final static int TIMES_OF_EACH_TASK = 3;
-	float pitch []= {65, 45, 25, 15};
-	float roll []= {-15, 0, 15, 45, 90};
-	float force []= {1, 2, 3, 4, 5};
-	int taskCount = pitch.length * roll.length * force.length;
-	ArrayList<StudyOneTask> tasks = new ArrayList<StudyOneTask>();
 
+	float force []= {1, 2, 3, 4, 5};
+	int taskCount = 0;
+
+	ArrayList<ArrayList<StudyOneTask>> tasks = new ArrayList<ArrayList<StudyOneTask>>();
+	ArrayList<StudyOneTask> template = new ArrayList<StudyOneTask>();
 	//external window
 	UserStudyOneFrame userStudyFrame = null;
 
@@ -54,14 +54,14 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	public Study1Mgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
 		this.mainClass = mainClass;
 		this.sensors = mainClass.sensors;
+		templateInit();
 
-		for (int i = 0; i < this.pitch.length; ++i) {
-			for (int j = 0; j < this.roll.length; ++j) {
-				for (int k = 0; k < this.force.length; ++k) {
-					tasks.add(new StudyOneTask(this.pitch[i], this.roll[j], this.force[k] * NEWTON_TO_GRAMS ));
-				}
-			}
+
+		for (int i = 0; i < TIMES_OF_EACH_TASK; ++i) {
+			tasks.add(template);
+			Collections.shuffle(tasks.get(i));
 		}
+		taskCount = TIMES_OF_EACH_TASK * template.size();
 	}
 
 	@Override
@@ -97,7 +97,61 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	      	}
       	}
 	}
+	void templateInit()
+	{
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(15, -15, this.force[k] * NEWTON_TO_GRAMS ));
+		}
 
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(15, 0, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(15, 15, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(15, 45, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(15, 90, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(25, 0, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(45, -15, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(45, 0, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(45, 15, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(45, 45, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(45, 90, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(65, 0, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(90, 0, this.force[k] * NEWTON_TO_GRAMS ));
+		}
+
+	}
 
 	void startStudy() {
 		userStudyFrame = addUserStudyOneFrame("User Study One", 320, 480, this);
@@ -145,8 +199,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
 			endStudy(false);
 		}
-		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-		int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
+		// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+		int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);
 
 		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv";
 
@@ -168,7 +222,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		else{
 			table = loadTable(nameOfFile, "header, csv");
 		}
-		sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
+		sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
 	}
 
 	void preTask() {
@@ -177,16 +231,16 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		
 		stopRecording(false);
 
-		if (table.getRowCount() > 0) {
-			//just drop the rows by a new table
-			nextTask();
-		}
-		else
-		{
+		// if (table.getRowCount() > 0) {
+		// 	//just drop the rows by a new table
+		// 	nextTask();
+		// }
+		// else
+		// {
 			currentTaskNum--;
 
-			StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-			int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);;
+			// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+			int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);;
 
 			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv";
 			table = loadTable(nameOfFile, "header, csv");
@@ -203,13 +257,13 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 			saveTable(table, nameOfFile);
 			userStudyFrame.updateProgress(currentTaskNum);
-		}		
+		// }		
 	}
 
 
 	boolean isApplicableForSaving(){
 
-		StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+		// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 
 		// float[] datas = sensors.getRollYawPitch();
 		// println("datas[0]: "+datas[0] + "datas[2]: "+datas[2]);
@@ -221,8 +275,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		// 	sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 		// 	return false; 
 		// }
-		if (toleranceCalculation(sensors.force, currentTask.force, 1)  == false) { 
-			sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
+		if (toleranceCalculation(sensors.force, currentTask().force, 1)  == false) { 
+			sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
 			return false; 
 		}
 
@@ -281,8 +335,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		println("currentSavedRawDataNum: "+currentSavedRawDataNum);
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
 
-			StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-			int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
+			// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+			int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);
 			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv");
 			currentTaskNum++;
 			userStudyFrame.updateProgress(currentTaskNum);
@@ -304,6 +358,12 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			return false;
 		}
 	}
+
+	StudyOneTask currentTask()
+  	{
+    	StudyOneTask currentTask = tasks.get((int) currentTaskNum / taskCount).get(currentTaskNum % taskCount);
+   		return currentTask;
+  	}
 
 
 	@Override

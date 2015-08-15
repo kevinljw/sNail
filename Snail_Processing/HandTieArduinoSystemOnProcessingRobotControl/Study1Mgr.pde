@@ -203,7 +203,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);
 
 		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
-
+		// println(nameOfFile);
 		if(!checkIfFileExist(nameOfFile))
 		{
 			table = new Table();
@@ -565,7 +565,7 @@ public class UserStudyOneFrame extends PApplet {
   	instruct_Roll = roll;
 	instruct_Force = force;
 
-  	println("file:" +currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
+  	// println("file:" +currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
   	currentShowImage_pitch = loadImage(currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
   	currentShowImage_roll = loadImage(currentSketchPath+"images/r"+ Math.round(roll) +".jpg");
 

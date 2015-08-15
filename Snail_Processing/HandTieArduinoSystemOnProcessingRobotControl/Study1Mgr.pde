@@ -59,7 +59,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 		for (int i = 0; i < TIMES_OF_EACH_TASK; ++i) {
 			tasks.add(template);
-			Collections.shuffle(tasks.get(i));
+			// Collections.shuffle(tasks.get(i));
 		}
 		taskCount = template.size();
 	}

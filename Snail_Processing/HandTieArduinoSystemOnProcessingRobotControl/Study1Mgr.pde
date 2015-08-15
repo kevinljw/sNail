@@ -154,8 +154,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	}
 
 	void startStudy() {
-		userStudyFrame = addUserStudyOneFrame("User Study One", 320, 480, this);
-		sensors.showWindow();
+		userStudyFrame = addUserStudyOneFrame("User Study One", 640, 480, this);
+		// sensors.showWindow();
 		currentDoing = true;
 		//init the first time, wont receiving data immediately, need to press startRecording
 		nextTask();
@@ -175,7 +175,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 
 		currentDoing = false;
-		sensors.closeWindow();
+		// sensors.closeWindow();
 		userStudyFrame.closeWindow();
 	}
 
@@ -222,7 +222,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		else{
 			table = loadTable(nameOfFile, "header, csv");
 		}
-		sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
+		userStudyFrame.setFrameInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
+		userStudyFrame.updateProgress(currentTaskNum);
 	}
 
 	void preTask() {
@@ -256,6 +257,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			}
 
 			saveTable(table, nameOfFile);
+
+			userStudyFrame.setFrameInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
 			userStudyFrame.updateProgress(currentTaskNum);
 		// }		
 	}
@@ -276,7 +279,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		// 	return false; 
 		// }
 		if (toleranceCalculation(sensors.force, currentTask().force, 1)  == false) { 
-			sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
+			// sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
 			return false; 
 		}
 
@@ -431,11 +434,14 @@ UserStudyOneFrame addUserStudyOneFrame(String theName, int theWidth, int theHeig
 public class UserStudyOneFrame extends PApplet {
 
 
-	public final static String START_RECORD = "Start Recording";
-	// public final static String STOP_RECORD = "Stop Recording";
-	public final static String NEXT_TASK = "Next Task";
-	public final static String PREVIOUS_TASK = "Previous Task";
-	public final static String CURRENT_PROGRESS = "Current Progress";
+  public final static String START_RECORD = "Start Recording";
+  // public final static String STOP_RECORD = "Stop Recording";
+  public final static String NEXT_TASK = "Next Task";
+  public final static String PREVIOUS_TASK = "Previous Task";
+  public final static String CURRENT_PROGRESS = "Current Progress";
+
+  PImage currentShowImage_pitch = null;
+  PImage currentShowImage_roll = null;
 
   int w, h;
   Frame frame;
@@ -448,6 +454,9 @@ public class UserStudyOneFrame extends PApplet {
   private Knob progressKnob;
   private Toggle toogleRecording;
   public boolean launchComplete = false;
+
+  private float instruct_Pitch = 0.0f;
+  private float instruct_Roll = 0.0f;
 
   public void setup() {
   	cp5 = new ControlP5(this);
@@ -465,6 +474,19 @@ public class UserStudyOneFrame extends PApplet {
   }
 
   public void draw() {
+  	background(255);
+  	fill(0);
+
+  	if (currentShowImage_pitch != null) {
+  		image(currentShowImage_pitch,280,0,180,180);
+  		textSize(12);
+  		text("Pitch: " + instruct_Pitch, 370, 180);
+  	}
+  	if (currentShowImage_roll != null) {
+  		image(currentShowImage_roll,280,200,180,180);
+  		textSize(12);
+  		text("Roll: " + instruct_Roll, 370, 400);
+  	}
   	  
   }
 
@@ -518,6 +540,15 @@ public class UserStudyOneFrame extends PApplet {
 
   public void toggle() {
   	toogleRecording.toggle();
+  }
+
+  public void setFrameInstruct(float pitch, float roll, float force){
+  	instruct_Pitch = pitch;
+  	instruct_Roll = roll;
+
+  	println("file:" +currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
+  	currentShowImage_pitch = loadImage(currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
+  	currentShowImage_roll = loadImage(currentSketchPath+"images/r"+ Math.round(roll) +".jpg");
   }
   
 

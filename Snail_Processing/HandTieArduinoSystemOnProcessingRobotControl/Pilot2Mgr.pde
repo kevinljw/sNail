@@ -8,7 +8,7 @@ public class PilotTwoTask
 {
 	
 	public int direction; // 4 direction starting from up, right, down, left
-	public int force; // 3 different forces, slide, pivot, heavy, 0...2
+	public int force; // 3 different forces, slide, pivot, drag, 0...2
 	//means that slide and drag
 
 	public PilotTwoTask(int direction, int force) {

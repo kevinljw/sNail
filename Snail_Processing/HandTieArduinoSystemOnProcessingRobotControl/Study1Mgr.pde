@@ -25,7 +25,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	//holding other class object
 	PApplet mainClass;
-	ExternalSensors sensors;
+	public ExternalSensors sensors;
 
 	//self variable
 	private SerialNotifier serialNotifier;
@@ -457,6 +457,7 @@ public class UserStudyOneFrame extends PApplet {
 
   private float instruct_Pitch = 0.0f;
   private float instruct_Roll = 0.0f;
+  private float instruct_Force = 0.0f;
 
   public void setup() {
   	cp5 = new ControlP5(this);
@@ -487,6 +488,23 @@ public class UserStudyOneFrame extends PApplet {
   		textSize(12);
   		text("Roll: " + instruct_Roll, 370, 400);
   	}
+
+  	translate(0, 0);
+	// float elongRatio = (float)sensorclass.force/sensorclass.instruct_force;
+	// fill(getHeatmapRGB(elongRatio));
+	fill(255, 255, 0);
+  	rect(500, height*0.8, 30, -instruct_Force * 0.5);
+
+	fill(0, 255, 0);
+  	rect(500, height*0.8, 30, -mgr.sensors.force * 0.5);
+
+  	
+
+  	fill(0);
+  	text("Current Force: " + mgr.sensors.force, 450, height*0.9);
+  	text("Instruct Force: " + instruct_Force, 450, height*0.95);
+
+  	// mgr.sensors;
   	  
   }
 
@@ -512,7 +530,7 @@ public class UserStudyOneFrame extends PApplet {
      .setBroadcast(true)
      ; 
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,300)
+     .setRange(0,195)
      .setValue(0)
      .setPosition(100,250)
      .setRadius(50)
@@ -545,10 +563,12 @@ public class UserStudyOneFrame extends PApplet {
   public void setFrameInstruct(float pitch, float roll, float force){
   	instruct_Pitch = pitch;
   	instruct_Roll = roll;
+	instruct_Force = force;
 
   	println("file:" +currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
   	currentShowImage_pitch = loadImage(currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
   	currentShowImage_roll = loadImage(currentSketchPath+"images/r"+ Math.round(roll) +".jpg");
+
   }
   
 

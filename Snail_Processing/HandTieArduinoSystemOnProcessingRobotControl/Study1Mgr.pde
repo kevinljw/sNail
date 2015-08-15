@@ -202,7 +202,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 		int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);
 
-		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv";
+		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
 
 		if(!checkIfFileExist(nameOfFile))
 		{
@@ -243,7 +243,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 			int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);;
 
-			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv";
+			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
 			table = loadTable(nameOfFile, "header, csv");
 
 			// for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
@@ -340,7 +340,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 			// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 			int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);
-			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/"+currentTaskNum % taskCount +".csv");
+			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv");
 			currentTaskNum++;
 			userStudyFrame.updateProgress(currentTaskNum);
 

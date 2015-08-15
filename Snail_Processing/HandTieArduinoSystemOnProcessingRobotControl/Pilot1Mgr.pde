@@ -35,7 +35,7 @@ public class Pilot1Mgr implements ControlListener {
   //task
   public final static int TIMES_OF_EACH_TASK = 5;
   int taskCount = AMOUNT_OF_FORCE;
-  ArrayList<PilotOneTask> tasks = new ArrayList<PilotOneTask>();
+  ArrayList<ArrayList<PilotOneTask>> tasks = new ArrayList<ArrayList<PilotOneTask>>();
 
   //external window
   PilotOneFrame userStudyFrame = null;
@@ -45,9 +45,18 @@ public class Pilot1Mgr implements ControlListener {
     this.mainClass = mainClass;
     this.sensors = mainClass.sensors;
 
-    for (int i = 0; i < AMOUNT_OF_FORCE; ++i) {
-        tasks.add(new PilotOneTask(i));
+    for (int j = 0; j < TIMES_OF_EACH_TASK; ++j) {
+      // tasks.add(new ArrayList<PilotOneTask>());
+
+      ArrayList<PilotOneTask> needToAddTask = new ArrayList<PilotOneTask>();
+      for (int i = 0; i < AMOUNT_OF_FORCE; ++i) {
+        needToAddTask.add(new PilotOneTask(i));
+      }
+      tasks.add(needToAddTask);
+      Collections.shuffle(tasks.get(j));
     }
+
+    
   }
 
   @Override
@@ -117,8 +126,8 @@ public class Pilot1Mgr implements ControlListener {
     //means that the task end
     currentRecording = false;
 
-    PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force+".csv");
+    // PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+".csv");
     currentTaskNum++;
     userStudyFrame.updateProgress(currentTaskNum);
     nextTask();
@@ -137,12 +146,8 @@ public class Pilot1Mgr implements ControlListener {
       endStudy();
     }
 
-    if (currentTaskNum % taskCount == 0) {
-      Collections.shuffle(tasks);
-    }
-
-    PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force+".csv";
+    // PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+".csv";
 
     if(!checkIfFileExist(nameOfFile))
     {
@@ -157,7 +162,7 @@ public class Pilot1Mgr implements ControlListener {
       table = loadTable(nameOfFile, "header, csv");
     }
 
-    userStudyFrame.updateInstruct(currentTask.force);
+    userStudyFrame.updateInstruct(currentTask().force);
     
     // sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
   }
@@ -175,8 +180,8 @@ public class Pilot1Mgr implements ControlListener {
     else
     {
       currentTaskNum--;
-      PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force+".csv";
+      // PilotOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask().force+".csv";
       table = loadTable(nameOfFile, "header, csv");
 
       int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
@@ -213,6 +218,13 @@ public class Pilot1Mgr implements ControlListener {
       return false;
     }
   }
+
+  PilotOneTask currentTask()
+  {
+    PilotOneTask currentTask = tasks.get((int) currentTaskNum / taskCount).get(currentTaskNum % taskCount);
+    return currentTask;
+  }
+
 }
 
 

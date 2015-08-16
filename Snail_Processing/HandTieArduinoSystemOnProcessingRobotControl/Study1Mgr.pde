@@ -186,7 +186,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void stopRecording(boolean fromUI)
 	{
-		if (fromUI == false) {
+		if (fromUI == false && currentRecording == true) {
 			userStudyFrame.toggle();	
 		}
 		currentRecording = false;

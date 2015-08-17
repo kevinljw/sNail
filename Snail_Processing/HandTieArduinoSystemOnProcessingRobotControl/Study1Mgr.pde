@@ -155,7 +155,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void startStudy() {
 		userStudyFrame = addUserStudyOneFrame("User Study One", 640, 480, this);
-		// sensors.showWindow();
+		sensors.showWindow();
 		currentDoing = true;
 		//init the first time, wont receiving data immediately, need to press startRecording
 		nextTask();
@@ -175,7 +175,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 
 		currentDoing = false;
-		// sensors.closeWindow();
+		sensors.closeWindow();
 		userStudyFrame.closeWindow();
 	}
 
@@ -223,6 +223,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			table = loadTable(nameOfFile, "header, csv");
 		}
 		userStudyFrame.setFrameInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
+		sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll,0.0f);
 		userStudyFrame.updateProgress(currentTaskNum);
 	}
 
@@ -259,6 +260,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			saveTable(table, nameOfFile);
 
 			userStudyFrame.setFrameInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
+			sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll,0.0f);
 			userStudyFrame.updateProgress(currentTaskNum);
 		// }		
 	}

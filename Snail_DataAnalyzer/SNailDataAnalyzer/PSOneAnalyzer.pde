@@ -2,15 +2,15 @@ import java.util.ArrayList;
 import java.io.*;
 
 // 0 - 15 users
-// each folder contains 0,1,2 csv
+// each folder contains 0,1 csv (tap and press)
 // in the csv contains force value
 
 
 class PSOneDatas {
 
-	ArrayList<Table> lightForce = new ArrayList<Table>();
-	ArrayList<Table> normalForce = new ArrayList<Table>();
-	ArrayList<Table> heavyForce = new ArrayList<Table>();
+	ArrayList<Table> tapForce = new ArrayList<Table>();
+	ArrayList<Table> pressForce = new ArrayList<Table>();
+
 }
 
 
@@ -37,66 +37,59 @@ public class PSOneAnalyzer implements ControlListener{
 
 		table = new Table();
 		table.addColumn("user");
-		table.addColumn("light");
-		table.addColumn("normal");
-		table.addColumn("heavy");
+		table.addColumn("tapMax");
+		table.addColumn("pressMax");
 
-		float totalNormalAverage = 0.0;
-		float totalLightAverage = 0.0;
-		float totalHeavyAverage = 0.0;
+		float totalTapAverage = 0.0;
+		float totalPressAverage = 0.0;
 
 
 		loadFiles();
 
 		for (int i = 0; i < list.length; ++i) {
 
-			float perUserNormalAverage = 0.0;
-			float perUserLightAverage = 0.0;
-			float perUserHeavyAverage = 0.0;
+			float perUserTapMax = 0.0;
+			float perUserPressMax = 0.0;
 
 
-			for (int j = 0; j < datas.normalForce.get(i).getRowCount(); ++j) {
-				TableRow row = datas.normalForce.get(i).getRow(j);
-				perUserNormalAverage += row.getFloat("force");
+			for (int j = 0; j < datas.tapForce.get(i).getRowCount(); ++j) {
+				TableRow row = datas.tapForce.get(i).getRow(j);
+				float currentRowForceValue = row.getFloat("force");
+				if (currentRowForceValue > perUserTapMax) {
+					perUserTapMax = currentRowForceValue;
+				}
 			}
-			perUserNormalAverage = (float) perUserNormalAverage / datas.normalForce.get(i).getRowCount();
 
-			for (int j = 0; j < datas.lightForce.get(i).getRowCount(); ++j) {
-				TableRow row = datas.lightForce.get(i).getRow(j);
-				perUserLightAverage += row.getFloat("force");	
+			for (int j = 0; j < datas.pressForce.get(i).getRowCount(); ++j) {
+				TableRow row = datas.pressForce.get(i).getRow(j);
+				float currentRowForceValue = row.getFloat("force");
+				if (currentRowForceValue > perUserPressMax) {
+					perUserPressMax = currentRowForceValue;
+				}
 			}
-			perUserLightAverage = (float) perUserLightAverage / datas.lightForce.get(i).getRowCount();
+			
 
-			for (int j = 0; j < datas.heavyForce.get(i).getRowCount(); ++j) {
-				TableRow row = datas.heavyForce.get(i).getRow(j);
-				perUserHeavyAverage += row.getFloat("force");
-			}
-			perUserHeavyAverage = (float) perUserHeavyAverage / datas.heavyForce.get(i).getRowCount();
 
 			TableRow newRow = table.addRow();
 			newRow.setString("user", "user_"+i );
-			newRow.setFloat("light", perUserLightAverage);
-			newRow.setFloat("normal", perUserNormalAverage);
-			newRow.setFloat("heavy", perUserHeavyAverage);
+			newRow.setFloat("tapMax", perUserTapMax);
+			newRow.setFloat("pressMax", perUserPressMax);
 
-			totalNormalAverage += perUserNormalAverage;
-			totalLightAverage += perUserLightAverage;
-			totalHeavyAverage += perUserHeavyAverage;
+			totalTapAverage += perUserTapMax;
+			totalPressAverage += perUserPressMax;
 		}
+
 		if (list.length >0) {
-			totalNormalAverage = totalNormalAverage / list.length;
-			totalLightAverage = totalLightAverage / list.length;
-			totalHeavyAverage = totalHeavyAverage / list.length;	
+			totalTapAverage = totalTapAverage / list.length;
+			totalPressAverage = totalPressAverage / list.length;
 		}
 
 		TableRow newRow = table.addRow();
 		newRow.setString("user", "overall");
-		newRow.setFloat("light", totalLightAverage);
-		newRow.setFloat("normal", totalNormalAverage);
-		newRow.setFloat("heavy", totalHeavyAverage);
+		newRow.setFloat("tapMax", totalTapAverage);
+		newRow.setFloat("pressMax", totalPressAverage);
 
 		saveTable(table, PILOT_STUDY_ONE_DATA +"/result.csv");
-
 	}
 
 	void loadFiles() {
@@ -104,24 +97,18 @@ public class PSOneAnalyzer implements ControlListener{
 
 		for (int i = 0; i < list.length; ++i) {
 			println("userslist[i]: "+list[i]);
-			for (int j = 0; j < 3; ++j) {
+			for (int j = 0; j < 2; ++j) {
 				switch (j) {
 					case 0:
 					{
 						Table loadtable = loadTable(PILOT_STUDY_ONE_DATA + "/"+ list[i] + "/0.csv", "header");
-						datas.normalForce.add(loadtable);
+						datas.tapForce.add(loadtable);
 						break;
 					}
 					case 1:
 					{
 						Table loadtable = loadTable(PILOT_STUDY_ONE_DATA + "/"+ list[i] + "/1.csv", "header");
-						datas.lightForce.add(loadtable);
-						break;
-					}
-					case 2:
-					{
-						Table loadtable = loadTable(PILOT_STUDY_ONE_DATA + "/"+ list[i] + "/2.csv", "header");
-						datas.heavyForce.add(loadtable);
+						datas.pressForce.add(loadtable);
 						break;
 					}
 					default:

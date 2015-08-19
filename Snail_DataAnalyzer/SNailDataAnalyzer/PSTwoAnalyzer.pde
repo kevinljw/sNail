@@ -3,9 +3,9 @@ import grafica.*;
 
 class PSTwoDatas {
 
-	ArrayList<Table> normalForce = new ArrayList<Table>();
-	ArrayList<Table> lightForce = new ArrayList<Table>();
-	ArrayList<Table> heavyForce = new ArrayList<Table>();
+	ArrayList<Table> slideForce = new ArrayList<Table>();
+	ArrayList<Table> pivotForce = new ArrayList<Table>();
+	ArrayList<Table> dragForce = new ArrayList<Table>();
 }
 
 
@@ -25,8 +25,8 @@ public class PSTwoAnalyzer implements ControlListener{
         }
     });
 	PSTwoDatas datas = new PSTwoDatas();
-	String [] forceNames = {"Normal", "light","Heavy"};
-	String [] directionNames = {"front", "front right", "right", "bottom right", "bottom", "bottom left", "left", "front left"};
+	String [] forceNames = {"Slide", "Pivot", "Drag"};
+	String [] directionNames = {"front", "right", "down", "left"};
 
 	Table table;
 
@@ -34,9 +34,9 @@ public class PSTwoAnalyzer implements ControlListener{
 	DropdownList listForceDropdown;
 	DropdownList listDirectionDropdown;
 
-	int currentUser;
-	int currentForce;
-	int currentDirection;
+	int currentUser = 0;
+	int currentForce = 0;
+	int currentDirection = 0;
 
 	SNailDataAnalyzer mainClass;
 
@@ -49,7 +49,7 @@ public class PSTwoAnalyzer implements ControlListener{
 
 		loadFiles();
 		drawUI();
-		drawGraph();
+		// drawGraph();
 		
 	}
 
@@ -94,7 +94,7 @@ public class PSTwoAnalyzer implements ControlListener{
         listUsersDropdown.setBackgroundColor(color(190));
 		listUsersDropdown.setItemHeight(20);
 		listUsersDropdown.setBarHeight(15);
-		listUsersDropdown.setHeight(210);
+		listUsersDropdown.setHeight(400);
 		listUsersDropdown.captionLabel().set(USER_LIST_DROPDOWN);
 		listUsersDropdown.captionLabel().style().marginTop = 3;
 		listUsersDropdown.captionLabel().style().marginLeft = 3;
@@ -140,7 +140,7 @@ public class PSTwoAnalyzer implements ControlListener{
 		listDirectionDropdown.captionLabel().style().marginLeft = 3;
 		listDirectionDropdown.valueLabel().style().marginTop = 3;
 
-        for (int i=0 ; i < 8 ;i++) {
+        for (int i=0 ; i < 4 ;i++) {
 		    listDirectionDropdown.addItem(directionNames[i], i);
   		}
   		listDirectionDropdown.setColorBackground(color(60));
@@ -151,53 +151,81 @@ public class PSTwoAnalyzer implements ControlListener{
 
 	void drawGraph()
 	{
+		background(0);
 		if (userslist.length == 0) {
 			return;
 		}
 
-		Table loadTable = datas.normalForce.get(currentUser);
+		println("currentFile: User:"+ currentUser + " currentForce:" + currentForce + " currentDirection:" + currentDirection);
+
+		Table loadTable = datas.slideForce.get(4*currentUser+currentDirection);
 
 		switch (currentForce) {
 			case 0 :
-				loadTable = datas.normalForce.get(currentUser);
+				loadTable = datas.slideForce.get(4*currentUser+currentDirection);
 				break;
 			case 1 :
-				loadTable = datas.normalForce.get(currentUser);
+				loadTable = datas.pivotForce.get(4*currentUser+currentDirection);
 				break;
 			case 2 :
-				loadTable = datas.normalForce.get(currentUser);
+				loadTable = datas.dragForce.get(4*currentUser+currentDirection);
 				break;
 		}
+
+		int countMax = 0;
+		float maxHeight = 0;
 
 		int i = 0;
 		GPointsArray points = new GPointsArray();
 		for (TableRow row : loadTable.findRows("0", "taskNumber")) {
-			points.add(i , row.getFloat("force"));
+
+			if (row.getFloat("force") > maxHeight) {
+				maxHeight = row.getFloat("force");
+			}
+
+			points.add(i , row.getFloat("force"), "point " + i);
 			i++;
+		}
+		if (i > countMax) {
+			countMax = i;
 		}
 
 		i=0;
 		GPointsArray points_2 = new GPointsArray();
 		for (TableRow row : loadTable.findRows("1", "taskNumber")) {
-			points.add(i , row.getFloat("force"));
+			if (row.getFloat("force") > maxHeight) {
+				maxHeight = row.getFloat("force");
+			}
+
+			points.add(i , row.getFloat("force"), "point " + i);
 			i++;
+		}
+		if (i > countMax) {
+			countMax = i;
 		}
 
 		i=0;
 		GPointsArray points_3 = new GPointsArray();
 		for (TableRow row : loadTable.findRows("3", "taskNumber")) {
-			points.add(i , row.getFloat("force"));
+			if (row.getFloat("force") > maxHeight) {
+				maxHeight = row.getFloat("force");
+			}
+
+			points.add(i , row.getFloat("force"), "point " + i);
 			i++;
+		}
+		if (i > countMax) {
+			countMax = i;
 		}
 
 		plot1 = new GPlot(mainClass);
-		plot1.setPos(0, 0);
-		plot1.setXLim(1, 100);
-		plot1.setYLim(0.1, 3);
+		plot1.setPos(100, 100);
+		plot1.setXLim(0, countMax);
+		plot1.setYLim(0, maxHeight + 20);
 		plot1.getTitle().setText("In three times");
 		plot1.getXAxis().getAxisLabel().setText("Time");
 		plot1.getYAxis().getAxisLabel().setText("Force");
-		plot1.setLogScale("xy");
+		// plot1.setLogScale("xy");
 		plot1.setPoints(points);
 		plot1.setLineColor(color(200, 200, 255));
 		plot1.addLayer("layer 1", points_2);
@@ -215,25 +243,25 @@ public class PSTwoAnalyzer implements ControlListener{
 				switch (j) {
 					case 0:
 					{
-						for (int k = 0; k < 8; ++k) {
+						for (int k = 0; k < 4; ++k) {
 							Table loadtable = loadTable(PILOT_STUDY_TWO_DATA + "/"+ userslist[i]+  "/"+ j + "/" + k +".csv", "header");
-							datas.normalForce.add(loadtable);
+							datas.slideForce.add(loadtable);
 						}
 						break;
 					}
 					case 1:
 					{
-						for (int k = 0; k < 8; ++k) {
+						for (int k = 0; k < 4; ++k) {
 							Table loadtable = loadTable(PILOT_STUDY_TWO_DATA + "/"+ userslist[i]+  "/"+ j + "/" + k +".csv", "header");
-							datas.lightForce.add(loadtable);
+							datas.pivotForce.add(loadtable);
 						}
 						break;
 					}
 					case 2:
 					{
-						for (int k = 0; k < 8; ++k) {
+						for (int k = 0; k < 4; ++k) {
 							Table loadtable = loadTable(PILOT_STUDY_TWO_DATA + "/"+ userslist[i]+  "/"+ j + "/" + k +".csv", "header");
-							datas.heavyForce.add(loadtable);
+							datas.dragForce.add(loadtable);
 						}
 						break;
 					}

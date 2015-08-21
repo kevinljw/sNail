@@ -8,7 +8,6 @@ public final static String PILOT_STUDY_TWO = "Pilot Study Two";
 public final static String USER_STUDY_ONE = "User Study One";
 public final static String USER_STUDY_TWO = "User Study Two";
 
-CSVMerger csvMerger;
 USOneAnalyzer usOneAnalyzer;
 USTwoAnalyzer usTwoAnalyzer;
 PSOneAnalyzer psOneAnalyzer;
@@ -22,7 +21,6 @@ int currentSeletedType = -1;
 
 void setup() {
 	cp5 = new ControlP5(this);
-	csvMerger = new CSVMerger(this);
 	
 	size(900, 600, P3D);
 	background(255);

@@ -1,0 +1,82 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.LibSVM -S 0 -K 2 -D 3 -G 0.0 -R 0.0 -N 0.5 -M 40.0 -C 1.0 -E 0.001 -P 0.1 -model /Users/JesseHsiu -seed 1
+Relation:     F2merged
+Instances:    1950
+Attributes:   19
+              SG_E0
+              SG_D0
+              SG_E1
+              SG_D1
+              SG_E2
+              SG_D2
+              SG_E3
+              SG_D3
+              SG_E4
+              SG_D4
+              SG_E5
+              SG_D5
+              SG_E6
+              SG_D6
+              SG_E7
+              SG_D7
+              SG_E8
+              SG_D8
+              ID
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+LibSVM wrapper, original code by Yasser EL-Manzalawy (= WLSVM)
+
+Time taken to build model: 2.04 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        1784               91.4872 %
+Incorrectly Classified Instances       166                8.5128 %
+Kappa statistic                          0.9078
+Mean absolute error                      0.0131
+Root mean squared error                  0.1144
+Relative absolute error                  9.2222 %
+Root relative squared error             42.947  %
+Coverage of cases (0.95 level)          91.4872 %
+Mean rel. region size (0.95 level)       7.6923 %
+Total Number of Instances             1950     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.887    0.000    1.000      0.887    0.940      0.937    0.943     0.895     U8_F2_p15_r-15
+                 1.000    0.092    0.475      1.000    0.644      0.656    0.954     0.475     U8_F2_p15_r0
+                 0.853    0.000    1.000      0.853    0.921      0.918    0.927     0.865     U8_F2_p15_r15
+                 0.907    0.000    1.000      0.907    0.951      0.949    0.953     0.914     U8_F2_p15_r45
+                 0.860    0.000    1.000      0.860    0.925      0.922    0.930     0.871     U8_F2_p15_r90
+                 0.900    0.000    1.000      0.900    0.947      0.945    0.950     0.908     U8_F2_p25_r0
+                 0.933    0.000    1.000      0.933    0.966      0.963    0.967     0.938     U8_F2_p45_r-15
+                 0.907    0.000    1.000      0.907    0.951      0.949    0.953     0.914     U8_F2_p45_r0
+                 0.933    0.000    1.000      0.933    0.966      0.963    0.967     0.938     U8_F2_p45_r15
+                 0.913    0.000    1.000      0.913    0.955      0.952    0.957     0.920     U8_F2_p45_r45
+                 0.920    0.000    1.000      0.920    0.958      0.956    0.960     0.926     U8_F2_p45_r90
+                 0.927    0.000    1.000      0.927    0.962      0.960    0.963     0.932     U8_F2_p65_r0
+                 0.953    0.000    1.000      0.953    0.976      0.974    0.977     0.957     U8_F2_p90_r0
+Weighted Avg.    0.915    0.007    0.960      0.915    0.928      0.927    0.954     0.881     
+
+=== Confusion Matrix ===
+
+   a   b   c   d   e   f   g   h   i   j   k   l   m   <-- classified as
+ 133  17   0   0   0   0   0   0   0   0   0   0   0 |   a = U8_F2_p15_r-15
+   0 150   0   0   0   0   0   0   0   0   0   0   0 |   b = U8_F2_p15_r0
+   0  22 128   0   0   0   0   0   0   0   0   0   0 |   c = U8_F2_p15_r15
+   0  14   0 136   0   0   0   0   0   0   0   0   0 |   d = U8_F2_p15_r45
+   0  21   0   0 129   0   0   0   0   0   0   0   0 |   e = U8_F2_p15_r90
+   0  15   0   0   0 135   0   0   0   0   0   0   0 |   f = U8_F2_p25_r0
+   0  10   0   0   0   0 140   0   0   0   0   0   0 |   g = U8_F2_p45_r-15
+   0  14   0   0   0   0   0 136   0   0   0   0   0 |   h = U8_F2_p45_r0
+   0  10   0   0   0   0   0   0 140   0   0   0   0 |   i = U8_F2_p45_r15
+   0  13   0   0   0   0   0   0   0 137   0   0   0 |   j = U8_F2_p45_r45
+   0  12   0   0   0   0   0   0   0   0 138   0   0 |   k = U8_F2_p45_r90
+   0  11   0   0   0   0   0   0   0   0   0 139   0 |   l = U8_F2_p65_r0
+   0   7   0   0   0   0   0   0   0   0   0   0 143 |   m = U8_F2_p90_r0
+

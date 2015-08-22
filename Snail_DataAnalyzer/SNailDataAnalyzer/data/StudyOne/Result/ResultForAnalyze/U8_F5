@@ -1,0 +1,82 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.LibSVM -S 0 -K 2 -D 3 -G 0.0 -R 0.0 -N 0.5 -M 40.0 -C 1.0 -E 0.001 -P 0.1 -model /Users/JesseHsiu -seed 1
+Relation:     F5merged
+Instances:    1950
+Attributes:   19
+              SG_E0
+              SG_D0
+              SG_E1
+              SG_D1
+              SG_E2
+              SG_D2
+              SG_E3
+              SG_D3
+              SG_E4
+              SG_D4
+              SG_E5
+              SG_D5
+              SG_E6
+              SG_D6
+              SG_E7
+              SG_D7
+              SG_E8
+              SG_D8
+              ID
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+LibSVM wrapper, original code by Yasser EL-Manzalawy (= WLSVM)
+
+Time taken to build model: 2.08 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        1733               88.8718 %
+Incorrectly Classified Instances       217               11.1282 %
+Kappa statistic                          0.8794
+Mean absolute error                      0.0171
+Root mean squared error                  0.1308
+Relative absolute error                 12.0556 %
+Root relative squared error             49.1031 %
+Coverage of cases (0.95 level)          88.8718 %
+Mean rel. region size (0.95 level)       7.6923 %
+Total Number of Instances             1950     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.121    0.409      1.000    0.580      0.600    0.940     0.409     U8_F5_p15_r-15
+                 0.860    0.000    1.000      0.860    0.925      0.922    0.930     0.871     U8_F5_p15_r0
+                 0.873    0.000    1.000      0.873    0.932      0.930    0.937     0.883     U8_F5_p15_r15
+                 0.880    0.000    1.000      0.880    0.936      0.933    0.940     0.889     U8_F5_p15_r45
+                 0.820    0.000    1.000      0.820    0.901      0.899    0.910     0.834     U8_F5_p15_r90
+                 0.860    0.000    1.000      0.860    0.925      0.922    0.930     0.871     U8_F5_p25_r0
+                 0.887    0.000    1.000      0.887    0.940      0.937    0.943     0.895     U8_F5_p45_r-15
+                 0.947    0.000    1.000      0.947    0.973      0.971    0.973     0.951     U8_F5_p45_r0
+                 0.907    0.000    1.000      0.907    0.951      0.949    0.953     0.914     U8_F5_p45_r15
+                 0.933    0.000    1.000      0.933    0.966      0.963    0.967     0.938     U8_F5_p45_r45
+                 0.860    0.000    1.000      0.860    0.925      0.922    0.930     0.871     U8_F5_p45_r90
+                 0.820    0.000    1.000      0.820    0.901      0.899    0.910     0.834     U8_F5_p65_r0
+                 0.907    0.000    1.000      0.907    0.951      0.949    0.953     0.914     U8_F5_p90_r0
+Weighted Avg.    0.889    0.009    0.955      0.889    0.908      0.907    0.940     0.852     
+
+=== Confusion Matrix ===
+
+   a   b   c   d   e   f   g   h   i   j   k   l   m   <-- classified as
+ 150   0   0   0   0   0   0   0   0   0   0   0   0 |   a = U8_F5_p15_r-15
+  21 129   0   0   0   0   0   0   0   0   0   0   0 |   b = U8_F5_p15_r0
+  19   0 131   0   0   0   0   0   0   0   0   0   0 |   c = U8_F5_p15_r15
+  18   0   0 132   0   0   0   0   0   0   0   0   0 |   d = U8_F5_p15_r45
+  27   0   0   0 123   0   0   0   0   0   0   0   0 |   e = U8_F5_p15_r90
+  21   0   0   0   0 129   0   0   0   0   0   0   0 |   f = U8_F5_p25_r0
+  17   0   0   0   0   0 133   0   0   0   0   0   0 |   g = U8_F5_p45_r-15
+   8   0   0   0   0   0   0 142   0   0   0   0   0 |   h = U8_F5_p45_r0
+  14   0   0   0   0   0   0   0 136   0   0   0   0 |   i = U8_F5_p45_r15
+  10   0   0   0   0   0   0   0   0 140   0   0   0 |   j = U8_F5_p45_r45
+  21   0   0   0   0   0   0   0   0   0 129   0   0 |   k = U8_F5_p45_r90
+  27   0   0   0   0   0   0   0   0   0   0 123   0 |   l = U8_F5_p65_r0
+  14   0   0   0   0   0   0   0   0   0   0   0 136 |   m = U8_F5_p90_r0
+

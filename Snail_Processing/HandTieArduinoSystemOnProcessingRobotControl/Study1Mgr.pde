@@ -218,6 +218,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			table = new Table();
   
 			// table.addColumn("taskNumber");
+			table.addColumn("roll");
+			table.addColumn("yaw");
+			table.addColumn("pitch");
 			table.addColumn("yaxis");
 			table.addColumn("xaxis");
 			table.addColumn("zaxis");
@@ -331,12 +334,16 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	{
 		println("saveToFile");
 
-		float [] datas = sensors.getRawAxis();
+		// float [] datas = sensors.getRawAxis();
 		TableRow newRow = table.addRow();
 		// newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
-		newRow.setFloat("yaxis", datas[0]);
-		newRow.setFloat("xaxis", datas[1]);
-		newRow.setFloat("zaxis", datas[2]);
+		newRow.setFloat("roll", sensors.roll);
+	    newRow.setFloat("yaw", sensors.yaw);
+	    newRow.setFloat("pitch", sensors.pitch);
+
+	    newRow.setFloat("yaxis", sensors.yaxis);
+	    newRow.setFloat("xaxis", sensors.xaxis);
+	    newRow.setFloat("zaxis", sensors.zaxis);
 		newRow.setFloat("force", sensors.force);
 		for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
 			newRow.setFloat("SG" + i, values[i]);

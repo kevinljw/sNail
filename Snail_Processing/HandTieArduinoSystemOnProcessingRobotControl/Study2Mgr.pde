@@ -10,41 +10,41 @@ public class StudyTwoTask
 {
   
   public int speed;
-  public int force;
+  public int texture;
   public int direction;
 
-  public StudyTwoTask(int speed, int force, int direction) {
+  public StudyTwoTask(int speed, int texture, int direction) {
     this.speed = speed;
-    this.force = force;
+    this.texture = texture;
     this.direction = direction;
   }
 }
 
-public class StudyTwoDataStructure
-{
-  int taskNumber;
-  float roll;
-  float yaw;
-  float pitch;
-  float force;
+// public class StudyTwoDataStructure
+// {
+//   int taskNumber;
+//   float roll;
+//   float yaw;
+//   float pitch;
+//   float force;
 
-  float [] sgs = new float[8];
-  float [] sgs_E = new float[8];
-  float [] sgs_D = new float[8];
+//   float [] sgs = new float[8];
+//   float [] sgs_E = new float[8];
+//   float [] sgs_D = new float[8];
 
-  public StudyTwoDataStructure(int taskNumber, float roll, float yaw, float pitch, float force, float [] sgs, float [] sgs_E, float [] sgs_D)
-  {
-    this.taskNumber = taskNumber;
-    this.roll = roll;
-    this.yaw = yaw;
-    this.pitch = pitch;
-    this.force = force;
-    this.sgs = sgs;
-    this.sgs_E = sgs_E;
-    this.sgs_D = sgs_D;
+//   public StudyTwoDataStructure(int taskNumber, float roll, float yaw, float pitch, float force, float [] sgs, float [] sgs_E, float [] sgs_D)
+//   {
+//     this.taskNumber = taskNumber;
+//     this.roll = roll;
+//     this.yaw = yaw;
+//     this.pitch = pitch;
+//     this.force = force;
+//     this.sgs = sgs;
+//     this.sgs_E = sgs_E;
+//     this.sgs_D = sgs_D;
 
-  }
-}
+//   }
+// }
 
 
 public class Study2Mgr implements ControlListener, SerialListener {
@@ -56,7 +56,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
   MovieFrame movieFrame = null;
 	boolean currentDoing = false;
   ArrayList<StudyTwoTask> tasks = new ArrayList<StudyTwoTask>();
-  ArrayList<StudyTwoDataStructure> currentDatasForOneTask = new ArrayList<StudyTwoDataStructure>();
+  // ArrayList<StudyTwoDataStructure> currentDatasForOneTask = new ArrayList<StudyTwoDataStructure>();
 
   private SerialNotifier serialNotifier;
   public int currentTaskNum = 0;
@@ -64,11 +64,11 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
 
   int speed []= {0, 1, 2};
-  int force []= {0, 1, 2};
+  int texture []= {0, 1, 2, 3};
   int direction []= {0, 1, 2, 3, 4, 5, 6, 7};
-
-  public int taskCount = speed.length * force.length * direction.length;
-  public final static int TIMES_OF_EACH_TASK = 3;
+// * force.length 
+  public int taskCount = speed.length * texture.length * direction.length;
+  public final static int TIMES_OF_EACH_TASK = 5;
 
   int run = 0;
   int runIndex = 0;
@@ -82,9 +82,9 @@ public class Study2Mgr implements ControlListener, SerialListener {
     this.sensors = mainClass.sensors;
 
     for (int i = 0; i < speed.length; ++i) {
-      for (int j = 0; j < force.length; ++j) {
+      for (int j = 0; j < texture.length; ++j) {
         for (int k = 0; k < direction.length; ++k) {
-          tasks.add(new StudyTwoTask(speed[i], force[j], direction[k]));
+          tasks.add(new StudyTwoTask(speed[i], texture[j], direction[k]));
         }
       }
     }
@@ -115,7 +115,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
     if (userStudyFrame != null) {
           if (!userStudyFrame.launchComplete)  return;
-          else if (theEvent.getName().equals(UserStudyOneFrame.START_RECORD)) {
+          else if (theEvent.getName().equals(UserStudyTwoFrame.START_RECORD)) {
             if (currentRecording) {
               stopRecording(true);
             }
@@ -123,12 +123,15 @@ public class Study2Mgr implements ControlListener, SerialListener {
               startRecording();
             }
           }
-          else if (theEvent.getName().equals(UserStudyOneFrame.NEXT_TASK)) {
+          else if (theEvent.getName().equals(UserStudyTwoFrame.NEXT_TASK)) {
             currentTaskNum++;
             nextTask();
           }
-          else if (theEvent.getName().equals(UserStudyOneFrame.PREVIOUS_TASK)) {
+          else if (theEvent.getName().equals(UserStudyTwoFrame.PREVIOUS_TASK)) {
             preTask();
+          }
+          else if (theEvent.getName().equals(UserStudyTwoFrame.CLOSEWINDOW)) {
+            closeWindow();
           }
         }
 
@@ -147,7 +150,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     currentRecording = false;
 
     StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
-    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force + "/" + currentTask.speed +"/"+ currentTask.direction +".csv");
+    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv");
     currentTaskNum++;
     userStudyFrame.updateProgress(currentTaskNum);
     nextTask();
@@ -168,10 +171,13 @@ public class Study2Mgr implements ControlListener, SerialListener {
     if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
       new UserProfile().doneStudy(3);
     }
-
-		userStudyFrame.closeWindow();
-    movieFrame.closeWindow();
 	}
+
+  void closeWindow()
+  {
+    userStudyFrame.closeWindow();
+    movieFrame.closeWindow();
+  }
 
   void nextTask()
   {
@@ -186,17 +192,17 @@ public class Study2Mgr implements ControlListener, SerialListener {
     StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
     // int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
 
-    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force + "/" + currentTask.speed +"/"+ currentTask.direction +".csv";
+    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv";
 
     if(!checkIfFileExist(nameOfFile))
     {
       table = new Table();
   
-      table.addColumn("taskNumber");
+      // table.addColumn("taskNumber");
       table.addColumn("yaxis");
       table.addColumn("xaxis");
       table.addColumn("zaxis");
-      table.addColumn("force");
+      // table.addColumn("force");
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
         table.addColumn("SG" + i);
         table.addColumn("SG_E" + i);
@@ -235,13 +241,16 @@ public class Study2Mgr implements ControlListener, SerialListener {
     {
       currentTaskNum--;
       StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
-      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.force + "/" + currentTask.speed +"/"+ currentTask.direction +".csv";
+      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv";
       table = loadTable(nameOfFile, "header, csv");
 
-      int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
+      // int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
 
-      for (int i = needToDeleteRows.length-1 ; i >= 0 ;i-- ) {
-        table.removeRow(needToDeleteRows[i]);
+      // for (int i = needToDeleteRows.length-1 ; i >= 0 ;i-- ) {
+      //   table.removeRow(needToDeleteRows[i]);
+      // }
+      for (int i = 0; i < table.getRowCount(); ++i) {
+        table.removeRow(0);
       }
 
       saveTable(table, nameOfFile);
@@ -255,11 +264,11 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
     float [] datas = sensors.getRawAxis();
     TableRow newRow = table.addRow();
-    newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
+    // newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
     newRow.setFloat("yaxis", datas[0]);
     newRow.setFloat("xaxis", datas[1]);
     newRow.setFloat("zaxis", datas[2]);
-    newRow.setFloat("force", sensors.force);
+    // newRow.setFloat("force", sensors.force);
     for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
       newRow.setFloat("SG" + i, values[i]);
       newRow.setFloat("SG_E" + i, sgManager.getOneElongationValsOfGauges(i));
@@ -377,6 +386,7 @@ public class UserStudyTwoFrame extends PApplet {
 	public final static String PREVIOUS_TASK = "Previous Task";
   public final static String ARROW_UP = "test";
   public final static String CURRENT_PROGRESS = "Current Progress";
+  public final static String CLOSEWINDOW = "Close Window";
 
   int w, h;
   Frame frame;
@@ -423,6 +433,10 @@ public class UserStudyTwoFrame extends PApplet {
 
   public void draw() {
     StudyTwoTask currentTask = mgr.tasks.get( mgr.currentTaskNum % mgr.taskCount);
+    background(255);
+    fill(0);
+    textSize(20);
+    text("Texture - " + currentTask.texture, 20, 20);
     // int index = mgr.tasks.get(mgr.runIndex).intValue();
     // println("runIndex:"+mgr.runIndex+",realindex:"+index);
 
@@ -488,6 +502,12 @@ public class UserStudyTwoFrame extends PApplet {
     cp5.addButton(PREVIOUS_TASK)
      .setValue(0)
      .setPosition(50,450)
+     .setSize(200,19)
+     .setBroadcast(true)
+     ; 
+    cp5.addButton(CLOSEWINDOW)
+     .setValue(0)
+     .setPosition(50,630)
      .setSize(200,19)
      .setBroadcast(true)
      ; 

@@ -5,6 +5,9 @@ public class USOneAnalyzer implements ControlListener{
 	public final static String STUDY_ONE_DATA = DATA_FOLDER + "/StudyOne";
 	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_USER = STUDY_ONE_DATA + "/Result/User" ;
 	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_USER_WITH_FORCE = STUDY_ONE_DATA + "/Result/UserWithForce" ;
+	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_USER_MIXED = STUDY_ONE_DATA + "/Result/UserMixed" ;
+	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_FORCE = STUDY_ONE_DATA + "/Result/PerUserLeaveOneOutByForce" ;
+	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_USER = STUDY_ONE_DATA + "/Result/UsersLeaveOneOut" ;
 
 	File dir = new File(sketchPath("") + STUDY_ONE_DATA );
 	String[] userslist = dir.list(new FilenameFilter() {
@@ -44,6 +47,7 @@ public class USOneAnalyzer implements ControlListener{
 	        @Override
 	        public boolean accept(File dir, String name) {
 	            return !name.equals(".DS_Store");
+	            //return name.contains(".csv");
 	        }
 	    });
 
@@ -64,6 +68,34 @@ public class USOneAnalyzer implements ControlListener{
 		    	csvMerger.mergeFiles(STUDY_ONE_DATA_RESULT_CLASS_BY_USER_WITH_FORCE + "/" + result_list_with_Force[i] +"/" + result_list_with_Force_folder[j]);	
 		    }
 		}
+
+		for (int j = 0; j < result_list_with_Force.length; ++j) {
+			for (int i = 0; i < 5; ++i) {
+				int showInt = i+1;
+				csvMerger.mergeCSVFilesWithIgnore(STUDY_ONE_DATA_RESULT_CLASS_BY_USER_WITH_FORCE + "/" + result_list_with_Force[j], i, "no"+showInt+"_Force");	
+			}
+		}
+		
+
+
+
+		//for user mixed
+		File result_dir_user_mixed = new File(sketchPath("") + STUDY_ONE_DATA_RESULT_CLASS_BY_USER_MIXED );
+		String[] result_list_user_mixed = result_dir_user_mixed.list(new FilenameFilter() {
+	        @Override
+	        public boolean accept(File dir, String name) {
+	            return !name.equals(".DS_Store");
+	        }
+	    });
+
+	    for (int i = 0; i < result_list_user_mixed.length; ++i) {
+	    	csvMerger.mergeFiles(STUDY_ONE_DATA_RESULT_CLASS_BY_USER_MIXED + "/" + result_list_user_mixed[i]);	
+	    }
+
+	    
+
+
+
 	    
 	}
 
@@ -129,9 +161,16 @@ public class USOneAnalyzer implements ControlListener{
 		for (int k = 0; k < table.getRowCount(); ++k) {
 			TableRow row = table.getRow(k);
 			println("U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName.substring(0, rawDataName.length() - 4));
-			row.setString("ID", "U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName.substring(0, rawDataName.length() - 4));
+			row.setString("ID", rawDataName.substring(0, rawDataName.length() - 4));
 			saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_USER +"/U" + userDir.substring(4) + "/U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName);
+
+			saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_USER_MIXED +"/F"+ forceDir + "/U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName);
+
 			saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_USER_WITH_FORCE +"/U" + userDir.substring(4) + "/F"+ forceDir + "/U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName);
+
+			// row.setString("ID", "F"+ forceDir + "_" + rawDataName.substring(0, rawDataName.length() - 4));
+			// saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_FORCE +"/U" +  userDir.substring(4) +"/F"+ forceDir+"_"+ rawDataName);
+			// saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_USER +"/U" + );
 		}
 	}
 

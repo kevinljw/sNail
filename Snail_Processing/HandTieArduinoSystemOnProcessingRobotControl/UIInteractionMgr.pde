@@ -64,8 +64,8 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    //User Study Btn
    public final static String START_PILOT_STUDY_ONE = "Start\nPilot Study One";
    public final static String START_PILOT_STUDY_TWO = "Start\nPilot Study Two";
-   public final static String START_USER_STUDY_ONE = "Start\nUser Study One";
-   public final static String START_USER_STUDY_TWO = "Start\nUser Study Two";
+   public final static String START_USER_STUDY_ONE = "Start\nUser Study Two";
+   public final static String START_USER_STUDY_TWO = "Start\nUser Study Three";
 
    public UIInteractionMgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
       this.mainClass = mainClass;

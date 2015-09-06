@@ -40,9 +40,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	public final static float TOLERANCE_OF_FORCE = 5;
 	public final static float NEWTON_TO_GRAMS = 101.971621298;
 	public final static int AMOUNT_OF_RECEIVED_RAW_DATA = 50;
-	public final static int TIMES_OF_EACH_TASK = 3;
+	public final static int TIMES_OF_EACH_TASK = 5;
 
-	float force []= {1, 2, 3, 4, 5};
+	float force []= {0.4, 0.8, 1.2, 1.6, 2};
 	int taskCount = 0;
 
 	ArrayList<ArrayList<StudyOneTask>> tasks = new ArrayList<ArrayList<StudyOneTask>>();

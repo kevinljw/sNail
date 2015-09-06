@@ -95,6 +95,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	      	else if (theEvent.getName().equals(UserStudyOneFrame.PREVIOUS_TASK)) {
 	      		preTask();
 	      	}
+	      	else if (theEvent.getName().equals(UserStudyOneFrame.WINDOWCLOSE)) {
+	      		closeWindows();
+	      	}
       	}
 	}
 	void templateInit()
@@ -175,6 +178,11 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 
 		currentDoing = false;
+		// don't close the windows if the error occur, then still have chance for preTask
+		
+	}
+	void closeWindows()
+	{
 		sensors.closeWindow();
 		userStudyFrame.closeWindow();
 	}
@@ -196,19 +204,20 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 	void nextTask() {
 
+		//check if the study is done or not, if so close the window
 		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
 			endStudy(false);
 		}
 		// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 		int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);
 
-		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
+		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
 		// println(nameOfFile);
 		if(!checkIfFileExist(nameOfFile))
 		{
 			table = new Table();
   
-			table.addColumn("taskNumber");
+			// table.addColumn("taskNumber");
 			table.addColumn("yaxis");
 			table.addColumn("xaxis");
 			table.addColumn("zaxis");
@@ -244,17 +253,17 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 			int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);;
 
-			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
+			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
 			table = loadTable(nameOfFile, "header, csv");
 
 			// for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
 			// 	table.removeRow(table.getRowCount() -1 );
 			// }
 
-			int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
+			// int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
 
-			for (int i = needToDeleteRows.length-1 ; i >= 0 ;i-- ) {
-				table.removeRow(needToDeleteRows[i]);
+			for (int i = 0; i < table.getRowCount(); ++i) {
+				table.removeRow(0);
 			}
 
 			saveTable(table, nameOfFile);
@@ -324,7 +333,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 		float [] datas = sensors.getRawAxis();
 		TableRow newRow = table.addRow();
-		newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
+		// newRow.setInt("taskNumber", (int) currentTaskNum / taskCount);
 		newRow.setFloat("yaxis", datas[0]);
 		newRow.setFloat("xaxis", datas[1]);
 		newRow.setFloat("zaxis", datas[2]);
@@ -342,7 +351,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 
 			// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 			int convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS);
-			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv");
+			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + convertForceToNewton +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv");
 			currentTaskNum++;
 			userStudyFrame.updateProgress(currentTaskNum);
 
@@ -441,6 +450,7 @@ public class UserStudyOneFrame extends PApplet {
   public final static String NEXT_TASK = "Next Task";
   public final static String PREVIOUS_TASK = "Previous Task";
   public final static String CURRENT_PROGRESS = "Current Progress";
+  public final static String WINDOWCLOSE = "Windows Close";
 
   PImage currentShowImage_pitch = null;
   PImage currentShowImage_roll = null;
@@ -530,7 +540,13 @@ public class UserStudyOneFrame extends PApplet {
      .setPosition(50,200)
      .setSize(200,19)
      .setBroadcast(true)
-     ; 
+     ;
+    cp5.addButton(WINDOWCLOSE)
+     .setValue(0)
+     .setPosition(50,400)
+     .setSize(200,19)
+     .setBroadcast(true)
+     ;
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
      .setRange(0,195)
      .setValue(0)

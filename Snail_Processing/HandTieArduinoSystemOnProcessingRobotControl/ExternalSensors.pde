@@ -147,12 +147,11 @@ public class ExternalSensors implements ControlListener{
               if (showAnotherWindow) {
                 pitchOffset = pitch;
               }
+              break;
+            case 'w':
               disconnectSerial();
               connectToSerial(connectPortNum);
-
-          //     	println("pressed A");
-        		// sensorsPort.write('c');
-        		break;
+    		  break;
                       
       }
 	}

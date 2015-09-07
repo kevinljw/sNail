@@ -63,8 +63,10 @@ public class Study2Mgr implements ControlListener, SerialListener {
   int currentSavedRawDataNum = 0;
 
 
-  int speed []= {0, 1, 2};
+  //need to change for conter balance
   int texture []= {0, 1, 2, 3};
+
+  int speed []= {0, 1, 2};
   int direction []= {0, 1, 2, 3, 4, 5, 6, 7};
 // * force.length 
   public int taskCount = speed.length * texture.length * direction.length;
@@ -81,15 +83,30 @@ public class Study2Mgr implements ControlListener, SerialListener {
     this.mainClass = mainClass;
     this.sensors = mainClass.sensors;
 
+    ArrayList<Integer> listSpeed = new ArrayList<Integer>();
+    ArrayList<Integer> listDirection = new ArrayList<Integer>();
+
     for (int i = 0; i < speed.length; ++i) {
+      listSpeed.add(speed[i]);
+    }
+    for (int k = 0; k < direction.length; ++k) {
+      listDirection.add(direction[k]);
+    }
+
+
+    for (int l = 0; l < TIMES_OF_EACH_TASK; ++l) {
       for (int j = 0; j < texture.length; ++j) {
-        for (int k = 0; k < direction.length; ++k) {
-          tasks.add(new StudyTwoTask(speed[i], texture[j], direction[k]));
+        Collections.shuffle(listSpeed);
+        Collections.shuffle(listDirection);
+        for (int i = 0; i < speed.length; ++i) {
+          for (int k = 0; k < direction.length; ++k) {
+            tasks.add(new StudyTwoTask(listSpeed.get(i), texture[j], listDirection.get(k)));
+          }
         }
       }
     }
 
-    Collections.shuffle(tasks);
+    
   }
 
 	@Override
@@ -145,7 +162,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     // }
     currentRecording = false;
 
-    StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+    StudyTwoTask currentTask = tasks.get(currentTaskNum);
     saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv");
     currentTaskNum++;
     userStudyFrame.updateProgress(currentTaskNum);
@@ -181,11 +198,11 @@ public class Study2Mgr implements ControlListener, SerialListener {
       endStudy(false);
     }
 
-    if (currentTaskNum % taskCount == 0) {
-      Collections.shuffle(tasks);
-    }
+    // if (currentTaskNum % taskCount == 0) {
+      // Collections.shuffle(tasks);
+    // }
 
-    StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+    StudyTwoTask currentTask = tasks.get(currentTaskNum);
     // int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
 
     String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv";
@@ -239,7 +256,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     else
     {
       currentTaskNum--;
-      StudyTwoTask currentTask = tasks.get(currentTaskNum % taskCount);
+      StudyTwoTask currentTask = tasks.get(currentTaskNum);
       String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv";
       table = loadTable(nameOfFile, "header, csv");
 
@@ -436,7 +453,7 @@ public class UserStudyTwoFrame extends PApplet {
   }
 
   public void draw() {
-    StudyTwoTask currentTask = mgr.tasks.get( mgr.currentTaskNum % mgr.taskCount);
+    StudyTwoTask currentTask = mgr.tasks.get( mgr.currentTaskNum);
     background(255);
     fill(0);
     textSize(20);

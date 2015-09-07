@@ -462,7 +462,7 @@ public class UserStudyTwoFrame extends PApplet {
     background(255);
     fill(0);
     textSize(20);
-    text("Texture - " + currentTask.texture, 20, 20);
+    text("Texture - " + currentTask.texture+", Speed - "+currentTask.speed, 20, 20);
     // int index = mgr.tasks.get(mgr.runIndex).intValue();
     // println("runIndex:"+mgr.runIndex+",realindex:"+index);
 

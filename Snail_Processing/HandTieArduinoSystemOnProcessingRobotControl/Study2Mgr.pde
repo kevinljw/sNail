@@ -89,10 +89,6 @@ public class Study2Mgr implements ControlListener, SerialListener {
       }
     }
 
-    // for(int i = 0; i < 8; i++){
-    //     tasks.add(i);
-    // }
-
     Collections.shuffle(tasks);
   }
 
@@ -572,14 +568,16 @@ public class UserStudyTwoFrame extends PApplet {
     }
 
     public void setup() {
-      movie = new Movie(this, currentSketchPath+"videos/origin.mov");
-      movie.play();
+      // movie = new Movie(this, currentSketchPath+"videos/origin.mov");
+      // movie.play();
       size(w, h);
       frameRate(30);
     }
     
     public void draw() {
-       image(movie, 0, 0, 1024, 640);
+      if (movie != null) {
+       image(movie, 0, 0, 1024, 640); 
+      }
     } 
 
     public void videoInstruction(int index, int speed) {

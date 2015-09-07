@@ -223,7 +223,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
       table.addColumn("yaxis");
       table.addColumn("xaxis");
       table.addColumn("zaxis");
-      // table.addColumn("force");
+      table.addColumn("force");
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
         table.addColumn("SG" + i);
         table.addColumn("SG_E" + i);
@@ -294,7 +294,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     newRow.setFloat("yaxis", sensors.yaxis);
     newRow.setFloat("xaxis", sensors.xaxis);
     newRow.setFloat("zaxis", sensors.zaxis);
-    // newRow.setFloat("force", sensors.force);
+    newRow.setFloat("force", sensors.force);
     for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
       newRow.setFloat("SG" + i, values[i]);
       newRow.setFloat("SG_E" + i, sgManager.getOneElongationValsOfGauges(i));

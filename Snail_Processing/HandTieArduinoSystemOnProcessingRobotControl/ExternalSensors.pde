@@ -38,6 +38,8 @@ public class ExternalSensors implements ControlListener{
 	PApplet mainClass;
 	Serial sensorsPort;
 
+	int connectPortNum;
+
 	public float[] getRawAxis() {
 		float[] datas = new float[3];
 
@@ -54,6 +56,7 @@ public class ExternalSensors implements ControlListener{
 
 
 	private void connectToSerial(int portNumber){
+		connectPortNum = portNumber;
 		String portName = Serial.list()[portNumber];
 		connectToSerial(portName);
 	}
@@ -144,6 +147,9 @@ public class ExternalSensors implements ControlListener{
               if (showAnotherWindow) {
                 pitchOffset = pitch;
               }
+              disconnectSerial();
+              connectToSerial(connectPortNum);
+
           //     	println("pressed A");
         		// sensorsPort.write('c');
         		break;

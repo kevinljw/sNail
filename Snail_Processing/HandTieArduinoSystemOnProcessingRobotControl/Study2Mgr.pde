@@ -12,11 +12,13 @@ public class StudyTwoTask
   public int speed;
   public int texture;
   public int direction;
+  public int times;
 
-  public StudyTwoTask(int speed, int texture, int direction) {
+  public StudyTwoTask(int speed, int texture, int direction, int times) {
     this.speed = speed;
     this.texture = texture;
     this.direction = direction;
+    this.times = times;
   }
 }
 
@@ -94,13 +96,14 @@ public class Study2Mgr implements ControlListener, SerialListener {
     }
 
 
-    for (int l = 0; l < TIMES_OF_EACH_TASK; ++l) {
-      for (int j = 0; j < texture.length; ++j) {
+    
+    for (int j = 0; j < texture.length; ++j) {
+      for (int l = 0; l < TIMES_OF_EACH_TASK; ++l) {
         Collections.shuffle(listSpeed);
         Collections.shuffle(listDirection);
         for (int i = 0; i < speed.length; ++i) {
           for (int k = 0; k < direction.length; ++k) {
-            tasks.add(new StudyTwoTask(listSpeed.get(i), texture[j], listDirection.get(k)));
+            tasks.add(new StudyTwoTask(listSpeed.get(i), texture[j], listDirection.get(k),l));
           }
         }
       }
@@ -163,7 +166,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     currentRecording = false;
 
     StudyTwoTask currentTask = tasks.get(currentTaskNum);
-    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv");
+    saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ currentTask.times +"_d"+ currentTask.direction +".csv");
     currentTaskNum++;
     userStudyFrame.updateProgress(currentTaskNum);
     nextTask();
@@ -205,7 +208,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     StudyTwoTask currentTask = tasks.get(currentTaskNum);
     // int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
 
-    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv";
+    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ currentTask.times +"_d"+ currentTask.direction +".csv";
 
     if(!checkIfFileExist(nameOfFile))
     {
@@ -257,7 +260,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     // {
       currentTaskNum--;
       StudyTwoTask currentTask = tasks.get(currentTaskNum);
-      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv";
+      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ currentTask.times+"_d"+ currentTask.direction +".csv";
       table = loadTable(nameOfFile, "header, csv");
 
       // int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
@@ -533,7 +536,7 @@ public class UserStudyTwoFrame extends PApplet {
      .setBroadcast(true)
      ; 
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,600)
+     .setRange(0,480)
      .setValue(0)
      .setPosition(50,500)
      .setRadius(50)

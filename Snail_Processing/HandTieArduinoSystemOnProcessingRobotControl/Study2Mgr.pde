@@ -249,12 +249,12 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
     currentRecording = false;
 
-    if (table.getRowCount() > 0) {
-      //just drop the rows by a new table
-      nextTask();
-    }
-    else
-    {
+    // if (table.getRowCount() > 0) {
+    //   //just drop the rows by a new table
+    //   nextTask();
+    // }
+    // else
+    // {
       currentTaskNum--;
       StudyTwoTask currentTask = tasks.get(currentTaskNum);
       String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ Integer.toString(currentTaskNum / taskCount)+"_d"+ currentTask.direction +".csv";
@@ -272,7 +272,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
       saveTable(table, nameOfFile);
       userStudyFrame.updateProgress(currentTaskNum);
       nextTask();
-    }
+    // }
   }
 
   void saveToFile(float [] values)

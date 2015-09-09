@@ -17,4 +17,5 @@ userID,name,address,company,title,time,hand,pilotOne,pilotTwo,studyOne,studyTwo
 15,user15,,,,2015/8/14,right,2,2,1,0
 16,user15,,,,2015/8/14,right,2,2,2,0
 17,user17,,,,2015/8/14,right,2,2,2,0
-18,user17,,,,2015/8/14,right,0,0,0,0
+18,user17,,,,2015/8/14,right,0,0,2,1
+19,user19,,,,2015/8/14,right,0,0,2,1

@@ -573,6 +573,15 @@ public class UserStudyTwoFrame extends PApplet {
     Frame frame;
     Study2Mgr mgr = null;
     Movie movie;
+    Movie movie_up = new Movie(this, currentSketchPath+"videos/up.mov");
+    Movie movie_rightup = new Movie(this, currentSketchPath+"videos/rightup.mov");
+    Movie movie_right = new Movie(this, currentSketchPath+"videos/right.mov");
+    Movie movie_rightdown = new Movie(this, currentSketchPath+"videos/rightdown.mov");
+    Movie movie_down = new Movie(this, currentSketchPath+"videos/down.mov");
+    Movie movie_leftdown = new Movie(this, currentSketchPath+"videos/leftdown.mov");
+    Movie movie_left = new Movie(this, currentSketchPath+"videos/left.mov");
+    Movie movie_leftup = new Movie(this, currentSketchPath+"videos/leftup.mov");
+
 
     public MovieFrame(){
     }
@@ -606,29 +615,28 @@ public class UserStudyTwoFrame extends PApplet {
       // println("video index :" + index);
       switch (index) {
         case 0:
-          movie = new Movie(this, currentSketchPath+"videos/up.mov");
+          movie = movie_up;
           break ;
         case 1:
-          movie = new Movie(this, currentSketchPath+"videos/rightup.mov");
+          movie = movie_rightup;
           break ;
         case 2:
-          movie = new Movie(this, currentSketchPath+"videos/right.mov");
+          movie = movie_right;
           break ;
         case 3:
-          movie = new Movie(this, currentSketchPath+"videos/rightdown.mov");
+          movie = movie_rightdown;
           break ;
         case 4:
-          movie = new Movie(this, currentSketchPath+"videos/down.mov");
+          movie = movie_down;
           break ;
         case 5:
-          movie = new Movie(this, currentSketchPath+"videos/leftdown.mov");
+          movie = movie_leftdown;
           break ;
         case 6:
-          movie = new Movie(this, currentSketchPath+"videos/left.mov");
+          movie = movie_left;
           break ;
         case 7:
-          movie = new Movie(this, currentSketchPath+"videos/leftup.mov");
-
+          movie = movie_leftup;
           break ;
         default :
           break ;

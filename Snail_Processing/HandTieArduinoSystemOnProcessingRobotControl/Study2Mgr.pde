@@ -66,9 +66,9 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
 
   //need to change for conter balance
-  int texture []= {0, 1, 2, 3};
+  int texture []= {0, 1, 2};
 
-  int speed []= {0, 1, 2};
+  int speed []= {0, 2};
   int direction []= {0, 1, 2, 3, 4, 5, 6, 7};
 // * force.length 
   public int taskCount = speed.length * texture.length * direction.length;

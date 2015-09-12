@@ -209,8 +209,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			endStudy(false);
 		}
 		// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-		float convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
-
+		float convertForceToNewton = (float)Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
+		println("convertForceToNewton: "+convertForceToNewton);
 		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + Float.toString(convertForceToNewton) +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
 		// println(nameOfFile);
 		if(!checkIfFileExist(nameOfFile))
@@ -254,7 +254,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			currentTaskNum--;
 
 			// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-			float convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
+			float convertForceToNewton = (float)Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
 
 			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + Float.toString(convertForceToNewton) +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
 			table = loadTable(nameOfFile, "header, csv");
@@ -357,7 +357,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (currentSavedRawDataNum == AMOUNT_OF_RECEIVED_RAW_DATA) {
 
 			// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-			float convertForceToNewton = Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
+			float convertForceToNewton = (float)Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
 			saveTable(table, FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + Float.toString(convertForceToNewton) +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv");
 			currentTaskNum++;
 			userStudyFrame.updateProgress(currentTaskNum);

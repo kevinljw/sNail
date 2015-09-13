@@ -620,6 +620,7 @@ public class UserStudyTwoFrame extends PApplet {
 
     public void videoInstruction(int index, int speed) {
       // println("video index :" + index);
+      movie.stop();
       switch (index) {
         case 0:
           movie = movie_up;

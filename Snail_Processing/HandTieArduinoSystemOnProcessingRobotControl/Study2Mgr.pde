@@ -66,7 +66,10 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
 
   //need to change for conter balance
-  int texture []= {0, 1, 2};
+  //0 - 木板 
+  //1 - 棉褲
+  //2 - 玻璃
+  int texture []= {0, 2, 1};
 
   int speed []= {0, 2};
   int direction []= {0, 1, 2, 3, 4, 5, 6, 7};

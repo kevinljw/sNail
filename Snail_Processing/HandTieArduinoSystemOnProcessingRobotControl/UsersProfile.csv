@@ -23,4 +23,5 @@ userID,name,address,company,title,time,hand,pilotOne,pilotTwo,studyOne,studyTwo
 21,user21,,,,2015/8/14,right,0,0,2,1
 22,user22,,,,2015/8/14,right,1,0,2,1
 23,user23,,,,2015/8/14,right,0,0,2,2
-24,user24,,,,2015/8/14,right,0,0,1,0
+24,user24,,,,2015/8/14,right,0,0,2,0
+25,user24,,,,2015/8/14,right,0,0,0,2

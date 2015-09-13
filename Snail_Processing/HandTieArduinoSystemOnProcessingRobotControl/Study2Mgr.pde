@@ -69,7 +69,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
   //0 - 木板 
   //1 - 棉褲
   //2 - 玻璃
-  int texture []= {0, 1, 2};
+  int texture []= {0, 2, 1};
 
   int speed []= {0, 2};
   int direction []= {0, 1, 2, 3, 4, 5, 6, 7};
@@ -542,7 +542,7 @@ public class UserStudyTwoFrame extends PApplet {
      .setBroadcast(true)
      ; 
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,480)
+     .setRange(0,240)
      .setValue(0)
      .setPosition(50,500)
      .setRadius(50)

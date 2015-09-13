@@ -556,7 +556,7 @@ public class UserStudyOneFrame extends PApplet {
      .setBroadcast(true)
      ;
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,325)
+     .setRange(0,250)
      .setValue(0)
      .setPosition(100,250)
      .setRadius(50)

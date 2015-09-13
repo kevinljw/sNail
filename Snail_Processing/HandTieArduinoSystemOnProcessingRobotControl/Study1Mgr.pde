@@ -118,9 +118,9 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			template.add(new StudyOneTask(15, 45, this.force[k] * NEWTON_TO_GRAMS ));
 		}
 
-		for (int k = 0; k < this.force.length; ++k) {
-			template.add(new StudyOneTask(15, 90, this.force[k] * NEWTON_TO_GRAMS ));
-		}
+		// for (int k = 0; k < this.force.length; ++k) {
+		// 	template.add(new StudyOneTask(15, 90, this.force[k] * NEWTON_TO_GRAMS ));
+		// }
 
 		for (int k = 0; k < this.force.length; ++k) {
 			template.add(new StudyOneTask(25, 0, this.force[k] * NEWTON_TO_GRAMS ));
@@ -142,17 +142,17 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			template.add(new StudyOneTask(45, 45, this.force[k] * NEWTON_TO_GRAMS ));
 		}
 
-		for (int k = 0; k < this.force.length; ++k) {
-			template.add(new StudyOneTask(45, 90, this.force[k] * NEWTON_TO_GRAMS ));
-		}
+		// for (int k = 0; k < this.force.length; ++k) {
+		// 	template.add(new StudyOneTask(45, 90, this.force[k] * NEWTON_TO_GRAMS ));
+		// }
 
 		for (int k = 0; k < this.force.length; ++k) {
 			template.add(new StudyOneTask(65, 0, this.force[k] * NEWTON_TO_GRAMS ));
 		}
 
-		for (int k = 0; k < this.force.length; ++k) {
-			template.add(new StudyOneTask(90, 0, this.force[k] * NEWTON_TO_GRAMS ));
-		}
+		// for (int k = 0; k < this.force.length; ++k) {
+		// 	template.add(new StudyOneTask(90, 0, this.force[k] * NEWTON_TO_GRAMS ));
+		// }
 
 	}
 

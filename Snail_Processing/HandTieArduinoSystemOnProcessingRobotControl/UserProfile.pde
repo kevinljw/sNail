@@ -1,8 +1,8 @@
 
 public class UserProfile {
 
-	public final static String USER_ID = "25"; // staring from 0
-	public final static String USER_NAME = "user24";
+	public final static String USER_ID = "26"; // staring from 0
+	public final static String USER_NAME = "user26";
 	public final static String USER_ADDRESS = "";
 	public final static String USER_COMPANY = "";
 	public final static String USER_TITLE = "";

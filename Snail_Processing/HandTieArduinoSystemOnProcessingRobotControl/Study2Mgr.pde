@@ -273,7 +273,8 @@ public class Study2Mgr implements ControlListener, SerialListener {
       // for (int i = needToDeleteRows.length-1 ; i >= 0 ;i-- ) {
       //   table.removeRow(needToDeleteRows[i]);
       // }
-      for (int i = 0; i < table.getRowCount(); ++i) {
+      int rowCount = table.getRowCount();
+      for (int i = 0; i < rowCount; ++i) {
         table.removeRow(0);
       }
 

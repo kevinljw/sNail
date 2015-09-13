@@ -257,6 +257,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			float convertForceToNewton = (float)Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
 
 			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + Float.toString(convertForceToNewton) +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
+			println("Remove nameOfFile now: "+nameOfFile);
 			table = loadTable(nameOfFile, "header, csv");
 
 			// for ( int i = 0; i < AMOUNT_OF_RECEIVED_RAW_DATA; i++ ) {
@@ -264,8 +265,8 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			// }
 
 			// int [] needToDeleteRows = table.findRowIndices( Integer.toString(currentTaskNum / taskCount), "taskNumber");
-
-			for (int i = 0; i < table.getRowCount(); ++i) {
+			int rowCount = table.getRowCount();
+			for (int i = 0; i < rowCount; ++i) {
 				table.removeRow(0);
 			}
 

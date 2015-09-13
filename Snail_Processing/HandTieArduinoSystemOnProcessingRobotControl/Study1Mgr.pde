@@ -205,38 +205,40 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	void nextTask() {
 
 		//check if the study is done or not, if so close the window
-		if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
+		if (taskCount * TIMES_OF_EACH_TASK >= currentTaskNum) {
 			endStudy(false);
 		}
-		// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
-		float convertForceToNewton = (float)Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
-		println("convertForceToNewton: "+convertForceToNewton);
-		String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + Float.toString(convertForceToNewton) +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
-		// println(nameOfFile);
-		if(!checkIfFileExist(nameOfFile))
-		{
-			table = new Table();
-  
-			// table.addColumn("taskNumber");
-			table.addColumn("roll");
-			table.addColumn("yaw");
-			table.addColumn("pitch");
-			table.addColumn("yaxis");
-			table.addColumn("xaxis");
-			table.addColumn("zaxis");
-			table.addColumn("force");
-			for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
-				table.addColumn("SG" + i);
-				table.addColumn("SG_E" + i);
-				table.addColumn("SG_D" + i);
-			}
-		}
 		else{
-			table = loadTable(nameOfFile, "header, csv");
+		// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
+			float convertForceToNewton = (float)Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
+			println("convertForceToNewton: "+convertForceToNewton);
+			String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + Float.toString(convertForceToNewton) +"/T"+ Integer.toString(currentTaskNum / taskCount)  +"_p"+Math.round(currentTask().pitch)+"_r"+ Math.round(currentTask().roll) +".csv";
+			// println(nameOfFile);
+			if(!checkIfFileExist(nameOfFile))
+			{
+				table = new Table();
+	  
+				// table.addColumn("taskNumber");
+				table.addColumn("roll");
+				table.addColumn("yaw");
+				table.addColumn("pitch");
+				table.addColumn("yaxis");
+				table.addColumn("xaxis");
+				table.addColumn("zaxis");
+				table.addColumn("force");
+				for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+					table.addColumn("SG" + i);
+					table.addColumn("SG_E" + i);
+					table.addColumn("SG_D" + i);
+				}
+			}
+			else{
+				table = loadTable(nameOfFile, "header, csv");
+			}
+			userStudyFrame.setFrameInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
+			sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll,0.0f);
+			userStudyFrame.updateProgress(currentTaskNum);
 		}
-		userStudyFrame.setFrameInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
-		sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll,0.0f);
-		userStudyFrame.updateProgress(currentTaskNum);
 	}
 
 	void preTask() {

@@ -202,41 +202,43 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
   void nextTask()
   {
-    if (taskCount * TIMES_OF_EACH_TASK == currentTaskNum) {
+    if (taskCount * TIMES_OF_EACH_TASK >= currentTaskNum) {
       endStudy(false);
     }
-
-    // if (currentTaskNum % taskCount == 0) {
-      // Collections.shuffle(tasks);
-    // }
-
-    StudyTwoTask currentTask = tasks.get(currentTaskNum);
-    // int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
-
-    String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ currentTask.times +"_d"+ currentTask.direction +".csv";
-
-    if(!checkIfFileExist(nameOfFile))
+    else
     {
-      table = new Table();
-  
-      // table.addColumn("taskNumber");
-      table.addColumn("roll");
-      table.addColumn("yaw");
-      table.addColumn("pitch");
-      table.addColumn("yaxis");
-      table.addColumn("xaxis");
-      table.addColumn("zaxis");
-      table.addColumn("force");
-      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
-        table.addColumn("SG" + i);
-        table.addColumn("SG_E" + i);
-        table.addColumn("SG_D" + i);
+
+      // if (currentTaskNum % taskCount == 0) {
+        // Collections.shuffle(tasks);
+      // }
+
+      StudyTwoTask currentTask = tasks.get(currentTaskNum);
+      // int convertForceToNewton = Math.round(currentTask.force/NEWTON_TO_GRAMS);
+
+      String nameOfFile = FOLDER_NAME + "/usr_" + UserProfile.USER_ID + "/" + currentTask.texture + "/" + currentTask.speed +"/T"+ currentTask.times +"_d"+ currentTask.direction +".csv";
+
+      if(!checkIfFileExist(nameOfFile))
+      {
+        table = new Table();
+    
+        // table.addColumn("taskNumber");
+        table.addColumn("roll");
+        table.addColumn("yaw");
+        table.addColumn("pitch");
+        table.addColumn("yaxis");
+        table.addColumn("xaxis");
+        table.addColumn("zaxis");
+        table.addColumn("force");
+        for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+          table.addColumn("SG" + i);
+          table.addColumn("SG_E" + i);
+          table.addColumn("SG_D" + i);
+        }
       }
-    }
-    else{
-      table = loadTable(nameOfFile, "header, csv");
-    }
-    movieFrame.videoInstruction(currentTask.direction, currentTask.speed);
+      else{
+        table = loadTable(nameOfFile, "header, csv");
+      }
+      movieFrame.videoInstruction(currentTask.direction, currentTask.speed);
     // sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 
 
@@ -250,6 +252,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     //   runIndex = 0;
     //   Collections.shuffle(tasks);
     // }
+    }
 
   }
   void preTask() {

@@ -208,7 +208,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		if (taskCount * TIMES_OF_EACH_TASK >= currentTaskNum) {
 			endStudy(false);
 		}
-		else{
+		// else{
 		// StudyOneTask currentTask = tasks.get(currentTaskNum % taskCount);
 			float convertForceToNewton = (float)Math.round(currentTask().force/NEWTON_TO_GRAMS * 10) /10;
 			println("convertForceToNewton: "+convertForceToNewton);
@@ -238,7 +238,7 @@ public class Study1Mgr implements ControlListener, SerialListener {
 			userStudyFrame.setFrameInstruct(currentTask().pitch, currentTask().roll, currentTask().force);
 			sensors.setCurrentInstruct(currentTask().pitch, currentTask().roll,0.0f);
 			userStudyFrame.updateProgress(currentTaskNum);
-		}
+		// }
 	}
 
 	void preTask() {
@@ -593,7 +593,7 @@ public class UserStudyOneFrame extends PApplet {
   	instruct_Roll = roll;
 	instruct_Force = force;
 
-  	// println("file:" +currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
+  	println("file:" +currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
   	currentShowImage_pitch = loadImage(currentSketchPath+"images/p"+ Math.round(pitch) +".jpg");
   	currentShowImage_roll = loadImage(currentSketchPath+"images/r"+ Math.round(roll) +".jpg");
 

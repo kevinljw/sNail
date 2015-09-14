@@ -69,7 +69,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
   //0 - 木板 
   //1 - 棉褲
   //2 - 玻璃
-  int texture []= {0, 2, 1};
+  int texture []= {1, 0, 2};
 
   int speed []= {0, 2};
   int direction []= {0, 1, 2, 3, 4, 5, 6, 7};
@@ -205,8 +205,8 @@ public class Study2Mgr implements ControlListener, SerialListener {
     if (taskCount * TIMES_OF_EACH_TASK >= currentTaskNum) {
       endStudy(false);
     }
-    else
-    {
+    // else
+    // {
 
       // if (currentTaskNum % taskCount == 0) {
         // Collections.shuffle(tasks);
@@ -252,7 +252,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
     //   runIndex = 0;
     //   Collections.shuffle(tasks);
     // }
-    }
+    // }
 
   }
   void preTask() {
@@ -620,7 +620,7 @@ public class UserStudyTwoFrame extends PApplet {
 
     public void videoInstruction(int index, int speed) {
       // println("video index :" + index);
-      movie.stop();
+      // movie.stop();
       switch (index) {
         case 0:
           movie = movie_up;

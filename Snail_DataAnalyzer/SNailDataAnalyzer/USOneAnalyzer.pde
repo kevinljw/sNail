@@ -6,7 +6,7 @@ public class USOneAnalyzer implements ControlListener{
 	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_USER = STUDY_ONE_DATA + "/Result/User" ;
 	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_USER_WITH_FORCE = STUDY_ONE_DATA + "/Result/UserWithForce" ;
 	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_USER_MIXED = STUDY_ONE_DATA + "/Result/UserMixed" ;
-	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_FORCE = STUDY_ONE_DATA + "/Result/PerUserLeaveOneOutByForce" ;
+	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME = STUDY_ONE_DATA + "/Result/PerUserLeaveOneOutByTime" ;
 	public final static String STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_USER = STUDY_ONE_DATA + "/Result/UsersLeaveOneOut" ;
 
 	File dir = new File(sketchPath("") + STUDY_ONE_DATA );
@@ -169,11 +169,11 @@ public class USOneAnalyzer implements ControlListener{
 
 
 			//leave one force
-			for (int i = 1; i <= 5; ++i) {
-				if (i*0.4 != Float.parseFloat(forceDir)) {
-					saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_FORCE +"/U" + userDir.substring(4) +"/leave"+ i*0.4 +"/F"+ forceDir+ "_" + rawDataName);
+			for (int i = 0; i < 5; ++i) {
+				if (i !=  Integer.valueOf(rawDataName.substring(1,2))) {
+					saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/leaveT"+ i +"/F"+ forceDir+ "_" + rawDataName);
 				}
-				
+				// println("rawDataName.substring(1,1): "+rawDataName.substring(1,2));;
 			}
 
 			

@@ -148,23 +148,23 @@ public class USOneAnalyzer implements ControlListener{
 		table.removeColumn("pitch");
 		table.removeColumn("force");
 		table.removeColumn("SG0");
-		table.removeColumn("SG_E0");
+		// table.removeColumn("SG_E0");
 		table.removeColumn("SG1");
-		table.removeColumn("SG_E1");
+		// table.removeColumn("SG_E1");
 		table.removeColumn("SG2");
-		table.removeColumn("SG_E2");
+		// table.removeColumn("SG_E2");
 		table.removeColumn("SG3");
-		table.removeColumn("SG_E3");
+		// table.removeColumn("SG_E3");
 		table.removeColumn("SG4");
-		table.removeColumn("SG_E4");
+		// table.removeColumn("SG_E4");
 		table.removeColumn("SG7");
-		table.removeColumn("SG_E7");
+		// table.removeColumn("SG_E7");
 		table.removeColumn("SG8");
-		table.removeColumn("SG_E8");
+		// table.removeColumn("SG_E8");
 		table.removeColumn("SG5");
-		table.removeColumn("SG_E5");
+		// table.removeColumn("SG_E5");
 		table.removeColumn("SG6");
-		table.removeColumn("SG_E6");
+		// table.removeColumn("SG_E6");
 
 
 		table.addColumn("ID");
@@ -173,7 +173,41 @@ public class USOneAnalyzer implements ControlListener{
 		for (int k = 0; k < table.getRowCount(); ++k) {
 			TableRow row = table.getRow(k);
 			// println("U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName.substring(0, rawDataName.length() - 4));
-			row.setString("ID", rawDataName.substring(3, rawDataName.length() - 4));
+			
+			println("rawDataName.substring(3, rawDataName.length() - 4): "+rawDataName.substring(3, rawDataName.length() - 4));
+
+			if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r-15")) {
+				row.setInt("ID", 0);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r0")) {
+				row.setInt("ID", 1);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r15")) {
+				row.setInt("ID", 2);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r45")) {
+				row.setInt("ID", 3);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p25_r0")) {
+				row.setInt("ID", 4);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r-15")) {
+				row.setInt("ID", 5);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r0")) {
+				row.setInt("ID", 6);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r15")) {
+				row.setInt("ID", 7);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r45")) {
+				row.setInt("ID", 8);
+			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p65_r0")) {
+				row.setInt("ID", 9);
+			}
+
+			
 
 
 

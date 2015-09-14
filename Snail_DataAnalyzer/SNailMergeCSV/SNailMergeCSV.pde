@@ -16,19 +16,33 @@ void setup() {
 
     for (int i = 0; i < file_list.length; ++i) {
 
-      if (i ==0) {
-        allDataTableForSaving = loadTable(DATA_FOLDER +"/" + file_list[i], "header");
-      }
-      else
-      {
-        currentReadDataForSaving = loadTable(DATA_FOLDER + "/" + file_list[i], "header");  
+      File dirToMerge = new File(sketchPath("") + DATA_FOLDER + "/" + file_list[i]);
 
-        for (TableRow row : currentReadDataForSaving.rows()) {
-          allDataTableForSaving.addRow(row);
+
+      String[] files_in_folder_list = dirToMerge.list(new FilenameFilter() {
+          @Override
+          public boolean accept(File dir, String name) {
+              return !name.equals(".DS_Store");
+          }
+      });
+
+      for (int j = 0; j < files_in_folder_list.length; ++j) {
+        if (j ==0) {
+        allDataTableForSaving = loadTable(DATA_FOLDER +"/"+file_list[i] +"/"+ files_in_folder_list[j], "header");
+        }
+        else
+        {
+          currentReadDataForSaving = loadTable(DATA_FOLDER +"/"+ file_list[i] + "/" + files_in_folder_list[j], "header");  
+
+          for (TableRow row : currentReadDataForSaving.rows()) {
+            allDataTableForSaving.addRow(row);
+          }
         }
       }
+
+      saveTable(allDataTableForSaving, DATA_FOLDER + "/" + file_list[i] + "merged.csv"); 
     }
 
 
-    saveTable(allDataTableForSaving, DATA_FOLDER + "merged.csv"); 
+    
 }

@@ -148,14 +148,23 @@ public class USOneAnalyzer implements ControlListener{
 		table.removeColumn("pitch");
 		table.removeColumn("force");
 		table.removeColumn("SG0");
+		table.removeColumn("SG_E0");
 		table.removeColumn("SG1");
+		table.removeColumn("SG_E1");
 		table.removeColumn("SG2");
+		table.removeColumn("SG_E2");
 		table.removeColumn("SG3");
+		table.removeColumn("SG_E3");
 		table.removeColumn("SG4");
+		table.removeColumn("SG_E4");
 		table.removeColumn("SG7");
+		table.removeColumn("SG_E7");
 		table.removeColumn("SG8");
+		table.removeColumn("SG_E8");
 		table.removeColumn("SG5");
+		table.removeColumn("SG_E5");
 		table.removeColumn("SG6");
+		table.removeColumn("SG_E6");
 
 
 		table.addColumn("ID");
@@ -172,6 +181,9 @@ public class USOneAnalyzer implements ControlListener{
 			for (int i = 0; i < 5; ++i) {
 				if (i !=  Integer.valueOf(rawDataName.substring(1,2))) {
 					saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/leaveT"+ i +"/F"+ forceDir+ "_" + rawDataName);
+				}
+				else {
+					saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/T"+ i +"/F"+ forceDir+ "_" + rawDataName);
 				}
 				// println("rawDataName.substring(1,1): "+rawDataName.substring(1,2));;
 			}

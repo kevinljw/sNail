@@ -26,6 +26,37 @@ public class USOneAnalyzer implements ControlListener{
 
 	public void analysisData() {
 		loadFiles();
+
+		File user_dir = new File(sketchPath("") + STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME );
+		String[] user_list = user_dir.list(new FilenameFilter() {
+	        @Override
+	        public boolean accept(File dir, String name) {
+	            return !name.equals(".DS_Store");
+	        }
+	    });
+
+	    for (int i = 0; i < user_list.length; ++i) {
+
+	    	File user_files_dir = new File(sketchPath("") + STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME + "/" + user_list[i]);
+	    	
+	    	String[] per_user_files = user_files_dir.list(new FilenameFilter() {
+		        @Override
+		        public boolean accept(File dir, String name) {
+		            return !name.equals(".DS_Store");
+		        }
+		    });
+
+	    	for (int j = 0; j < per_user_files.length; ++j) {
+	    		csvMerger.mergeFiles(STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME + "/" + user_list[i]+"/"+per_user_files[j]);	
+	    	}
+			
+
+
+		}
+		
+
+
+
 		//mixed
 		// File result_dir = new File(sketchPath("") + STUDY_ONE_DATA_RESULT_CLASS_BY_USER );
 		// String[] result_list = result_dir.list(new FilenameFilter() {
@@ -148,23 +179,32 @@ public class USOneAnalyzer implements ControlListener{
 		table.removeColumn("pitch");
 		table.removeColumn("force");
 		table.removeColumn("SG0");
-		// table.removeColumn("SG_E0");
+		table.removeColumn("SG_E0");
+		// table.removeColumn("SG_D0");
 		table.removeColumn("SG1");
-		// table.removeColumn("SG_E1");
+		table.removeColumn("SG_E1");
+		// table.removeColumn("SG_D1");
 		table.removeColumn("SG2");
-		// table.removeColumn("SG_E2");
+		table.removeColumn("SG_E2");
+		// // table.removeColumn("SG_D2");
 		table.removeColumn("SG3");
-		// table.removeColumn("SG_E3");
+		table.removeColumn("SG_E3");
+		// // table.removeColumn("SG_D3");
 		table.removeColumn("SG4");
-		// table.removeColumn("SG_E4");
+		table.removeColumn("SG_E4");
+		// // table.removeColumn("SG_D4");
 		table.removeColumn("SG7");
-		// table.removeColumn("SG_E7");
+		table.removeColumn("SG_E7");
+		// // table.removeColumn("SG_D7");
 		table.removeColumn("SG8");
-		// table.removeColumn("SG_E8");
+		table.removeColumn("SG_E8");
+		// // table.removeColumn("SG_D8");
 		table.removeColumn("SG5");
-		// table.removeColumn("SG_E5");
+		table.removeColumn("SG_E5");
+		// // table.removeColumn("SG_D5");
 		table.removeColumn("SG6");
-		// table.removeColumn("SG_E6");
+		table.removeColumn("SG_E6");
+		// // table.removeColumn("SG_D6");
 
 
 		table.addColumn("ID");
@@ -174,37 +214,70 @@ public class USOneAnalyzer implements ControlListener{
 			TableRow row = table.getRow(k);
 			// println("U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName.substring(0, rawDataName.length() - 4));
 			
+			//ignore force?
+			//|| forceDir.equals("1.6") || forceDir.equals("2.0")
+			if(forceDir.equals("0.4"))
+			{
+				continue;
+			}
+			int idNum = 0;
+
+
+			// if (forceDir.equals("0.4")) {
+			// 	idNum = 40;
+			// }
+			// else if (forceDir.equals("0.8")) {
+			// 	idNum = 80;	
+			// }
+			// else if (forceDir.equals("1.2")) {
+			// 	idNum = 120;
+			// }
+			// else if (forceDir.equals("1.6")) {
+			// 	idNum = 160;
+			// }
+			// else if (forceDir.equals("2.0")) {
+			// 	idNum = 200;
+			// }
+
+
+
 			println("rawDataName.substring(3, rawDataName.length() - 4): "+rawDataName.substring(3, rawDataName.length() - 4));
 
 			if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r-15")) {
-				row.setInt("ID", 0);
+				row.setInt("ID", idNum+0);
+				continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r0")) {
-				row.setInt("ID", 1);
+				row.setInt("ID", idNum+1);
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r15")) {
-				row.setInt("ID", 2);
+				row.setInt("ID", idNum+2);
+				continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r45")) {
-				row.setInt("ID", 3);
+				row.setInt("ID", idNum+3);
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p25_r0")) {
-				row.setInt("ID", 4);
+				row.setInt("ID", idNum+4);
+				continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r-15")) {
-				row.setInt("ID", 5);
+				row.setInt("ID", idNum+5);
+				continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r0")) {
-				row.setInt("ID", 6);
+				row.setInt("ID", idNum+6);
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r15")) {
-				row.setInt("ID", 7);
+				row.setInt("ID", idNum+7);
+				continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r45")) {
-				row.setInt("ID", 8);
+				row.setInt("ID", idNum+8);
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p65_r0")) {
-				row.setInt("ID", 9);
+				row.setInt("ID", idNum+9);
+				// continue;
 			}
 
 			
@@ -212,7 +285,7 @@ public class USOneAnalyzer implements ControlListener{
 
 
 			//leave one force
-			for (int i = 0; i < 5; ++i) {
+			for (int i = 0; i < 10; ++i) {
 				if (i !=  Integer.valueOf(rawDataName.substring(1,2))) {
 					saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/leaveT"+ i +"/F"+ forceDir+ "_" + rawDataName);
 				}

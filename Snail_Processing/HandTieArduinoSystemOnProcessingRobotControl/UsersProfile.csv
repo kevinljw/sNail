@@ -30,3 +30,7 @@ userID,name,address,company,title,time,hand,pilotOne,pilotTwo,studyOne,studyTwo
 28,user28,,,,2015/8/14,right,0,0,2,2
 29,user29,,,,2015/8/14,right,0,0,2,2
 30,user30,,,,2015/8/14,right,0,0,2,2
+31,user31test,,,,2015/8/14,right,0,0,2,0
+32,user32test,,,,2015/8/14,right,0,0,1,0
+33,user33test,,,,2015/8/14,right,0,0,2,0
+34,user34,,,,2015/8/14,right,0,0,2,2

@@ -216,10 +216,10 @@ public class USOneAnalyzer implements ControlListener{
 			
 			//ignore force?
 			//|| forceDir.equals("0.4") || || forceDir.equals("0.8") || forceDir.equals("1.0")
-			// if(forceDir.equals("0.4") || forceDir.equals("0.6") )//|| forceDir.equals("0.6")
-			// {
-			// 	continue;
-			// }
+			if(forceDir.equals("0.4")|| forceDir.equals("0.6"))//|| forceDir.equals("0.6")
+			{
+				continue;
+			}
 			int idNum = 0;
 
 

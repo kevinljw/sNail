@@ -40,10 +40,10 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	public final static float TOLERANCE_OF_FORCE = 5;
 	public final static float NEWTON_TO_GRAMS = 101.971621298;
 	public final static int AMOUNT_OF_RECEIVED_RAW_DATA = 50;
-	public final static int TIMES_OF_EACH_TASK = 10;
+	public final static int TIMES_OF_EACH_TASK = 6;
 
 	// float force []= {0.4, 0.8, 1.2, 1.6, 2};
-	float force []= { 0.6 , 0.8 , 1.0 };
+	float force []= { 0.4, 0.6, 0.8, 1.0, 1.2 };
 	int taskCount = 0;
 
 	ArrayList<ArrayList<StudyOneTask>> tasks = new ArrayList<ArrayList<StudyOneTask>>();
@@ -103,17 +103,17 @@ public class Study1Mgr implements ControlListener, SerialListener {
 	}
 	void templateInit()
 	{
-		// for (int k = 0; k < this.force.length; ++k) {
-		// 	template.add(new StudyOneTask(15, -15, this.force[k] * NEWTON_TO_GRAMS ));
-		// }
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(15, -15, this.force[k] * NEWTON_TO_GRAMS ));
+		}
 
 		for (int k = 0; k < this.force.length; ++k) {
 			template.add(new StudyOneTask(15, 0, this.force[k] * NEWTON_TO_GRAMS ));
 		}
 
-		// for (int k = 0; k < this.force.length; ++k) {
-		// 	template.add(new StudyOneTask(15, 15, this.force[k] * NEWTON_TO_GRAMS ));
-		// }
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(15, 15, this.force[k] * NEWTON_TO_GRAMS ));
+		}
 
 		for (int k = 0; k < this.force.length; ++k) {
 			template.add(new StudyOneTask(15, 45, this.force[k] * NEWTON_TO_GRAMS ));
@@ -124,21 +124,21 @@ public class Study1Mgr implements ControlListener, SerialListener {
 		// 	template.add(new StudyOneTask(15, 90, this.force[k] * NEWTON_TO_GRAMS ));
 		// }
 
-		// for (int k = 0; k < this.force.length; ++k) {
-		// 	template.add(new StudyOneTask(25, 0, this.force[k] * NEWTON_TO_GRAMS ));
-		// }
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(25, 0, this.force[k] * NEWTON_TO_GRAMS ));
+		}
 
-		// for (int k = 0; k < this.force.length; ++k) {
-		// 	template.add(new StudyOneTask(45, -15, this.force[k] * NEWTON_TO_GRAMS ));
-		// }
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(45, -15, this.force[k] * NEWTON_TO_GRAMS ));
+		}
 
 		for (int k = 0; k < this.force.length; ++k) {
 			template.add(new StudyOneTask(45, 0, this.force[k] * NEWTON_TO_GRAMS ));
 		}
 
-		// for (int k = 0; k < this.force.length; ++k) {
-		// 	template.add(new StudyOneTask(45, 15, this.force[k] * NEWTON_TO_GRAMS ));
-		// }
+		for (int k = 0; k < this.force.length; ++k) {
+			template.add(new StudyOneTask(45, 15, this.force[k] * NEWTON_TO_GRAMS ));
+		}
 
 		for (int k = 0; k < this.force.length; ++k) {
 			template.add(new StudyOneTask(45, 45, this.force[k] * NEWTON_TO_GRAMS ));
@@ -562,7 +562,7 @@ public class UserStudyOneFrame extends PApplet {
      .setBroadcast(true)
      ;
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,180)
+     .setRange(0,300)
      .setValue(0)
      .setPosition(100,250)
      .setRadius(50)

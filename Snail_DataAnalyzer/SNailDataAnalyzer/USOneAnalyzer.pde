@@ -168,6 +168,67 @@ public class USOneAnalyzer implements ControlListener{
 
 	void settingForNewFile(String userDir, String forceDir, String rawDataName)
 	{
+
+		if(forceDir.equals("0.4"))//
+		{
+			// continue;
+		}
+		else if(forceDir.equals("0.6"))//
+		{
+			// continue;
+		}
+		else if(forceDir.equals("0.8"))//
+		{
+			// continue;
+		}
+		else if(forceDir.equals("1.0"))//
+		{
+			// continue;
+		}
+		else if(forceDir.equals("1.2"))//
+		{
+			// continue;
+		}
+
+		
+		if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r-15")) {
+			// return;
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p0_r0")) {
+			
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r0")) {
+				
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r15")) {
+			// return;
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r45")) {
+			// return;
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p25_r0")) {
+			// return;
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r-15")) {
+			// return;
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r0")) {
+			// return;
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r15")) {
+			// return;
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r45")) {
+			// return;
+		}
+		else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p65_r0")) {
+			// return;
+		}
+
+
+
+
+
 		table = loadTable(STUDY_ONE_DATA + "/"+ userDir + "/" + forceDir + "/"+ rawDataName, "header");
 		// roll,yaw,pitch,yaxis,xaxis,zaxis,force,SG0,SG_E0,SG_D0,SG1,SG_E1,SG_D1,SG2,SG_E2,SG_D2,SG3,SG_E3,SG_D3,SG4,SG_E4,SG_D4,SG5,SG_E5,SG_D5,SG6,SG_E6,SG_D6,SG7,SG_E7,SG_D7,SG8,SG_E8,SG_D8
 		// table.removeColumn("taskNumber");
@@ -210,16 +271,19 @@ public class USOneAnalyzer implements ControlListener{
 		table.addColumn("ID");
 
 
+		
+
+
 		for (int k = 0; k < table.getRowCount(); ++k) {
 			TableRow row = table.getRow(k);
-			// println("U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName.substring(0, rawDataName.length() - 4));
+			println("U"+ userDir.substring(4) + "_F"+ forceDir + "_" + rawDataName.substring(0, rawDataName.length() - 4));
 			
 			//ignore force?
 			//|| forceDir.equals("0.4") || || forceDir.equals("0.8") || forceDir.equals("1.0")
-			if(forceDir.equals("0.4")|| forceDir.equals("0.6"))//|| forceDir.equals("0.6")
-			{
-				continue;
-			}
+			// if(forceDir.equals("0.4"))//
+			// {
+			// 	continue;
+			// }
 			int idNum = 0;
 
 
@@ -248,13 +312,17 @@ public class USOneAnalyzer implements ControlListener{
 				row.setInt("ID", idNum+0);
 				// continue;
 			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p0_r0")) {
+				row.setInt("ID", idNum+10);
+				// continue;
+			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r0")) {
 				row.setInt("ID", idNum+1);
 				// continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r15")) {
 				row.setInt("ID", idNum+2);
-				continue;
+				// continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r45")) {
 				row.setInt("ID", idNum+3);
@@ -262,7 +330,7 @@ public class USOneAnalyzer implements ControlListener{
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p25_r0")) {
 				row.setInt("ID", idNum+4);
-				continue;
+				// continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r-15")) {
 				row.setInt("ID", idNum+5);
@@ -274,7 +342,7 @@ public class USOneAnalyzer implements ControlListener{
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r15")) {
 				row.setInt("ID", idNum+7);
-				continue;
+				// continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r45")) {
 				row.setInt("ID", idNum+8);
@@ -284,24 +352,28 @@ public class USOneAnalyzer implements ControlListener{
 				row.setInt("ID", idNum+9);
 				// continue;
 			}
+		}
 
 			
 
 
 
-			//leave one force
-			for (int i = 1; i < 6; ++i) {
-				if (Integer.valueOf(rawDataName.substring(1,2)) == 0) {
-					continue;
-				}
-				else if (i != Integer.valueOf(rawDataName.substring(1,2))) {
-					saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/leaveT"+ i +"/F"+ forceDir+ "_" + rawDataName);
-				}
-				else {
-					saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/T"+ i +"/F"+ forceDir+ "_" + rawDataName);
-				}
-				// println("rawDataName.substring(1,1): "+rawDataName.substring(1,2));;
+		//leave one force
+		for (int i = 1; i < 6; ++i) {
+			if (Integer.valueOf(rawDataName.substring(1,2)) == 0) {
+				continue;
 			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r-15")) {
+				
+			}
+			else if (i != Integer.valueOf(rawDataName.substring(1,2))) {
+				saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/leaveT"+ i +"/F"+ forceDir+ "_" + rawDataName);
+			}
+			else {
+				saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/T"+ i +"/F"+ forceDir+ "_" + rawDataName);
+			}
+			// println("rawDataName.substring(1,2): "+rawDataName.substring(1,2));;
+		}
 
 			
 
@@ -312,7 +384,7 @@ public class USOneAnalyzer implements ControlListener{
 			// row.setString("ID", "F"+ forceDir + "_" + rawDataName.substring(0, rawDataName.length() - 4));
 			// saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_FORCE +"/U" +  userDir.substring(4) +"/F"+ forceDir+"_"+ rawDataName);
 			// saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_USER +"/U" + );
-		}
+		
 	}
 
 	

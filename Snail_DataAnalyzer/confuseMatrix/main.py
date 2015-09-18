@@ -52,16 +52,19 @@ for x in folders:
 		csvFile.close()
 		predictfile.close()
 
-		# for y_result in range(0,11):
-		# 	total = 0
-		# 	for x_result in xrange(0,11):
-		# 		total += result[y_result, x_result ]
+	# for y_result in range(0,11):
+	# 	# print y_result
+	# 	total = 0
+	# 	for x_result in xrange(0,11):
+	# 		total += result[y_result, x_result ]
 
-		# 	for x_result in xrange(0,11):
-		# 		result[y_result, x_result ] = float(result[y_result, x_result ]/total)
+	# 	print "total: " + str(total)
 
+	# 	for x_result in xrange(0,11):
+	# 		result[y_result, x_result ] = float(result[y_result, x_result ]/total)
 
-		a = np.asarray(result)
-		np.savetxt(splitext(basename(x))[0] +"result.csv", a, delimiter=",", fmt='%i', header="p15_r-15,p15_r0,p15_r15,p15_r45,p25_r0,p45_r-15,p45_r0,p45_r15,p45_r45,p65_r0,p0_r0")
+	a = np.asarray(result)
+	# %1.3f
+	np.savetxt(splitext(basename(x))[0] +"result.csv", a, delimiter=",", fmt='%i', header="p15_r-15,p15_r0,p15_r15,p15_r45,p25_r0,p45_r-15,p45_r0,p45_r15,p45_r45,p65_r0,p0_r0")
 
 	

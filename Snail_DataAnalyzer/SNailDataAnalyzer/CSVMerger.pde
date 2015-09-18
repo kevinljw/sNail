@@ -14,7 +14,7 @@ public class CSVMerger {
 	Table currentReadDataForSaving = new Table();
 
 
-	public void mergeFiles(String dirLocation) {
+	public void mergeFiles(String dirLocation, String prefix) {
 		File mergeDir = new File(sketchPath("") + dirLocation);
 		String[] file_list = mergeDir.list(new FilenameFilter() {
 	        @Override
@@ -37,7 +37,7 @@ public class CSVMerger {
 				}
 			}
 		}
-		saveTable(allDataTableForSaving, dirLocation + "merged.csv");
+		saveTable(allDataTableForSaving, dirLocation + prefix + "merged.csv");
 	}
 
 	public void mergeCSVFilesWithIgnore(String dirLocation, int ignoreID, String prefix) {

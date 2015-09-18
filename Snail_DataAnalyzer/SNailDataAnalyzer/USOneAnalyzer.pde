@@ -47,7 +47,7 @@ public class USOneAnalyzer implements ControlListener{
 		    });
 
 	    	for (int j = 0; j < per_user_files.length; ++j) {
-	    		csvMerger.mergeFiles(STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME + "/" + user_list[i]+"/"+per_user_files[j]);	
+	    		csvMerger.mergeFiles(STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME + "/" + user_list[i]+"/"+per_user_files[j], "");	
 	    	}
 			
 
@@ -312,10 +312,6 @@ public class USOneAnalyzer implements ControlListener{
 				row.setInt("ID", idNum+0);
 				// continue;
 			}
-			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p0_r0")) {
-				row.setInt("ID", idNum+10);
-				// continue;
-			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r0")) {
 				row.setInt("ID", idNum+1);
 				// continue;
@@ -324,7 +320,7 @@ public class USOneAnalyzer implements ControlListener{
 				row.setInt("ID", idNum+2);
 				// continue;
 			}
-			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r45")) {
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r45")) {//good!!
 				row.setInt("ID", idNum+3);
 				// continue;
 			}
@@ -352,6 +348,10 @@ public class USOneAnalyzer implements ControlListener{
 				row.setInt("ID", idNum+9);
 				// continue;
 			}
+			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p0_r0")) {
+				row.setInt("ID", idNum+10);
+				// continue;
+			}
 		}
 
 			
@@ -362,9 +362,6 @@ public class USOneAnalyzer implements ControlListener{
 		for (int i = 1; i < 6; ++i) {
 			if (Integer.valueOf(rawDataName.substring(1,2)) == 0) {
 				continue;
-			}
-			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r-15")) {
-				
 			}
 			else if (i != Integer.valueOf(rawDataName.substring(1,2))) {
 				saveTable(table, STUDY_ONE_DATA_RESULT_CLASS_BY_LOO_TIME +"/U" + userDir.substring(4) +"/leaveT"+ i +"/F"+ forceDir+ "_" + rawDataName);

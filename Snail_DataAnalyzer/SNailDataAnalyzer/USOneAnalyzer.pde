@@ -310,7 +310,7 @@ public class USOneAnalyzer implements ControlListener{
 
 			if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r-15")) {
 				row.setInt("ID", idNum+0);
-				// continue;
+				 continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r0")) {
 				row.setInt("ID", idNum+1);
@@ -318,7 +318,7 @@ public class USOneAnalyzer implements ControlListener{
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r15")) {
 				row.setInt("ID", idNum+2);
-				// continue;
+				 continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p15_r45")) {//good!!
 				row.setInt("ID", idNum+3);
@@ -326,11 +326,11 @@ public class USOneAnalyzer implements ControlListener{
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p25_r0")) {
 				row.setInt("ID", idNum+4);
-				// continue;
+				 continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r-15")) {
 				row.setInt("ID", idNum+5);
-				// continue;
+				 continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r0")) {
 				row.setInt("ID", idNum+6);
@@ -338,7 +338,7 @@ public class USOneAnalyzer implements ControlListener{
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r15")) {
 				row.setInt("ID", idNum+7);
-				// continue;
+				 continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p45_r45")) {
 				row.setInt("ID", idNum+8);
@@ -346,7 +346,7 @@ public class USOneAnalyzer implements ControlListener{
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p65_r0")) {
 				row.setInt("ID", idNum+9);
-				// continue;
+				 continue;
 			}
 			else if (rawDataName.substring(3, rawDataName.length() - 4).equals("p0_r0")) {
 				row.setInt("ID", idNum+10);

@@ -69,13 +69,13 @@ public class Study2Mgr implements ControlListener, SerialListener {
   //0 - 木板 
   //1 - 棉褲
   //2 - 玻璃
-  int texture []= {2,0,1};
+  int texture []= {0};
 
-  int speed []= {0, 2};
-  int direction []= {0, 1, 2, 3, 4, 5, 6, 7};
+  int speed []= {2};
+  int direction []= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 // * force.length 
   public int taskCount = speed.length * texture.length * direction.length;
-  public final static int TIMES_OF_EACH_TASK = 5;
+  public final static int TIMES_OF_EACH_TASK = 10;
 
   int run = 0;
   int runIndex = 0;
@@ -180,8 +180,8 @@ public class Study2Mgr implements ControlListener, SerialListener {
 
 	void startStudy() {
 		userStudyFrame = addUserStudyTwoFrame("User Study Two", 320, 720, this);
-    movieFrame = addMovieFrame("User Study Two movie", 1024, 640, this);
-    sensors.showWindow();
+    // movieFrame = addMovieFrame("User Study Two movie", 1024, 640, this);
+    // sensors.showWindow();
     nextTask();
     new UserProfile().startDoingStudy(3);
 	}
@@ -204,6 +204,8 @@ public class Study2Mgr implements ControlListener, SerialListener {
   {
     if (taskCount * TIMES_OF_EACH_TASK >= currentTaskNum) {
       endStudy(false);
+      // currentTaskNum --;
+      // return;
     }
     // else
     // {
@@ -238,7 +240,7 @@ public class Study2Mgr implements ControlListener, SerialListener {
       else{
         table = loadTable(nameOfFile, "header, csv");
       }
-      movieFrame.videoInstruction(currentTask.direction, currentTask.speed);
+      // movieFrame.videoInstruction(currentTask.direction, currentTask.speed);
     // sensors.setCurrentInstruct(currentTask.pitch, currentTask.roll, currentTask.force);
 
 
@@ -510,6 +512,15 @@ public class UserStudyTwoFrame extends PApplet {
       case 7:
         image(arrow_leftup_on,50,60,80,80);
         break;
+      case 8:
+        text("Tap", 100,80);
+        break;
+      case 9:
+        text("Release", 100,80);
+        break;
+      // case 8:
+      //   text("Release", 50,60);
+      //   break;
       default:
         // do something
     }
@@ -545,7 +556,7 @@ public class UserStudyTwoFrame extends PApplet {
      .setBroadcast(true)
      ; 
     progressKnob = cp5.addKnob(CURRENT_PROGRESS)
-     .setRange(0,240)
+     .setRange(0,100)
      .setValue(0)
      .setPosition(50,500)
      .setRadius(50)

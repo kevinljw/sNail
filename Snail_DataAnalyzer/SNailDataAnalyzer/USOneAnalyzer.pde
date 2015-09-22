@@ -171,7 +171,7 @@ public class USOneAnalyzer implements ControlListener{
 
 		if(forceDir.equals("0.4"))//
 		{
-			 return;
+			 // return;
 		}
 		else if(forceDir.equals("0.6"))//
 		{
@@ -179,15 +179,15 @@ public class USOneAnalyzer implements ControlListener{
 		}
 		else if(forceDir.equals("0.8"))//
 		{
-			//return;
+			return;
 		}
 		else if(forceDir.equals("1.0"))//
 		{
-			//return;
+			return;
 		}
 		else if(forceDir.equals("1.2"))//
 		{
-			//return;
+			return;
 		}
 
 		

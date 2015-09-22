@@ -1,0 +1,260 @@
+*
+optimization finished, #iter = 67
+nu = 0.269084
+obj = -130.209160, rho = -0.138400
+nSV = 109, nBSV = 106
+*
+optimization finished, #iter = 17
+nu = 0.055586
+obj = -22.308645, rho = 0.039353
+nSV = 25, nBSV = 20
+*
+optimization finished, #iter = 69
+nu = 0.178613
+obj = -72.778961, rho = 0.372546
+nSV = 74, nBSV = 69
+*
+optimization finished, #iter = 25
+nu = 0.085977
+obj = -34.774843, rho = 0.183763
+nSV = 37, nBSV = 34
+*
+optimization finished, #iter = 16
+nu = 0.050048
+obj = -20.144781, rho = 0.036235
+nSV = 22, nBSV = 18
+*
+optimization finished, #iter = 69
+nu = 0.267678
+obj = -124.023957, rho = 0.689988
+nSV = 109, nBSV = 106
+*
+optimization finished, #iter = 34
+nu = 0.084093
+obj = -34.121017, rho = 0.140450
+nSV = 35, nBSV = 30
+*
+optimization finished, #iter = 59
+nu = 0.117264
+obj = -48.022832, rho = -0.130512
+nSV = 50, nBSV = 45
+*
+optimization finished, #iter = 97
+nu = 0.391842
+obj = -176.493887, rho = 0.321399
+nSV = 159, nBSV = 155
+*
+optimization finished, #iter = 86
+nu = 0.328682
+obj = -138.034024, rho = -0.008772
+nSV = 134, nBSV = 127
+Total nSV = 498
+Accuracy = 100% (250/250) (classification)
+*
+optimization finished, #iter = 61
+nu = 0.278166
+obj = -143.712403, rho = -0.197490
+nSV = 113, nBSV = 110
+*
+optimization finished, #iter = 24
+nu = 0.065262
+obj = -26.368983, rho = 0.141944
+nSV = 29, nBSV = 25
+*
+optimization finished, #iter = 52
+nu = 0.211631
+obj = -88.321340, rho = 0.330967
+nSV = 86, nBSV = 83
+*
+optimization finished, #iter = 39
+nu = 0.101286
+obj = -41.129963, rho = 0.325620
+nSV = 42, nBSV = 38
+*
+optimization finished, #iter = 17
+nu = 0.054854
+obj = -22.227467, rho = 0.085625
+nSV = 24, nBSV = 20
+*
+optimization finished, #iter = 65
+nu = 0.292067
+obj = -130.937732, rho = 0.498163
+nSV = 118, nBSV = 115
+*
+optimization finished, #iter = 40
+nu = 0.090019
+obj = -36.637577, rho = -0.008176
+nSV = 39, nBSV = 33
+*
+optimization finished, #iter = 40
+nu = 0.138565
+obj = -57.204981, rho = -0.134110
+nSV = 57, nBSV = 53
+*
+optimization finished, #iter = 87
+nu = 0.398065
+obj = -183.719673, rho = 0.176084
+nSV = 161, nBSV = 157
+*
+optimization finished, #iter = 93
+nu = 0.398007
+obj = -180.981286, rho = 0.106684
+nSV = 161, nBSV = 156
+Total nSV = 530
+Accuracy = 100% (250/250) (classification)
+*
+optimization finished, #iter = 32
+nu = 0.137557
+obj = -56.371349, rho = 0.150429
+nSV = 57, nBSV = 54
+*
+optimization finished, #iter = 15
+nu = 0.059727
+obj = -24.174929, rho = 0.092181
+nSV = 26, nBSV = 22
+*
+optimization finished, #iter = 51
+nu = 0.207022
+obj = -86.008177, rho = 0.226395
+nSV = 84, nBSV = 80
+*
+optimization finished, #iter = 31
+nu = 0.090388
+obj = -36.657712, rho = 0.130988
+nSV = 38, nBSV = 34
+*
+optimization finished, #iter = 13
+nu = 0.048194
+obj = -19.508002, rho = 0.049257
+nSV = 21, nBSV = 18
+*
+optimization finished, #iter = 79
+nu = 0.177889
+obj = -75.520345, rho = 0.089710
+nSV = 73, nBSV = 68
+*
+optimization finished, #iter = 27
+nu = 0.079243
+obj = -32.160845, rho = 0.003977
+nSV = 34, nBSV = 28
+*
+optimization finished, #iter = 54
+nu = 0.105861
+obj = -42.938255, rho = 0.064049
+nSV = 45, nBSV = 38
+*
+optimization finished, #iter = 67
+nu = 0.311720
+obj = -135.864572, rho = -0.255084
+nSV = 126, nBSV = 124
+*
+optimization finished, #iter = 103
+nu = 0.431717
+obj = -186.202241, rho = 0.322300
+nSV = 175, nBSV = 170
+Total nSV = 481
+Accuracy = 100% (250/250) (classification)
+*
+optimization finished, #iter = 61
+nu = 0.273980
+obj = -143.906914, rho = -0.180404
+nSV = 111, nBSV = 108
+*
+optimization finished, #iter = 19
+nu = 0.069022
+obj = -27.912268, rho = 0.166151
+nSV = 29, nBSV = 26
+*
+optimization finished, #iter = 41
+nu = 0.180327
+obj = -73.225170, rho = 0.251482
+nSV = 75, nBSV = 71
+*
+optimization finished, #iter = 31
+nu = 0.110140
+obj = -45.089752, rho = 0.395617
+nSV = 47, nBSV = 43
+*
+optimization finished, #iter = 16
+nu = 0.058570
+obj = -23.763886, rho = 0.111254
+nSV = 26, nBSV = 21
+*
+optimization finished, #iter = 85
+nu = 0.240178
+obj = -101.302242, rho = 0.088324
+nSV = 98, nBSV = 93
+*
+optimization finished, #iter = 27
+nu = 0.096977
+obj = -39.454120, rho = 0.057888
+nSV = 40, nBSV = 36
+*
+optimization finished, #iter = 36
+nu = 0.149651
+obj = -62.155030, rho = -0.126687
+nSV = 62, nBSV = 58
+*
+optimization finished, #iter = 96
+nu = 0.437176
+obj = -205.461463, rho = 0.249423
+nSV = 177, nBSV = 174
+*
+optimization finished, #iter = 106
+nu = 0.450689
+obj = -205.707547, rho = 0.307662
+nSV = 182, nBSV = 178
+Total nSV = 559
+Accuracy = 100% (250/250) (classification)
+*
+optimization finished, #iter = 57
+nu = 0.261377
+obj = -132.643058, rho = -0.094872
+nSV = 107, nBSV = 104
+*
+optimization finished, #iter = 18
+nu = 0.063805
+obj = -25.776558, rho = 0.137311
+nSV = 28, nBSV = 23
+*
+optimization finished, #iter = 46
+nu = 0.211261
+obj = -88.010823, rho = 0.218913
+nSV = 87, nBSV = 82
+*
+optimization finished, #iter = 34
+nu = 0.094363
+obj = -38.331345, rho = 0.293816
+nSV = 39, nBSV = 34
+*
+optimization finished, #iter = 19
+nu = 0.053086
+obj = -21.487236, rho = 0.052837
+nSV = 24, nBSV = 18
+*
+optimization finished, #iter = 73
+nu = 0.272674
+obj = -117.538584, rho = 0.195138
+nSV = 112, nBSV = 107
+*
+optimization finished, #iter = 40
+nu = 0.086523
+obj = -35.216572, rho = -0.079082
+nSV = 37, nBSV = 32
+*
+optimization finished, #iter = 43
+nu = 0.138505
+obj = -57.122835, rho = -0.050878
+nSV = 58, nBSV = 53
+*
+optimization finished, #iter = 67
+nu = 0.318030
+obj = -145.306223, rho = 0.023122
+nSV = 129, nBSV = 125
+*
+optimization finished, #iter = 100
+nu = 0.386663
+obj = -165.039936, rho = 0.519077
+nSV = 157, nBSV = 150
+Total nSV = 508
+Accuracy = 80.4% (201/250) (classification)
